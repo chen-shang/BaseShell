@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 
-source ./../../BashShell/Utils/BaseHeader.sh
-source ./../../BashShell/Utils/BaseUuidUtil.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseUuidUtil.sh
 
 # new a thread pool
 function new_threadPool(){

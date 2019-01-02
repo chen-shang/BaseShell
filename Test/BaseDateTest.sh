@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 #################引入需要测试的脚本################
-source ./../../BashShell/Date/BaseLocalDate.sh
-source ./../../BashShell/Date/BaseLocalDateTime.sh
-source ./../../BashShell/Date/BaseLocalTime.sh
-source ./../../BashShell/Date/BaseMonth.sh
-source ./../../BashShell/Date/BaseWeek.sh
-source ./../../BashShell/Date/BaseCalendar.sh
+source ./../../BaseShell/Date/BaseLocalDate.sh
+source ./../../BaseShell/Date/BaseLocalDateTime.sh
+source ./../../BaseShell/Date/BaseLocalTime.sh
+source ./../../BaseShell/Date/BaseMonth.sh
+source ./../../BaseShell/Date/BaseWeek.sh
+source ./../../BaseShell/Date/BaseCalendar.sh
 ###################下面写单元测试#################
-myLocaldate="2018-11-02"
+myLocaldate="2018-01-02"
 localdate_of "${myLocaldate}"
 ${myLocaldate} getDayOfYear
 
@@ -23,4 +23,4 @@ localdatetime_now_timestamp
 
 timestamp_now_localdatetime "1542993787"
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

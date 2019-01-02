@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 #################引入需要测试的脚本################
-source ./../../BashShell/Collection/BaseHashMap.sh
+source ./../../BaseShell/Collection/BaseHashMap.sh
 ###################下面写单元测试#################
 
 test-map_put(){
@@ -13,4 +13,4 @@ test-map_put(){
   echo ${map[*]}
 }
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

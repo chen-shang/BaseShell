@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-source ./../../BashShell/Utils/BaseHeader.sh
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 
-source ./../../BashShell/Utils/BaseHeader.sh
-source ./../../BashShell/Utils/BaseUuidUtil.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseUuidUtil.sh
 
 function new_lock(){
   enum_available_fd #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
@@ -23,6 +23,20 @@ function lock_action(){
   private_lock_releaseLock "${lock}"
 }
 
+function new_flock() {
+  local lock="$(uuid_toString)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
+  echo ${lock}
+}
+
+function flcok_action(){
+  local lock=$1 ; local action=$2
+  {
+    flock -n 1024 || log_fail "lock error"
+    ${action}
+    rm -rf /tmp/${lock}
+  } 1024<> /tmp/${lock}
+}
+
 private_lock_tryLock(){
   local lock=$1
   #能获取到锁,则可以入队,获取不到锁说明队列已满,并没有消费,阻塞在入队上
@@ -32,18 +46,4 @@ private_lock_tryLock(){
 private_lock_releaseLock(){
   local lockPool=$1
   echo  1 >& "${lockPool}"
-}
-
-function new_flock() {
-  local lock="$(uuid_toString)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
-  echo ${lock}
-}
-
-flcok_action(){
-  local lock=$1 ; local action=$2
-  {
-    flock -n 1024 || log_fail "lock error"
-    ${action}
-    rm -rf /tmp/${lock}
-  } 1024<> /tmp/${lock}
 }

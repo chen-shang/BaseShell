@@ -6,10 +6,10 @@ if [[ ${BASE_HEADER_IMPORTED} != 0 ]]; then
   readonly BASE_HEADER_IMPORTED=0
 
   # Header 的引入是为了引进每个脚本都公共的函数、常量等
-  source ./../../BashShell/Constant/BaseConstant.sh
-  source ./../../BashShell/Lang/BaseObject.sh
-  source ./../../BashShell/Log/BaseLog.sh
-  source ./../../BashShell/Annotation/BaseAnnotation.sh
+  source ./../../BaseShell/Constant/BaseConstant.sh
+  source ./../../BaseShell/Lang/BaseObject.sh
+  source ./../../BaseShell/Log/BaseLog.sh
+  source ./../../BaseShell/Annotation/BaseAnnotation.sh
   # 脚本使用帮助文档
   manual(){ cat <"$0" \
   | grep -B1 'function' \
@@ -21,4 +21,5 @@ if [[ ${BASE_HEADER_IMPORTED} != 0 ]]; then
   | awk -F ':' '{print $2,$1,$3}' \
   | column -t
   }
+
 fi

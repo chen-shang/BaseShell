@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-
 # shellcheck disable=SC1091,SC2155
-source ./../../BashShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
 ######################################################################
+main(){
+ echo "hello word"
 
+ log_info "hello word"
+}
 ######################################################################
-source ./../../BashShell/Utils/BaseEnd.sh
+source ./../../BaseShell/Utils/BaseEnd.sh

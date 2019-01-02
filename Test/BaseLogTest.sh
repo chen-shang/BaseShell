@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 #################引入需要测试的脚本################
-source ./../../BashShell/Log/BaseLog.sh
+source ./../../BaseShell/Log/BaseLog.sh
 ###################下面写单元测试#################
 
 test-log_info(){
@@ -23,4 +23,4 @@ test-log_warn(){
 }
 
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

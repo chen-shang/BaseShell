@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 #################引入需要测试的脚本################
-source ./../../BashShell/Lang/BaseString.sh
+source ./../../BaseShell/Lang/BaseString.sh
 ###################下面写单元测试#################
 
 test-string_isBlank(){
@@ -55,4 +55,4 @@ test-string_isNotBlank(){
 #}
 
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

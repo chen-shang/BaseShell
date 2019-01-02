@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #################引入需要测试的脚本################
-source ./../../BashShell/Concurrent/BaseThreadPool.sh
+source ./../../BaseShell/Concurrent/BaseThreadPool.sh
 ###################下面写单元测试#################
 
 function runable(){
@@ -66,4 +66,4 @@ test-threadPool_submit(){
 }
 
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

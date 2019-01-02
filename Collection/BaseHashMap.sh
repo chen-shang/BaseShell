@@ -6,10 +6,10 @@
 #JAVA中的HashMap在hash冲突的时候使用链表,这里使用->串联的字符串模拟JAVA中的链表,如([0]=[k1=v1]->[k2=v2] [1]=[one=1]->[two=2])
 #JAVA中HashMap的扩容有一个阈值,这里为了减少参数的传递,废除了这一规则,当HashMap中值的个数达到 16,32,64,128的时候就会自动扩容为原来的两倍
 ######################################################################
-source ./../../BashShell/Utils/BaseHeader.sh
-source ./../../BashShell/Lang/BaseString.sh
-source ./../../BashShell/Lang/BaseMath.sh
-source ./../../BashShell/Collection/BaseArrayList.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Lang/BaseString.sh
+source ./../../BaseShell/Lang/BaseMath.sh
+source ./../../BaseShell/Collection/BaseArrayList.sh
 # @return a hash map
 function new_hashMap(){
   # 使用[]占位符,这样才能获取到传入参数中hashMap桶的大小,不得已而为之

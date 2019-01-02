@@ -3,7 +3,7 @@
 
 # 注: 数组最大长度255
 #${arrayList[*]} 数组的传递方式
-source ./../../BashShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
 
 #list 本身不能带空格
 ######################################################################

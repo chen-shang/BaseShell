@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 
-source ./../../BashShell/Utils/BaseHeader.sh
-source ./../../BashShell/Utils/BaseUuidUtil.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseUuidUtil.sh
 if [[ ${BASE_BLOCKING_QUEUE_IMPORTED} != 0 ]]; then
   BASE_BLOCKING_QUEUE_IMPORTED=0
   LOCK_POOL_MAP=()

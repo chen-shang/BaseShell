@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ./../../BashShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Utils/BaseHeader.sh
 
 function http_get() {
   curl -s -X GET "$@"

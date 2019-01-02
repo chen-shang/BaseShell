@@ -2,7 +2,7 @@
 
 # shellcheck disable=SC1091
 #################引入需要测试的脚本################
-source ./../../BashShell/Lang/BaseObject.sh
+source ./../../BaseShell/Lang/BaseObject.sh
 ###################下面写单元测试#################
 
 test-equals(){
@@ -15,4 +15,4 @@ log_info
 TimeUnit_MINUTE_SLEEP 1
 log_info
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh

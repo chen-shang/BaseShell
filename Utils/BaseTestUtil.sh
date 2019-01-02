@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-source ./../../BashShell/Lang/BaseString.sh
-source ./../../BashShell/Collection/BaseArrayList.sh
+source ./../../BaseShell/Lang/BaseString.sh
+source ./../../BaseShell/Collection/BaseArrayList.sh
 
 assertTotalCount=0 #断言总次数
 assertFailCount=0 #断言失败次数

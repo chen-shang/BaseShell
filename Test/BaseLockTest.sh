@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #################引入需要测试的脚本################
-source ./../../BashShell/Concurrent/BaseLock.sh
+source ./../../BaseShell/Concurrent/BaseLock.sh
 ###################下面写单元测试#################
 
 action(){
@@ -17,4 +17,4 @@ wait
 
 
 ###################上面写单元测试#################
-source ./../../BashShell/Utils/BaseTestUtil.sh
+source ./../../BaseShell/Utils/BaseTestUtil.sh
