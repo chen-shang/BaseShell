@@ -21,6 +21,10 @@ ENUM(){
   LATEST_FD_INDEX=3
 }
 
+function enum_available_fd(){
+  [[ $((LATEST_FD_INDEX++)) -eq 255 ]] && log_fail "In the process of a largest open file descriptors is 255" || return ${LATEST_FD_INDEX}
+}
+
 if [[ ${BASE_CONSTANT_IMPORTED} != 0 ]]; then
   BASE_CONSTANT_IMPORTED=0
   ENUM

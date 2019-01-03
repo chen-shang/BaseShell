@@ -10,9 +10,5 @@ test-equals(){
   echo $?
   $(equals "1" "0") && echo 0 || echo 1
 }
-
-log_info
-TimeUnit_MINUTE_SLEEP 1
-log_info
 ###################上面写单元测试#################
 source ./../../BaseShell/Utils/BaseTestUtil.sh

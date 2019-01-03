@@ -59,15 +59,3 @@ function hashCode(){
   done
   printf "%d" "${hash}" # final hashCode in decimal
 }
-
-function enum_available_fd(){
-  [[ $((LATEST_FD_INDEX++)) -eq 255 ]] && log_fail "In the process of a largest open file descriptors is 255" || return ${LATEST_FD_INDEX}
-}
-
-function TimeUnit_MINUTE_SLEEP() {
-  sleep $(($1*60))
-}
-
-function TimeUnit_SECONDS_SLEEP() {
-  sleep "$1"
-}
