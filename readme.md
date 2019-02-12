@@ -1,131 +1,698 @@
 # 序
-shell是用户与Linux或Unix内核通信的工具,shell编程指的并不是编写这个工具,而是指利用现有的shell工具进行编程,写出来的程序是轻量级的脚本,我们叫做shell脚本。
+Shell脚本实在是太灵活了,相比标准的Java、C、C++ 等，它不过是一些现有命令的堆叠,这是他的优势也是他的劣势,太灵活导致不容易写规范。本人在写Shell脚本的过程中形成了自己一些规范,这些规范还在实践中,在此分享出来.
 
-shell的语法是从C语言继承过来的,因此我们在写shell脚本的时候,无论从语法、语意还是书写格式上往往能看到C语言的影子。
+# Shell介绍
+Shell中文译名叫 壳(ke,又读qiao) 外壳的意思,有壳就要有核.核指的是内核,内核即操作系统**内**的**核**心代码,所以简称内核,内核是操作系统对计算机硬件资源(例如显示器、硬盘、内存等等)进行调度的唯一通道,也就是说所有对计算机发出的指令,例如使蜂鸣器鸣响、点亮键盘背光、复制粘贴等等都需要经过内核来操作才行,这无论如何你是跨越不过去的。
 
-shell脚本实在是太灵活了,相比标准的Java、C、C++ 等，它不过是一些现有命令的堆叠,这是他的优势也是他的劣势,太灵活导致不容易写规范。本人在写shell脚本的过程中形成了一些自己的规范,这些规范还在实践中,在此分享出来,以期更多的人来帮助我完善。
-当然也希望随着规约的不断update,有朝一日能成为业界的规范。
+历史上出现过很多Shell,例如 sh,bash,csh,zsh 等等,不同的Shell有不同的词法和语法,就好比不同的方言。用不同的Shell其实指的仅仅是更换了脚本解释器而已。要注意的是有些命令在不同的解释器中会有不同的表现,这也是为什么我们的脚本一移植到别人电脑上就不可用的原因之一。
 
-linux提供了很多强大到令人窒息的命令,虽然美好,但好多时候我们使用起来还要man一下,或者不停的调试修改参数直到达到我们想要的结果。另外linux对数据结构支持的并不友好,我们很少在shell中使用过像map、list、tree、queue这样的数据结构,我们也很少使用shell去直接操作数据库、缓存,我们更不能像Java一样使用线程池等等,不这样做的原因一方面是shell并不适合处理这些问题(是不适合,并不是不能),另一方面是并不像Java、C、C++等语言一样有丰富的工具类。所以催生出了我想写BaseShell项目的想法
+坑一:echo 在 zsh 和其他 Shell解释器中对特殊字符转义的输出就不同。
 
-BaseShell是一个函数集,旨在提供丰富的像Java语言一样的框架,可以理解为shell版的jar包。我在这里面实现了类似Java风格的 线程池(其实是进程池)、map数据结构、list数据结构、阻塞队列、锁、日志框架等工具。
+以下是切换到bash后 echo 命令的输出
+```
+chenshang@chenshangMacBook-Pro:~$ bash
+chenshang@chenshangMacBook-Pro:~$ echo \\
+\
+chenshang@chenshangMacBook-Pro:~$ echo \\\\
+\\
+chenshang@chenshangMacBook-Pro:~$ echo \\\\\\ 
+\\\
+```
+以下是切换到zsh后 echo 命令的输出
+```
+chenshang@chenshangMacBook-Pro:~$ zsh
+chenshangMacBook-Pro% echo \\
+\
+chenshangMacBook-Pro% echo \\\\
+\
+chenshangMacBook-Pro% echo \\\\\\
+\\
+chenshangMacBook-Pro% echo \\\\\\\\
+\\
+chenshangMacBook-Pro% echo \\\\\\\\\\
+\\\
+chenshangMacBook-Pro%
+```
+坑二: sh 和 bash 对函数的命名要求就也不太一样,sh 不能出现特殊字符，而bash则放开了这种限制
+```
+chenshang@chenshangMacBook-Pro:~$ cat test.sh
+#!/bin/sh
+function @NotNull(){
+  echo "0"
+}
+chenshang@chenshangMacBook-Pro:~$ shellcheck test.sh
 
-![](!http://piyoxv26o.bkt.clouddn.com/BaseShellJietu20181129-232543@2x.jpg)
+In test.sh line 2:
+function @NotNull(){
+^-- SC2039: In POSIX sh, naming functions outside [a-zA-Z_][a-zA-Z0-9_]* is undefined.
+^-- SC2112: 'function' keyword is non-standard. Delete it.
 
-# 关于并发
-谈到并发,我们优先想到的就是多线程。线程是进程内的最小运行单元,进程是系统的最小运行单元。所以线程是比进程更细粒度的调度工具。一个进程可以理解为一个应用、一个软件、一个脚本执行,这些应用、软件、脚本共享系统的资源如 磁盘、网络、内存。一个线程只能共享一个应用内的资源。
+For more information:
+  https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, naming functions out...
+  https://www.shellcheck.net/wiki/SC2112 -- 'function' keyword is non-standar...
+```
+总之，Shell脚本中的坑很多，林林总总，写脚本的时候一定要小心，因为脚本的移植性堪忧。也就是为什么Shell不适合开发大型应用的原因之一。但辅助开发还是绰绰有余的。尤其是在运维服务器的过程中，与linux的亲和性使它占尽了优势。
 
-Shell中并没有真正意义的多线程,要实现多线程可以启动多个后端进程,最大程度利用cpu性能。
+本Shell规约是以bash为标准,在Mac OS上进行验证。
+```
+chenshang@chenshangMacBook-Pro:~$ sw_vers
+ProductName:	Mac OS X
+ProductVersion:	10.14
+chenshang@chenshangMacBook-Pro:~$ uname -a
+BuildVersion:	18A391Darwin chenshangMacBook-Pro.local 18.0.0 Darwin Kernel Version 18.0.0: Wed Aug 22 20:13:40 PDT 2018; root:xnu-4903.201.2~1/RELEASE_X86_64 x86_64
+chenshang@chenshangMacBook-Pro:~$ echo $0
+-bash
+chenshang@chenshangMacBook-Pro:~$ echo ${SHELL}
+/usr/local/bin/bash
+chenshang@chenshangMacBook-Pro:~$ bash -version
+GNU bash, version 5.0.2(1)-release (x86_64-apple-darwin18.2.0)
+Copyright (C) 2019 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 
-在 BaseShell 中 BaseShell/Concurrent 目录下,有我提供的关于线程池的工具
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+```
+Shell既是一种脚本编程语言,也是一个连接内核和用户的软件.既然他是一门语言就免不了两大要素:词法和语法,首先有哪些词汇(保留词、关键字),词汇有哪些分类(数据类型),其次这些词汇如何表达语意(也就是语法)。Shell编程指的并不是编写这个工具,而是指利用现有的Shell工具进行编程,写出来的程序是轻量级的脚本,我们叫做Shell脚本。Shell的语法是从C继承过来的,因此我们在写Shell脚本的时候往往能看到C语言的影子。因为初代Unix内核中的Shell解释器最主要的两个贡献者是肯汤普森和丹尼斯里奇,而丹尼斯里奇是C语言的发明者,肯汤普森则用C语言重写了之前的Unix内核。
 
-第一步 创建一个线程池
-第二步 想线程池中提交任务
+# 基础语法
+## 说明
+写Shell脚本考验是的你对各个命令或工具使用的熟练程度。基本命令必须要熟练掌握,常用命令要知道基本功能和基本参数,生僻命令只需要知道大概即可,要学会使用man手册查看命令的帮助文档。对于一些命令不必死记硬背,用的时候查一下解决问题即可。
 
-# 关于命名
-1. 【强制】代码中的命名均不能以下划线或美元符号开始，也不能以下划线或美元符号结束。
-  反例：_name / __name / $Object / name_ / name$ / Object$
-  因为$往往作为Shell中的取值运算符,$出现在变量中容易引起歧义 $Object 代表取变量Object的值呢,还是定义一个变量名叫$Object呢
+基本命令例如 /bin 目录下的
+```
+chenshang@chenshangMacBook-Pro:~$ ls /bin/
+[         chmod     date      echo      hostname  launchctl ls        pax       rm        sleep     tcsh      wait4path
+bash      cp        dd        ed        kill      link      mkdir     ps        rmdir     stty      test      zsh
+cat       csh       df        expr      ksh       ln        mv        pwd       sh        sync      unlink
+```
 
-2. 【强制】代码中的命名严禁使用拼音与英文混合的方式，更不允许直接使用中文的方式。
- 说明：正确的英文拼写和语法可以让阅读者易于理解，避免歧义。注意，即使纯拼音命名方式也要避免采用。
- 正例：alibaba / taobao / youku / hangzhou 等国际通用的名称，可视同英文。
- 反例：DaZhePromotion [打折] / getPingfenByName() [评分] / int 某变量 = 3
- 虽然支持中文变量,但容易引起歧义,因为我们的日志输出中往往使用中文,如果使用中文变量给人很凌乱的感觉
+常用命令和工具
+```
+sed、awk、grep、tr、column、ssh、scp、expect、ps、top、htop、tree、pstree、curl、wget、java相关的工具
+```
 
-变量名、函数名
-尽量不适用全局变量
-说明: 我们都知道全局变量,可以在任何使用的地方被修改,但没有人清楚,改变之后是否会影响到其他正在调用的地方。
+## 运行Hello World
+新建一个文件 HelloWorld.sh (参考<a href="#end">命名风格</a>规约以 `.sh` 结尾 )
+```bash
+echo "Hello World"
+```
+运行
+```
+chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ sh HelloWorld.sh 
+Hello World
+chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ bash HelloWorld.sh 
+Hello World
+```
+## Shell变量
+```bash
+function f1(){
+  local var="Hello"
+  echo "${var} World"
+}
+```
+注意，变量名和等号之间不能有空格，这可能和你熟悉的所有编程语言都不一样。同时，变量名的命名须遵循如下规则：
+(参考<a href="#style">命名风格</a>)
 
+运行shell时，会同时存在三种变量：
+1) 局部变量 局部变量在脚本或命令中定义，仅在当前shell实例中有效，其他shell启动的程序不能访问局部变量。
+2) 环境变量 所有的程序，包括shell启动的程序，都能访问环境变量，有些程序需要环境变量来保证其正常运行。必要的时候shell脚本也可以定义环境变量。
+3) shell变量 shell变量是由shell程序设置的特殊变量。shell变量中有一部分是环境变量，有一部分是局部变量，这些变量保证了shell的正常运行
 
+```
+【强制】变量取值用 "${}", 使用 {} 包裹，给所有变量加上花括号，防止产生歧义
+【强制】变量取值用 "${}", 使用 "" 包裹，防止分词
+【强制】若需要将调用的函数的返回结果赋值给local变量,使用 $(),不推荐使用 ``
+【强制】常量使用 readonly 修饰
+```
+### 只读变量
+使用 readonly 命令可以将变量定义为只读变量，只读变量的值不能被改变。
+### 删除变量
+使用 unset 命令可以删除变量,变量被删除后不能再次使用。unset 命令不能删除只读变量。
+## 数据类型
+### 字符串
+shell语言是一门弱类型语言，无论输入的是字符串还是数字，shell都是按照字符串类型来进行存储的，具体属于什么数据类型，shell会根据上下文进行确定,字符串可以用单引号，也可以用双引号，也可以不用引号。单双引号的区别跟PHP类似。
 
-3. 【强制】常量命名全部大写，单词间用下划线隔开，力求语义表达完整清楚，不要嫌名字长。
- 正例：MAX_STOCK_COUNT
- 反例：MAX_COUNT
+区别
+1. 单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的；
+2. 单引号字串中不能出现单独一个的单引号（对单引号使用转义符后也不行），但可成对出现，作为字符串拼接使用。
+3. 双引号里可以有变量(这在编程语言里面叫字符串插值)和转义字符
+```bash
+one=1
+first="${one}" #first就是变量one的值1
+first='${one}' #first是${one}
+```
+### Shell数组
+#### 定义数组
+bash支持一维数组（不支持多维数组），并且没有限定数组的大小。类似于 C 语言，数组元素的下标由 0 开始编号。获取数组中的元素要利用下标，下标可以是整数或算术表达式，其值应大于或等于 0。在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。定义数组的一般形式为：数组名=(值1 值2 ... 值n)
 
+例如：
+``` 
+array=(value0 value1 value2 value3)
+或者
+array=(
+value0
+value1
+value2
+value3
+)
+还可以单独定义数组的各个分量：
+array_name[0]=value0
+array_name[1]=value1
+array_name[n]=valueN
+```
+可以不使用连续的下标，而且下标的范围没有限制。
 
+#### 读取数组
+```
+读取数组元素值的一般格式是：${数组名[下标]}。
+例如：`valuen=${array[n]}`
+使用 @ 符号可以获取数组中的所有元素。
+例如： `echo ${array[@]}`
+```
+#### 数组长度
+```
+取得数组元素的个数 
+length=${#array[@]} 
+或者 
+length=${#array[*]}
+取得数组单个元素的长度 
+lengthn=${#array[n]}
+```
+## 关于注释
+除脚本首行外,所有以 `#` 开头的语句都将成为注释。
 
+示例:
+```bash
+# 主函数 []<-()                   <-------函数注释这样写
+function main(){
+  local var="Hello World!!!"
+  echo ${var}
+}
+# info级别的日志 []<-(msg:String)  <-------带入参的函数注释
+log_info(){
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')][$$]: [info] $*" >&2
+}
+# error级别的日志 []<-(msg:String) <-------带入参的函数注释
+log_error(){
+  # todo [error]用红色显示         <------函数内注释
+  local msg=$1 #将要输出的日志内容  <------变量的注释紧跟在变量的后面
+  if [[ x"${msg}" != x"" ]];then
+    # 注释                        <-------函数内注释 `#` 与缩进格式对整齐
+    echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')][$$]:[error] $*" >&2
+  fi
+}
+```
+```
+【强制】函数需有注释标识该函数的用途、入参变量、函数的返回值类型
+【强制】函数的注释 `#` 顶格写, 井号后面紧跟一个空格,对于该格式的要求是为了最后生成函数的帮助文档是用的(markdown语法),然后是注释的内容,注释尽量简短且在一行,最后跟的是函数的类型。
+【强制】函数内注释 `#` 与缩进格式对整齐
+【强制】变量的注释紧跟在变量的后面,不推荐换行写注释
+```
 # 关于首行
+```
+【推荐】#!/usr/bin/env bash
+说明:脚本用env启动的原因，是因为脚本解释器在linux中可能被安装于不同的目录，env可以在系统的PATH目录中查找。
+```
+我们往往看到大多数Shell脚本的第一行是 #!/bin/bash 这句话,当然也有 #!/bin/sh、#!/usr/bin/bash,这几种写法也都算是正确,
+当然还有一些野路子的写法,为了避免误导这里就不示例了。本Shell规约并不推荐使用上面的任何一种,而是使用 #!/usr/bin/env bash 这种。
+
+首行关系到运行脚本的时候究竟使用哪种Shell解释器。这也说明Shell是一种解释性语言,脚本从上到下每读一行就执行一行,
+在遇到第一行是 #!/bin/bash 的时候就会加载 bash 相关的环境,在遇到 #!/bin/sh 就会加载 sh 相关的环境,
+避免在执行脚本的时候遇到意想不到的错误。但一开始我并不知道我电脑上安装了哪些Shell,默认使用的又是哪一个Shell,
+我脚本移植到别人的计算机上执行,我更不可能知道别人的计算机是Ubuntu还是Arch或是Centos。为了提高程序的移植性,
+本Shell规约规定使用 #!/usr/bin/env bash, #!/usr/bin/env bash 会自己判断使用的Shell是目录在哪,并加载相应的环境变量。
+
+我们看一下下面一段脚本,在改变第一行头部的时候,Shellcheck给出的建议是什么
+$ cat test.sh
+
+```bash
+function main(){
+  local string="Hello World!!!"
+  echo $string
+}
+```
+
+使用 #!/bin/bash 或 #!/usr/bin/env bash
+```
+$ Shellchek test.sh
+In base_file.sh line 4:
+  echo $string
+       ^-- SC2086: Double quote to prevent globbing and word splitting.
+```
+
+使用 #!/bin/zsh
+```
+$ Shellchek test.sh
+In base_file.sh line 1:
+#!/bin/zsh
+^-- SC1071: ShellCheck only supports sh/bash/dash/ksh scripts. Sorry!
+```
+
+使用 #!/bin/sh
+```
+$ Shellchek test.sh
+In base_file.sh line 2:
+function main(){
+^-- SC2112: 'function' keyword is non-standard. Delete it.
+In base_file.sh line 3:
+  local string="Hello World!!!"
+  ^-- SC2039: In POSIX sh, 'local' is undefined.
+In base_file.sh line 4:
+  echo $string
+       ^-- SC2086: Double quote to prevent globbing and word splitting.
+```
+
+这一行不写大多数时候我们运行脚本的时候也没有问题,但在使用Shellcheck进行检查的时候,会提示
+```
+^-- SC2148: Tips depend on target Shell and yours is unknown. Add a shebang.
+```
+
+如果使用Intellij IDEA 也会提示
+![](Shell编程规范/shebang.jpg)
+
+当你点击 `Add shebangline` 的时候它会自动添加 `#!/usr/bin/env bash` ,这也是为什么本Shell规约推荐使用 `#!/usr/bin/env bash` 的原因之一
+
+> shebang 维基百科
+>> 在计算机科学中，Shebang（也称为 Hashbang ）是一个由井号和叹号构成的字符序列 #! ，其出现在文本文件的第一行的前两个字符。 在文件中存在 Shebang 的情况下，类 Unix 操作系统的程序载入器会分析 Shebang 后的内容，将这些内容作为解释器指令，并调用该指令，并将载有 Shebang 的文件路径作为该解释器的参数[1]。
+
+>> 例如，以指令`#!/bin/sh`开头的文件在执行时会实际调用 `/bin/sh` 程序（通常是 Bourne Shell 或兼容的 Shell，例如 bash、dash 等）来执行。这行内容也是 Shell 脚本的标准起始行。
+
+
+
 # 关于函数
-# 关于赋值
-# 关于换行
-# 关于注释
-# 关于变量
-# 关于计算
-# 关于文件
+函数定义的形式是
+```
+function main(){
+  #函数执行的操作
+  #函数的返回结果
+}
+```
+或
+```
+main(){
+  #函数执行的操作
+  #函数的返回结果
+}
+```
+```
+【推荐】使用关键字 `function` 显示定义的函数为 public 的函数,可以供 外部脚本以 `sh 脚本 函数 函数入参` 的形式调用,可以认为成Java当中的public的方法
+【推荐】未使用关键字 `function` 显示定义的函数为 private 的函数, 仅供本脚本内部调用,可以认为成Java中的私有方法,注意这种private是人为规定的,并不是Shell的语法,不推荐以 `sh 脚本 函数 函数入参` 的形式调用,注意是不推荐而不是不能。
+
+说明:本Shell规约这样做的目的就在于使脚本具有一定的封装性,看到 `function` 修饰的就知道这个函数能被外部调用, 
+没有被修饰的函数就仅供内部调用。你就知道如果你修改了改函数的影响范围. 如果是 被function 修饰的函数,
+修改后可能影响到外部调用他的脚本, 而修改未被function修饰的函数的时候,仅仅影响本文件中其他函数。
+```
+如 core.sh 脚本内容如下是
+```
+# 重新设置DNS地址 []<-()
+function setNameServer(){
+  > /etc/resolv.conf
+  echo nameserver 114.114.114.114 >> /etc/resolv.conf
+  echo nameserver 8.8.8.8 >> /etc/resolv.conf
+  cat /etc/resolv.conf
+}
+# info级别的日志 []<-(msg:String)
+log_info(){
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')][$$]: \033[32m [info] \033[0m $*" >&2
+}
+# error级别的日志 []<-(msg:String)
+log_error(){
+  # todo [error]用红色显示
+  echo -e "[$(date +'%Y-%m-%dT%H:%M:%S%z')][$$]: \033[31m [error] \033[0m $*" >&2
+}
+```
+
+则我可以使用 `sh core.sh setNameServer` 的形式调用  `set_name_server` 函数,
+但就不推荐使用 `sh core.sh log_info "Hello World"` 的形式使用 `log_info` 和 `log_error` 函数,注意是不推荐不是不能。
+
+## 关于函数调用
+变量、函数调用必须在函数声明之后,也就是说在用一个函数的时候,这一行命令的前面必须出现了该函数,因为Shell的执行是从上向下解释执行的。
+
+同一个脚本内调用、执行调用另一个脚本、调用另一脚本中的命令实例
+```bash
+#!/usr/bin/env bash
+source ./../../BaseShell/Log/BaseLog.sh
+function f1(){
+  echo "I am f1"
+}
+
+function main(){
+  log_info "LINENO:${LINENO} 开始执行"  #调用 ./../../BaseShell/Log/BaseLog.sh 中的函数,需要先用source BaseLog.sh
+  f1 #在函数内部调用当前脚本内的函数
+  log_success "LINENO:${LINENO} 结束执行" #调用 ./../../BaseShell/Log/BaseLog.sh 中的函数
+}
+
+main #在脚本内部调用当前脚本内的函数
+bash ChangBaiShanFetcher.sh #执行其他脚本
+
+bash ChangBaiShanFetcher.sh main #执行其他脚本的main方法,前提是 ChangBaiShanFetcher.sh 脚本 支持按函数名调用
+
+```
+## 关于函数参数
+| 参数处理 | 说明                                                                                                                   |   |
+|----------|------------------------------------------------------------------------------------------------------------------------|---|
+| $#       | 传递到脚本的参数个数                                                                                                   |   |
+| $*       | 以一个单字符串显示所有向脚本传递的参数。如"$*"用「"」括起来的情况、以"$1 $2 … $n"的形式输出所有参数。                  |   |
+| $$       | 脚本运行的当前进程ID号                                                                                                 |   |
+| $!       | 后台运行的最后一个进程的ID号                                                                                           |   |
+| $@       | 与$*相同，但是使用时加引号，并在引号中返回每个参数。如"$@"用「"」括起来的情况、以"$1" "$2" … "$n" 的形式输出所有参数。 |   |
+| $-       | 显示Shell使用的当前选项，与set命令功能相同。                                                                           |   |
+| $?       | 显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误。                                                          |   |
+```
+【强制】 在函数内部首先使用有意义的变量名接受参数,然后在使用这些变量进行操作,禁止直接操作$1,$2等,除非这些变量只用一次
+```
+## 关于函数注释
+函数类型的概念是从函数编程语言中的概念偷过来的,Shell函数的函数类型指的是函数的输入到函数的输入的映射关系
+```bash
+# 主函数 []<-()                  <-------函数注释这样写
+function main(){
+  local var="Hello World!!!"
+  echo ${var}
+}
+# info级别的日志 []<-(msg:String)  <-------带入参的函数注释
+log_info(){
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')][$$]: [info] $*" >&2
+}
+```
+说明:
+> main函数的函数类型是 []<-() , <- 左侧表的是函数的返回值类型 用[]包裹, 右侧是函数的参数类型 用()包裹,多个参数用 ',' 分隔,参数的描述是从 Scala 语言中偷过来, 先是参数名称 然后是参数类型 中间用:分隔
+
+> 对于main函数的注释来说, `#` 顶格写,后面紧跟一个空格,其实这样写是遵循的markdown的语法, 后面再跟一个空格,然后是 []<-(),代表这个函数没有入参也没有返回值,这个函数的目的就是执行这个这个函数中的命令,但我不关心这个函数的返回值。也就是利用函数的副作用来完成我们想要的操作。
+
+> 对于log_info 也是一样 不过 最后的函数类型是 []<-(msg:String) 代表入参是一个string类型的信息,然后也没有返回值。
+关于函数的返回值,我理解的函数的返回值有两种形式,一种是显示的return一种是隐式的echo
+
+以下是几种常见的写法
+```
+[]<-()
+[String]<-(var1:String,var2:String)
+[Boolean]<-(var1:String,var2:Int)
+[]<-(var1:String)
+```
+## 关于返回值
+Shell 函数的返回值比较复杂,获取函数的返回值又有多种方式.
+我们先来说,我们执行一条命令的时候, 比如 pwd 正常情况下它输出的结果是 当前所处的目录
+```
+Last login: Sat Jan 20 17:39:16 on ttys000
+chenshang@chenshangMacBook-Pro:~$ pwd
+/Users/chenshang
+```
+注意我说的是正常情况下,那异常情况下呢?输出的结果又是什么?输出的结果有可能五花八门!所以,Shell中必然有一种状态来标识一条命令是否执行成功,也就是命令执行结果的状态。那这种状态是怎么标识的,这就引出了Shell中一个反人类的规定,就是 0代表真、成功的含义。非零代表假、失败的含义。
+
+所以 pwd 这条命令如果执行成功的话,命令的执行结果状态一定是0,然后返回值才是当前目录。如果这条命令执行失败的话,命令的执行结果状态一定不是0,有可能是1 代表命令不存在，然后输出 not found，也有可能执行结果状态是2 代表超时，然后什么也不输出。(不要以为pwd这种linux内带的命令就一定执行成功,有可能你拿到的就是一台阉割版的linux呢)
+
+如何获取pwd的返回值呢
+```Shell
+function main(){
+  local dir=$(pwd)
+  echo "dir is ${dir}"
+}
+```
+如果想要获取pwd的执行结果的状态呢
+```Shell
+function main(){
+  pwd
+  local status=$?
+  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
+
+  pwdd
+  local status=$?
+  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
+
+  local dir
+  dir=$(pwdd)
+  status=$?
+  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
+  echo "dir is ${dir}"
+
+  local dir=$(pwdd)
+  status=$?
+  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
+  echo "dir is ${dir}"
+}
+```
+### 显示return
+return 用来显示的返回函数的返回结果,例如
+```
+# 检查当前系统版本 [Integer]<-()
+function check_version(){
+  (log_info "check_version ...") #log_info是我写的工具类中的一个函数
+  local version #这里是先定义变量,在对变量进行赋值,我们往往是直接初始化,而不是像这样先定义在赋值,这里只是告诉大家可以这么用
+  version=$(sed -r 's/.* ([0-9]+)\..*/\1/' /etc/redhat-release)
+  (log_info "centos version is ${version}")
+  return "${version}"
+}
+```
+这样这个函数的返回值是一个数值类型,我在脚本的任何地方调用 check_version 这个函数后,使用 $? 获取返回值
+```
+check_version
+local version=$?
+echo "${version}"
+```
+注意这里不用 local version=$(check_version) 这种形式获取结果,这样也是获取不到结果的,因为显示的return结果,返回值只能是[0-255]的数值,这对于我们一般的函数来说就足够了,因为我们使用显示return的时候往往是知道返回结果一定是数字且在[0-255]之间的，常常用在状态判断的时候。
+所以
+本Shell规约规定:
+```
+【推荐】返回结果类型是Boolean类型,也就是说函数的功能是起判断作用,返回结果是真或者假的时候使用显示 return 返回结果
+【推荐】不推荐使用return方式返回,推荐使用echo方式返回结果
+```
+例如
+```bash
+# 检查网络 [Boolean]<-()
+function check_network(){
+  (log_info "check_network ...")
+  for((i=1;i<=3;i++));do
+    local http_code=$(curl -I -m 10 -o /dev/null -s -w %\{http_code\}  www.baidu.com)
+    if [[ ${http_code} -eq 200 ]];then
+      (log_info "network is ok")
+      return ${TRUE}
+    fi
+  done
+  (log_error "network is not ok")
+  return ${FALSE}
+}
+```
+
+### 隐式echo
+会将所有标准输出当做返回值
+
+echo 用来显示的返回函数的返回结果,例如
+```bash
+# 将json字符串格式化树形结构 [String]<-(json_string:String)
+function json_format(){
+  local json_string=$1
+  echo "${json_string}"|jq . #jq是Shell中处理json的一个工具
+}
+```
+函数中所有的echo照理都应该输出到控制台上 例如
+```
+json_format "{\"1\":\"one\"}"
+```
+你会在控制台上看到如下输出
+```json
+{
+  "1": "one"
+}
+```
+但是一旦你用变量接收函数的返回值,这些本该输出到控制台的结果就都会存储到你定义的变量中 例如
+```bash
+json=$(json_format "{\"1\":\"one\"}")
+echo "${json}" #如果没有这句,上面的语句执行完成后,不会在控制台有任何的输出
+```
+我们把 json_format 改造一下
+```bash
+# 将json字符串格式化树形结构 [String]<-(json_string:String)
+function json_format(){
+  local json_string=$1
+  echo "为格式化之前:${json_string}" #其实新添加的这一句只是用来记录一行日志的,但是返回结果会被外层变量接收
+  echo "${json_string}"|jq . #jq是Shell中处理json的一个工具
+}
+```
+echo "为格式化之前:${json_string}" 其实新添加的只一句只是用来记录一行日志的,但是json=$(json_format "{\"1\":\"one\"}")
+变量 json 也会将这句话作为返回结果进行接收,但这是我不想要看到的。
+解决这个问题需要了解重定向相关
+```bash
+# 将json字符串格式化树形结构 [String]<-(json_string:String)
+function json_format(){
+  local json_string=$1
+  log_trace "为格式化之前:${json_string}" #其实新添加的只一句只是用来记录一行日志的
+  echo "${json_string}"|jq . #jq是Shell中处理json的一个工具
+}
+```
+
 # 关于分支
-# 关于Test表达式
-# 单元测试
-# 调试技术
+```bash
+HEAD_KEYWORD parameters; BODY_BEGIN
+  BODY_COMMANDS
+BODY_END
+```
+```
+【强制】将HEAD_KEYWORD和初始化命令或者参数放在第一行；
+【强制】将BODY_BEGIN同样放在第一行；
+【强制】复合命令中的BODY部分以2个空格缩进；
+【强制】BODY_END部分独立一行放在最后；
+```
+1. if
+if 的一般模式
+```
+if [[ condition ]]; then
+  # statements
+fi
 
+if [[ condition ]]; then
+  # statements
+else
+  # statements
+fi
 
-> 只能有一级目录
+if [[ condition ]]; then
+  # statements
+elif [[ condition ]]; then
+  # statements
+else
+  # statements
+fi
+```
+2. while
+```
+while [[ condition ]]; do
+  # statements
+done
 
-> controller之间不能互相调用
+while read -r item ;do
+  # statements
+done < 'file_name'
+```
+3. until
+```
+until [[ condition ]]; do
+  # statements
+done
+```
+4. for
+```
+for (( i = 0; i < 10; i++ )); do
+  # statements
+done
 
-> 引入 BaseEnd.sh 的脚本不能被其他引入 BaseEnd.sh的脚本引用
+for item in ${array}; do
+  # statements
+done
+```
+5. case
+```
+case word in
+  pattern )
+    #statements
+    ;;
+    *)
+    #statements
+    ;;
+esac
+```
+```
+【强制】 if\while\until 后面的判断 使用 双中括号`[[]]`
+```
+# 数学计算
+```
+【推荐】简单计算使用`$(())`包裹计算,(())内对变量的操作不用$取值
+ 正确 a=$((1+1))
+ 反例 a=$(($a++))
+【推荐】复杂计算使用bc计算器,前提是得安装bc计算器命令
+```
+# 关于文件
+```bash
+while read line;do
+  echo ${line}
+done < 文件名
+```
 
->引入 Header的目的是为了引入静态常量
+# 关于进程间通信
+# 关于单元测试
+以test-开头的都会进行测试
+```bash
+#!/usr/bin/env bash
+# shellcheck disable=SC1091
+#################引入需要测试的脚本################
+source ./../../BaseShell/Collection/BaseHashMap.sh
+###################下面写单元测试#################
 
-# 函数返回值
-function 定义的函数类似公共函数
+test-map_put(){
+  map=($(new_hashMap))
+  map=($(map_put "${map[*]}" "one" "1"))
+  map=($(map_put "${map[*]}" "two" "1"))
+  map=($(map_put "${map[*]}" "three" "1"))
+  echo ${map[*]}
+}
 
-shell 中用0代表真 ，非零代表假
-目的是0代表这个正常，其他代表异常，123各自有各自的异常
+###################上面写单元测试#################
+source ./../../BaseShell/Utils/BaseTestUtil.sh
+```
+重定向
+测试与调试
+1. sh -x 
+2. 在合适位置 set -x
+3. bashdb 单步调试
 
+# 命名风格 
+<a name="style"></a>
+```
+【强制】脚本中变量、函数、文件的命名均不能以数字、下划线、$开头,也不能以下划线或者$结尾
+反例: _name / __name / $name / name_ / name$ / 5name
+说明: $作为Shell语言的取值符号,其他命名约束参考Java规约。
 
-return 的直接
-$(functionName) && balabla || balabala
-不用 [[$(functionName)]]
+【强制】代码中的命名严禁使用拼音与英文混合的方式，更不允许直接使用中文的方式。 
+正例：alibaba / taobao / youku / hangzhou 等国际通用的名称，可视同英文。
+说明：正确的英文拼写和语法可以让阅读者易于理解，避免歧义。注意，即使纯拼音命名方式 也要避免采用。
 
+【强制】参数名、局部变量都统一使用 lowerCamelCase 风格，必须遵从 驼峰形式。
+正例： localValue / errMsg / userName
 
-有名管道 创建出来 关联文件描述符 ，进程退出文件描述符作废
+【推荐】使用下划线分割函数命名,都统一使用 lowerCamelCase 风格，必须遵从 驼峰形式。
+正例：getUserName() / log_info() / map_add()
+说明: 纯用下划线会使得命名很长,纯用驼峰又无法将函数聚类 
+get_user_english_name()  vs getUserEnglishName()
+log_info() vs logInfo()
+map_add() vs mapAdd()
 
+`log_info "xxx"` 在调用的时候类比于Java 的`log.info("xxx")` 
 
-eval "exec ${FD}<>${threadPoolName} && rm -rf ${threadPoolName}"
+【强制】文件名 UpperCamelCase 风格，首字母大写的驼峰形式
+正例：BaseLog.sh / BaseString.sh 
 
-eval 可以将 一个字符串命令来执行
+说明：类比Java的类,我们把相同功能的函数抽象到一个脚本文件中,留待后续其他脚本引用。随着我们写的脚本日渐增多
+我们很有必要分门别类的将它们聚集到一个文本文件中，一是方便后续查阅，而是方便后续调用
 
-{1..10}左闭右闭
+【强制】常量命名全部大写，单词间用下划线隔开，力求语义表达完整清楚，不要嫌名字长。
+正例：MAX_STOCK_COUNT 反例：MAX_COUNT
 
-
-多线程控制的几种方式
-
-1. 最多有100个线程并发执行,当有第101个任务提交的时候,阻塞
-2. 最多有100个线程并发执行,有多少个任务就提交多少个任务,但是后台一次只有100个线程取出来并发执行,执行完成后再去任务队列中取一个
-3. 最多有100个线程并发执行,有多少提交多少,发现执行完成了就在通知执行一个或一批
-
-
-关于使用 fifo + 文件描述符进行了两种尝试，一种是惰性加载，但是失败了，但是不能实现线程池之间的并发执行
-
-ulimit = user limit 该命令也就是用户限制，限制了最大调用的进程数和文件描述符的大小。
-
-Header 防止重复引用，其他的也可以这么用，为了简单，不想jav还有编译器
-
-
-END只能放到最后
-
-
-
-
-
-
-$LINENO 打印行号
-
-list=($(new_arrayList "1 2 3"))
-echo ${list[*]}
-
-list_size "${list[*]}"
-list=($(list_add ${list[*]} 1 2 3 45 66))
-
-数组要用()接收
-
-[[ -z $1 ]] && log_fail "${err_msg}" 作为最后一行会改变返回值的状态
-
-return 形式的返回不适用 [[]]
-
-exec 1024<>token 关联fd后写编程了非阻塞的了
-timeunit sleep
-定时任务
-
-log_info eval $(gdate) 传递，会先计算，而不是延迟计算
+【推荐】文件夹名字大写
+【强制】文件名以 .sh 结尾
+说明：虽然不用.sh结尾或者以任何其他新式结尾都可以运行,但是以 .sh结尾可以一眼看出就是脚本文件
+```
+<a name="end"></a>
+```
+【强制】使用两个空格进行缩进,不适用tab缩进
+【推荐】不在一行的时候使用 `\` 进行换行,使用 `\` 换行的原则是整齐美观
+```
+例子:
+```bash
+#!/usr/bin/env bash
+# 脚本使用帮助文档 []<-()
+manual(){
+  cat "$0"|grep -v "less \"\$0\"" \
+          |grep -B1 "function "   \
+          |grep -v "\\--"         \
+          |sed "s/function //g"   \
+          |sed "s/(){//g"         \
+          |sed "s/#//g"           \
+          |sed 'N;s/\n/ /'        \
+          |column -t              \
+          |awk '{print $1,$3,$2}' \
+          |column -t
+}
+function search_user_info(){
+  local result=$(httpclient_get --cookie "${cookie}" \
+                                         "${url}/userName=${user_name}")
+}
+``

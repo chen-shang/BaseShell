@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Constant/BaseConstant.sh
-
+source ./../../BaseShell/Log/BaseLog.sh
 # not null
 function ^NotNull(){
   local err_msg=$2

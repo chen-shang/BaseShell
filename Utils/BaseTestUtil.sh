@@ -66,22 +66,22 @@ test_checkResult(){
 test_getMethodList(){
   # "test-"开头的方法
   # 不被#ignore注释的
-  cat <"$0" | grep "test-" \
- | grep -v "grep" \
- | grep -v "#ignore" \
- | sed "s/(){//g"
+  cat <"$0" | grep "test-"      \
+            | grep -v "grep"    \
+            | grep -v "#ignore" \
+            | sed "s/(){//g"
 }
 
 # 测试函数执行函数
 test_run(){
-  local methodList=( $(test_getMethodList) )
+  local methodList=("$(test_getMethodList)")
   for method in ${methodList[*]}; do
     log_info "开始执行测试函数==============》${method}《=============="
     ${method}
   done
 
   echo "
-   测试方法[$(list_size ${methodList[*]})]个
+   测试方法[$(list_size "${methodList[*]}")]个
    执行断言[${assertTotalCount}]个
    成功:${assertSuccessCount}
    失败:${assertFailCount}

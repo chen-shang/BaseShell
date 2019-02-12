@@ -7,12 +7,12 @@ source ./../../BaseShell/Lang/BaseString.sh
 
 test-string_isBlank(){
   local result=$(string_isBlank "")
-  assertEquals ${result} ${TRUE}
+  assertEquals "${result}" "${TRUE}"
 }
+
 test-string_isNumeric(){
-  string_isNatural 123a
   local result=$(string_isNatural 123)
-  assertEquals ${result} ${TRUE}
+  assertEquals "${result}" "${TRUE}"
 }
 
 

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+source ./../../BaseShell/Utils/BaseHeader.sh
 
-func01
-function autoload_func01(){
-  echo "func01"
+function func01(){
+  log_info "123"
 }
 func01
+
+#source ./../../BaseShell/Utils/BaseEnd.sh

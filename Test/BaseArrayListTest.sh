@@ -11,7 +11,7 @@ consumer(){
 }
 
 test-new_arrayList(){
-  list=($(new_arrayList "1 "))
+  list=($(new_arrayList "1 2"))
   assertEquals "${list[*]}" "1"
 
   list=($(list_add "${list[*]}" "1"))
