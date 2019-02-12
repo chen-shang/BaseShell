@@ -102,6 +102,9 @@ chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ sh HelloWorld.s
 Hello World
 chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ bash HelloWorld.sh 
 Hello World
+chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ chmod u+x HelloWorld.sh 
+chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ ./HelloWorld.sh 
+Hello World
 ```
 ## Shell变量
 ```bash
@@ -156,18 +159,18 @@ value2
 value3
 )
 还可以单独定义数组的各个分量：
-array_name[0]=value0
-array_name[1]=value1
-array_name[n]=valueN
+array[0]=value0
+array[1]=value1
+array[n]=valueN
 ```
 可以不使用连续的下标，而且下标的范围没有限制。
 
 #### 读取数组
 ```
 读取数组元素值的一般格式是：${数组名[下标]}。
-例如：`valuen=${array[n]}`
+例如：valuen=${array[n]}
 使用 @ 符号可以获取数组中的所有元素。
-例如： `echo ${array[@]}`
+例如：echo ${array[@]}
 ```
 #### 数组长度
 ```
@@ -186,7 +189,7 @@ lengthn=${#array[n]}
 # 主函数 []<-()                   <-------函数注释这样写
 function main(){
   local var="Hello World!!!"
-  echo ${var}
+  echo "${var}"
 }
 # info级别的日志 []<-(msg:String)  <-------带入参的函数注释
 log_info(){
@@ -335,21 +338,17 @@ source ./../../BaseShell/Log/BaseLog.sh
 function f1(){
   echo "I am f1"
 }
-
 function main(){
-  log_info "LINENO:${LINENO} 开始执行"  #调用 ./../../BaseShell/Log/BaseLog.sh 中的函数,需要先用source BaseLog.sh
-  f1 #在函数内部调用当前脚本内的函数
-  log_success "LINENO:${LINENO} 结束执行" #调用 ./../../BaseShell/Log/BaseLog.sh 中的函数
+  log_info "LINENO:${LINENO} 开始执行"      #调用 ./../../BaseShell/Log/BaseLog.sh 中的函数,需要先用source BaseLog.sh
+  f1                                      #在函数内部调用当前脚本内的函数
+  log_success "LINENO:${LINENO} 结束执行"   #调用 ./../../BaseShell/Log/BaseLog.sh 中的函数
 }
-
-main #在脚本内部调用当前脚本内的函数
-bash ChangBaiShanFetcher.sh #执行其他脚本
-
-bash ChangBaiShanFetcher.sh main #执行其他脚本的main方法,前提是 ChangBaiShanFetcher.sh 脚本 支持按函数名调用
-
+main                                       #在脚本内部调用当前脚本内的函数
+bash ChangBaiShanFetcher.sh                #执行其他脚本
+bash ChangBaiShanFetcher.sh main           #执行其他脚本的main方法,前提是 ChangBaiShanFetcher.sh 脚本 支持按函数名调用
 ```
 ## 关于函数参数
-| 参数处理 | 说明                                                                                                                   |   |
+| 参数 | 说明                                                                                                                   |   |
 |----------|------------------------------------------------------------------------------------------------------------------------|---|
 | $#       | 传递到脚本的参数个数                                                                                                   |   |
 | $*       | 以一个单字符串显示所有向脚本传递的参数。如"$*"用「"」括起来的情况、以"$1 $2 … $n"的形式输出所有参数。                  |   |
@@ -402,14 +401,14 @@ chenshang@chenshangMacBook-Pro:~$ pwd
 所以 pwd 这条命令如果执行成功的话,命令的执行结果状态一定是0,然后返回值才是当前目录。如果这条命令执行失败的话,命令的执行结果状态一定不是0,有可能是1 代表命令不存在，然后输出 not found，也有可能执行结果状态是2 代表超时，然后什么也不输出。(不要以为pwd这种linux内带的命令就一定执行成功,有可能你拿到的就是一台阉割版的linux呢)
 
 如何获取pwd的返回值呢
-```Shell
+```bash
 function main(){
   local dir=$(pwd)
   echo "dir is ${dir}"
 }
 ```
 如果想要获取pwd的执行结果的状态呢
-```Shell
+```bash
 function main(){
   pwd
   local status=$?
@@ -433,7 +432,7 @@ function main(){
 ```
 ### 显示return
 return 用来显示的返回函数的返回结果,例如
-```
+```bash
 # 检查当前系统版本 [Integer]<-()
 function check_version(){
   (log_info "check_version ...") #log_info是我写的工具类中的一个函数
@@ -444,9 +443,9 @@ function check_version(){
 }
 ```
 这样这个函数的返回值是一个数值类型,我在脚本的任何地方调用 check_version 这个函数后,使用 $? 获取返回值
-```
+```bash
 check_version
-local version=$?
+version=$?
 echo "${version}"
 ```
 注意这里不用 local version=$(check_version) 这种形式获取结果,这样也是获取不到结果的,因为显示的return结果,返回值只能是[0-255]的数值,这对于我们一般的函数来说就足够了,因为我们使用显示return的时候往往是知道返回结果一定是数字且在[0-255]之间的，常常用在状态判断的时候。
