@@ -4,7 +4,7 @@
 source ./../../BaseShell/Concurrent/BaseThreadPool.sh
 ###################下面写单元测试#################
 
-function runable(){
+function runnable(){
   sleep 5
   echo "$(gdate +%s.%N):I am running"
 }
@@ -22,35 +22,32 @@ function supplier(){
   echo "$1"
 }
 test-threadPool_submit(){
-  new_threadPool 1
+  new_threadPool 512
   local pool=$?
-  for i in {1..10};do
-    # 没有输入参数和输出参数的
-    local runable="log_info 线程池1:${pool}:任务${i}"
-    threadPool_submit "${pool}" "${runable}" &
+  # 没有输入参数和输出参数的
+  for i in {1..5000};do
+    threadPool_submit "${pool}" "runnable"
   done
 
-  new_threadPool 1
-  local pool=$?
-  (
-    for i in {1..100};do
-      # 没有输入参数和输出参数的
-      local runable="log_info 线程池2:${pool}:任务${i}"
-      threadPool_submit "${pool}" "${runable}" &
-    done
-    wait
-  ) &
+#  new_threadPool 300
+#  local pool=$?
+#  for i in {1..1000};do
+#    threadPool_submit "${pool}" "runnable"
+#  done
+  wait
+  say "运行完毕"
 
-  new_threadPool 1
-  local pool2=$?
-  (
-    for i in {1..100000};do
-      # 有输入参数，但是没有返回值的
-      local param="线程池${pool2}:任务${i}"
-      threadPool_submit "${pool2}" "consumer ${param}" &
-    done
-    wait
-  ) &
+#  new_threadPool 10
+#  local pool2=$?
+#  (
+#    for i in {1..100};do
+#      # 有输入参数，但是没有返回值的
+#      local param="线程池${pool2}:任务${i}"
+#      threadPool_submit "${pool2}" "consumer ${param}"
+#    done
+#    wait
+#    say "运行完毕"
+#  ) &
 #  (new_threadPool 100
 #  local pool2=$?
 #  for i in {1..100};do

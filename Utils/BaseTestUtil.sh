@@ -55,10 +55,10 @@ test_checkResult(){
   # 测试统计
   if [[ ${result} -eq ${TRUE} ]]; then
     ((assertSuccessCount ++))
-    log_success "${description}\\n test ok[100%],hit ${targetValue}"
+    log_success "${description} test ok[100%],hit ${targetValue}"
   else
     ((assertFailCount ++))
-    log_fail "${description}\\n test fail[100%],expect ${targetValue} but ${sourceValue}"
+    log_fail "${description} test fail[100%],expect ${targetValue} but ${sourceValue}"
   fi
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
 # shellcheck disable=SC1091,SC2155
+
 # 执行函数 [Any]<-(functionName:String,functionParameters:List<Any>)
 execute(){
   functionName=$1
@@ -10,10 +10,7 @@ execute(){
 }
 
 case $1 in
-# -h 是 --help 的缩写,执行 manual
-  "-h" | "--help" | "?") (manual) ;;
-# 默认执行当前脚本中的main方法
-  "") (main) ;;
-# 执行当前脚本指定函数
-  *) (execute "$@") ;;
+  "-h" | "--help" | "?") (manual) ;;# -h 是 --help 的缩写,执行 manual
+  "") (main) ;;                     # 默认执行当前脚本中的main方法
+  *) (execute "$@") ;;              # 执行当前脚本指定函数
 esac

@@ -26,7 +26,7 @@ function threadPool_submit(){
   local action="$*"
   read -r -u "${threadPool}" item #从线程池获取一个任务执行令牌，获取不到则挂起
   {
-    eval "${action}"
+    ${action}
     echo "${item}" >& "${threadPool}"
   } &
 }

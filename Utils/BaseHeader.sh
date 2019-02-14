@@ -21,5 +21,4 @@ if [[ ${BASE_HEADER_IMPORTED} != 0 ]]; then
   | awk -F ':' '{print $2,$1,$3}' \
   | column -t
   }
-
 fi

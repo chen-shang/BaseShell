@@ -3,15 +3,12 @@
 #################引入需要测试的脚本################
 source ./../../BaseShell/Collection/BaseArrayList.sh
 ###################下面写单元测试#################
-assertEquals(){
- $$
-}
 consumer(){
  log_info "consumer $1"
 }
 
 test-new_arrayList(){
-  list=($(new_arrayList "1 2"))
+  list=($(new_arrayList "1"))
   assertEquals "${list[*]}" "1"
 
   list=($(list_add "${list[*]}" "1"))

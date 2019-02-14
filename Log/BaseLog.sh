@@ -11,17 +11,18 @@ fi
 LOG_TRACE_MODEL=${TRUE}
 
 ######################################################################
+# 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
 
 # debug级别的日志 []<-(msg:String)
 function log_debug(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID] [DEBUG]:   $*" 2>&1 \
+  echo -e "[$(localdatetime_now)][$$ $BASHPID] [DEBUG]:   $*" 1>&2 \
  | tee -a "${LOG_DIR}/$(localdate_now).debug.log" \
  | tee -a "${LOG_DIR}/$(localdate_now).log"
 }
 
 # info级别的日志 []<-(msg:String)
 function log_info(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*" 2>&1 \
+  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*" 1>&2 \
  | tee -a "${LOG_DIR}/$(localdate_now).info.log" \
  | tee -a "${LOG_DIR}/$(localdate_now).log"
 }

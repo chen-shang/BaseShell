@@ -84,11 +84,18 @@ function math_sqrt(){
   echo "scale=4;sqrt($1)" | bc
 }
 
-# 平局
+# 平均数
 function math_avg(){
-  echo "scale=4;sqrt($1)" | bc
+  local sum=0
+  local num=0
+  for item in "$@";do
+    sum=$(echo "scale=4;${sum}+${item}"|bc)
+    ((num+=1))
+  done
+  echo "scale=4;${sum}/${num}"|bc
 }
 
+# 对数
 function math_log(){
   case $# in
     1)

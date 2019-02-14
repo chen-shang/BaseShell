@@ -51,7 +51,7 @@ For more information:
   https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, naming functions out...
   https://www.shellcheck.net/wiki/SC2112 -- 'function' keyword is non-standar...
 ```
-总之，Shell脚本中的坑很多，林林总总，写脚本的时候一定要小心，因为脚本的移植性堪忧。也就是为什么Shell不适合开发大型应用的原因之一。但辅助开发还是绰绰有余的。尤其是在运维服务器的过程中，与linux的亲和性使它占尽了优势。
+总之，Shell脚本中的坑很多，林林总总，写脚本的时候一定要小心，否则脚本的移植性堪忧。这也就是为什么Shell不适合开发大型应用的原因之一。但辅助开发还是绰绰有余的。尤其是在运维服务器的过程中，与linux的亲和性让它占尽了优势。
 
 本Shell规约是以bash为标准,在Mac OS上进行验证。
 ```
@@ -116,11 +116,10 @@ function f1(){
 注意，变量名和等号之间不能有空格，这可能和你熟悉的所有编程语言都不一样。同时，变量名的命名须遵循如下规则：
 (参考<a href="#style">命名风格</a>)
 
-运行shell时，会同时存在三种变量：
 1) 局部变量 局部变量在脚本或命令中定义，仅在当前shell实例中有效，其他shell启动的程序不能访问局部变量。
 2) 环境变量 所有的程序，包括shell启动的程序，都能访问环境变量，有些程序需要环境变量来保证其正常运行。必要的时候shell脚本也可以定义环境变量。
-3) shell变量 shell变量是由shell程序设置的特殊变量。shell变量中有一部分是环境变量，有一部分是局部变量，这些变量保证了shell的正常运行
 
+本shell规约规定:
 ```
 【强制】变量取值用 "${}", 使用 {} 包裹，给所有变量加上花括号，防止产生歧义
 【强制】变量取值用 "${}", 使用 "" 包裹，防止分词
@@ -146,9 +145,9 @@ first='${one}' #first是${one}
 ```
 ### Shell数组
 #### 定义数组
-bash支持一维数组（不支持多维数组），并且没有限定数组的大小。类似于 C 语言，数组元素的下标由 0 开始编号。获取数组中的元素要利用下标，下标可以是整数或算术表达式，其值应大于或等于 0。在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。定义数组的一般形式为：数组名=(值1 值2 ... 值n)
+bash支持一维数组（不支持多维数组），并且没有限定数组的大小。类似于 C 语言，数组元素的下标由 0 开始编号。获取数组中的元素要利用下标，下标可以是整数或算术表达式，其值应大于或等于 0。在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。
 
-例如：
+定义数组的一般形式为：数组名=(值1 值2 ... 值n).例如：
 ``` 
 array=(value0 value1 value2 value3)
 或者
@@ -180,6 +179,22 @@ length=${#array[@]}
 length=${#array[*]}
 取得数组单个元素的长度 
 lengthn=${#array[n]}
+```
+
+本Shell规约规定
+```
+【强制】传递数组使用 "${list[*]}" 形式
+【强制】接收数组使用 array=($*) 形式 
+```
+示例：
+```bash
+# @return the number of elements in this list
+function list_size(){
+  local array=($1);local size=${#array[*]}
+  echo "${size}"
+}
+size=$(list_size "${list[*]}")
+assertEquals "${size}" "2"
 ```
 ## 关于注释
 除脚本首行外,所有以 `#` 开头的语句都将成为注释。
@@ -270,8 +285,7 @@ In base_file.sh line 4:
 ^-- SC2148: Tips depend on target Shell and yours is unknown. Add a shebang.
 ```
 
-如果使用Intellij IDEA 也会提示
-![](Shell编程规范/shebang.jpg)
+如果使用Intellij IDEA 也会提示 `add shebang line`
 
 当你点击 `Add shebangline` 的时候它会自动添加 `#!/usr/bin/env bash` ,这也是为什么本Shell规约推荐使用 `#!/usr/bin/env bash` 的原因之一
 
@@ -280,18 +294,16 @@ In base_file.sh line 4:
 
 >> 例如，以指令`#!/bin/sh`开头的文件在执行时会实际调用 `/bin/sh` 程序（通常是 Bourne Shell 或兼容的 Shell，例如 bash、dash 等）来执行。这行内容也是 Shell 脚本的标准起始行。
 
-
-
 # 关于函数
 函数定义的形式是
-```
+```bash
 function main(){
   #函数执行的操作
   #函数的返回结果
 }
 ```
 或
-```
+```bash
 main(){
   #函数执行的操作
   #函数的返回结果
@@ -301,9 +313,7 @@ main(){
 【推荐】使用关键字 `function` 显示定义的函数为 public 的函数,可以供 外部脚本以 `sh 脚本 函数 函数入参` 的形式调用,可以认为成Java当中的public的方法
 【推荐】未使用关键字 `function` 显示定义的函数为 private 的函数, 仅供本脚本内部调用,可以认为成Java中的私有方法,注意这种private是人为规定的,并不是Shell的语法,不推荐以 `sh 脚本 函数 函数入参` 的形式调用,注意是不推荐而不是不能。
 
-说明:本Shell规约这样做的目的就在于使脚本具有一定的封装性,看到 `function` 修饰的就知道这个函数能被外部调用, 
-没有被修饰的函数就仅供内部调用。你就知道如果你修改了改函数的影响范围. 如果是 被function 修饰的函数,
-修改后可能影响到外部调用他的脚本, 而修改未被function修饰的函数的时候,仅仅影响本文件中其他函数。
+说明:本Shell规约这样做的目的就在于使脚本具有一定的封装性,看到 `function` 修饰的就知道这个函数能被外部调用, 没有被修饰的函数就仅供内部调用。你就知道如果你修改了改函数的影响范围. 如果是 被function 修饰的函数,修改后可能影响到外部调用他的脚本, 而修改未被function修饰的函数的时候,仅仅影响本文件中其他函数。
 ```
 如 core.sh 脚本内容如下是
 ```
@@ -439,17 +449,20 @@ function check_version(){
   local version #这里是先定义变量,在对变量进行赋值,我们往往是直接初始化,而不是像这样先定义在赋值,这里只是告诉大家可以这么用
   version=$(sed -r 's/.* ([0-9]+)\..*/\1/' /etc/redhat-release)
   (log_info "centos version is ${version}")
-  return "${version}"
+  return "${version}" 
 }
 ```
+用显示return的方式的原因是因为我明确知道我方法的返回值一定是一个0-225之间的整数,且我要保留中间的日志输出。
+显示的return结果,返回值只能是[0-255]的数值,常常用在状态判断的时候
+
 这样这个函数的返回值是一个数值类型,我在脚本的任何地方调用 check_version 这个函数后,使用 $? 获取返回值
 ```bash
 check_version
 version=$?
 echo "${version}"
 ```
-注意这里不用 local version=$(check_version) 这种形式获取结果,这样也是获取不到结果的,因为显示的return结果,返回值只能是[0-255]的数值,这对于我们一般的函数来说就足够了,因为我们使用显示return的时候往往是知道返回结果一定是数字且在[0-255]之间的，常常用在状态判断的时候。
-所以
+注意这里不用 `version=$(check_version)` 这种形式获取结果,这样也是获取不到结果的
+  
 本Shell规约规定:
 ```
 【推荐】返回结果类型是Boolean类型,也就是说函数的功能是起判断作用,返回结果是真或者假的时候使用显示 return 返回结果
