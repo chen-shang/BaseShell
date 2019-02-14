@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155,SC2034
-BASE_ENUM(){
-
-  # Linux 中一般0代表真非0代表假
-  readonly TRUE=0
+if [[ "${BASE_CONSTANT_IMPORTED}" != "0" ]]; then
+  BASE_CONSTANT_IMPORTED=0
+  readonly TRUE=0                         # Linux 中一般0代表真非0代表假
   readonly FALSE=1
   readonly NONE=''
   readonly NULL='null'
@@ -19,13 +18,8 @@ BASE_ENUM(){
   #这里定义的是系统全局变量,任何地方都可以用到这个值
   #当前进程使用到了那个文件描述符的下标
   LATEST_FD_INDEX=3
-}
+fi
 
-function enum_available_fd(){
+function available_fd(){
   [[ $((LATEST_FD_INDEX++)) -eq 255 ]] && log_fail "In the process of a largest open file descriptors is 255" || return ${LATEST_FD_INDEX}
 }
-
-if [[ ${BASE_CONSTANT_IMPORTED} != 0 ]]; then
-  BASE_CONSTANT_IMPORTED=0
-  BASE_ENUM
-fi

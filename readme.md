@@ -2,7 +2,7 @@
 Shell脚本实在是太灵活了,相比标准的Java、C、C++ 等，它不过是一些现有命令的堆叠,这是他的优势也是他的劣势,太灵活导致不容易写规范。本人在写Shell脚本的过程中形成了自己一些规范,这些规范还在实践中,在此分享出来.
 
 # Shell介绍
-Shell中文译名叫 壳(ke,又读qiao) 外壳的意思,有壳就要有核.核指的是内核,内核即操作系统**内**的**核**心代码,所以简称内核,内核是操作系统对计算机硬件资源(例如显示器、硬盘、内存等等)进行调度的唯一通道,也就是说所有对计算机发出的指令,例如使蜂鸣器鸣响、点亮键盘背光、复制粘贴等等都需要经过内核来操作才行,这无论如何你是跨越不过去的。
+Shell中文译名叫 壳(ke,又读qiao) 外壳的意思,有壳就要有核.核指的是内核,内核即操作系统**内**的**核**心代码,内核是操作系统对计算机硬件资源(例如显示器、硬盘、内存等等)进行调度的唯一通道,也就是说所有对计算机发出的指令,例如使蜂鸣器鸣响、点亮键盘背光、复制粘贴等等都需要经过内核来操作才行,这无论如何你是跨越不过去的。
 
 历史上出现过很多Shell,例如 sh,bash,csh,zsh 等等,不同的Shell有不同的词法和语法,就好比不同的方言。用不同的Shell其实指的仅仅是更换了脚本解释器而已。要注意的是有些命令在不同的解释器中会有不同的表现,这也是为什么我们的脚本一移植到别人电脑上就不可用的原因之一。
 
@@ -15,50 +15,33 @@ chenshang@chenshangMacBook-Pro:~$ echo \\
 \
 chenshang@chenshangMacBook-Pro:~$ echo \\\\
 \\
-chenshang@chenshangMacBook-Pro:~$ echo \\\\\\ 
-\\\
-```
-以下是切换到zsh后 echo 命令的输出
-```
 chenshang@chenshangMacBook-Pro:~$ zsh
 chenshangMacBook-Pro% echo \\
 \
 chenshangMacBook-Pro% echo \\\\
 \
-chenshangMacBook-Pro% echo \\\\\\
-\\
-chenshangMacBook-Pro% echo \\\\\\\\
-\\
-chenshangMacBook-Pro% echo \\\\\\\\\\
-\\\
+```
+坑二: 数组使用方式不同
+```
+chenshang@chenshangMacBook-Pro:~$ bash
+chenshang@chenshangMacBook-Pro:~$ a=(1 2 3)
+chenshang@chenshangMacBook-Pro:~$ echo ${a}
+1
+
+chenshang@chenshangMacBook-Pro:~$ zsh
+chenshangMacBook-Pro% a=(1 2 3)
+chenshangMacBook-Pro% echo ${a}
+1 2 3
 chenshangMacBook-Pro%
-```
-坑二: sh 和 bash 对函数的命名要求就也不太一样,sh 不能出现特殊字符，而bash则放开了这种限制
-```
-chenshang@chenshangMacBook-Pro:~$ cat test.sh
-#!/bin/sh
-function @NotNull(){
-  echo "0"
-}
-chenshang@chenshangMacBook-Pro:~$ shellcheck test.sh
-
-In test.sh line 2:
-function @NotNull(){
-^-- SC2039: In POSIX sh, naming functions outside [a-zA-Z_][a-zA-Z0-9_]* is undefined.
-^-- SC2112: 'function' keyword is non-standard. Delete it.
-
-For more information:
-  https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, naming functions out...
-  https://www.shellcheck.net/wiki/SC2112 -- 'function' keyword is non-standar...
 ```
 总之，Shell脚本中的坑很多，林林总总，写脚本的时候一定要小心，否则脚本的移植性堪忧。这也就是为什么Shell不适合开发大型应用的原因之一。但辅助开发还是绰绰有余的。尤其是在运维服务器的过程中，与linux的亲和性让它占尽了优势。
 
-本Shell规约是以bash为标准,在Mac OS上进行验证。
+本Shell规约是以bash为标准,在Mac OS 10.14上进行验证。
 ```
 chenshang@chenshangMacBook-Pro:~$ sw_vers
 ProductName:	Mac OS X
 ProductVersion:	10.14
-chenshang@chenshangMacBook-Pro:~$ uname -a
+chenshang@chenshangMacBo    ok-Pro:~$ uname -a
 BuildVersion:	18A391Darwin chenshangMacBook-Pro.local 18.0.0 Darwin Kernel Version 18.0.0: Wed Aug 22 20:13:40 PDT 2018; root:xnu-4903.201.2~1/RELEASE_X86_64 x86_64
 chenshang@chenshangMacBook-Pro:~$ echo $0
 -bash
@@ -72,6 +55,24 @@ License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 This is free software; you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 ```
+# 运行方式
+既可以在命令行交互的运行,又可以将指令固化到文件中执行
+```
+chenshang@chenshangMacBook-Pro:~$ ./test.sh
+\
+1 2 3
+chenshang@chenshangMacBook-Pro:~$ cat test.sh
+#!/bin/zsh
+echo \\\\
+a=(1 2 3)
+echo "${a}"
+chenshang@chenshangMacBook-Pro:~$ vim test.sh
+chenshang@chenshangMacBook-Pro:~$ ./test.sh
+\\
+1
+chenshang@chenshangMacBook-Pro:~$
+```
+
 Shell既是一种脚本编程语言,也是一个连接内核和用户的软件.既然他是一门语言就免不了两大要素:词法和语法,首先有哪些词汇(保留词、关键字),词汇有哪些分类(数据类型),其次这些词汇如何表达语意(也就是语法)。Shell编程指的并不是编写这个工具,而是指利用现有的Shell工具进行编程,写出来的程序是轻量级的脚本,我们叫做Shell脚本。Shell的语法是从C继承过来的,因此我们在写Shell脚本的时候往往能看到C语言的影子。因为初代Unix内核中的Shell解释器最主要的两个贡献者是肯汤普森和丹尼斯里奇,而丹尼斯里奇是C语言的发明者,肯汤普森则用C语言重写了之前的Unix内核。
 
 # 基础语法
@@ -90,46 +91,6 @@ cat       csh       df        expr      ksh       ln        mv        pwd       
 ```
 sed、awk、grep、tr、column、ssh、scp、expect、ps、top、htop、tree、pstree、curl、wget、java相关的工具
 ```
-
-## 运行Hello World
-新建一个文件 HelloWorld.sh (参考<a href="#end">命名风格</a>规约以 `.sh` 结尾 )
-```bash
-echo "Hello World"
-```
-运行
-```
-chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ sh HelloWorld.sh 
-Hello World
-chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ bash HelloWorld.sh 
-Hello World
-chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ chmod u+x HelloWorld.sh 
-chenshang@chenshangMacBook-Pro:~/Learn/BaseShell/MyProject/Test$ ./HelloWorld.sh 
-Hello World
-```
-## Shell变量
-```bash
-function f1(){
-  local var="Hello"
-  echo "${var} World"
-}
-```
-注意，变量名和等号之间不能有空格，这可能和你熟悉的所有编程语言都不一样。同时，变量名的命名须遵循如下规则：
-(参考<a href="#style">命名风格</a>)
-
-1) 局部变量 局部变量在脚本或命令中定义，仅在当前shell实例中有效，其他shell启动的程序不能访问局部变量。
-2) 环境变量 所有的程序，包括shell启动的程序，都能访问环境变量，有些程序需要环境变量来保证其正常运行。必要的时候shell脚本也可以定义环境变量。
-
-本shell规约规定:
-```
-【强制】变量取值用 "${}", 使用 {} 包裹，给所有变量加上花括号，防止产生歧义
-【强制】变量取值用 "${}", 使用 "" 包裹，防止分词
-【强制】若需要将调用的函数的返回结果赋值给local变量,使用 $(),不推荐使用 ``
-【强制】常量使用 readonly 修饰
-```
-### 只读变量
-使用 readonly 命令可以将变量定义为只读变量，只读变量的值不能被改变。
-### 删除变量
-使用 unset 命令可以删除变量,变量被删除后不能再次使用。unset 命令不能删除只读变量。
 ## 数据类型
 ### 字符串
 shell语言是一门弱类型语言，无论输入的是字符串还是数字，shell都是按照字符串类型来进行存储的，具体属于什么数据类型，shell会根据上下文进行确定,字符串可以用单引号，也可以用双引号，也可以不用引号。单双引号的区别跟PHP类似。
@@ -138,11 +99,7 @@ shell语言是一门弱类型语言，无论输入的是字符串还是数字，
 1. 单引号里的任何字符都会原样输出，单引号字符串中的变量是无效的；
 2. 单引号字串中不能出现单独一个的单引号（对单引号使用转义符后也不行），但可成对出现，作为字符串拼接使用。
 3. 双引号里可以有变量(这在编程语言里面叫字符串插值)和转义字符
-```bash
-one=1
-first="${one}" #first就是变量one的值1
-first='${one}' #first是${one}
-```
+
 ### Shell数组
 #### 定义数组
 bash支持一维数组（不支持多维数组），并且没有限定数组的大小。类似于 C 语言，数组元素的下标由 0 开始编号。获取数组中的元素要利用下标，下标可以是整数或算术表达式，其值应大于或等于 0。在 Shell 中，用括号来表示数组，数组元素用"空格"符号分割开。
@@ -196,6 +153,31 @@ function list_size(){
 size=$(list_size "${list[*]}")
 assertEquals "${size}" "2"
 ```
+
+## Shell变量
+```bash
+function f1(){
+  local var="Hello"
+  echo "${var} World"
+}
+```
+注意，变量名和等号之间不能有空格，这可能和你熟悉的所有编程语言都不一样。同时，变量名的命名须遵循如下规则：(参考<a href="#style">命名风格</a>)
+
+1) 局部变量 局部变量在脚本或命令中定义，仅在当前shell实例中有效，其他shell启动的程序不能访问局部变量。
+2) 环境变量 所有的程序，包括shell启动的程序，都能访问环境变量，有些程序需要环境变量来保证其正常运行。必要的时候shell脚本也可以定义环境变量。
+
+本shell规约规定:
+```
+【强制】变量取值用 "${}", 使用 {} 包裹，给所有变量加上花括号，防止产生歧义
+【强制】变量取值用 "${}", 使用 "" 包裹，防止分词
+【强制】若需要将调用的函数的返回结果赋值给local变量,使用 $(),不推荐使用 ``
+【强制】常量使用 readonly 修饰
+```
+### 只读变量
+使用 readonly 命令可以将变量定义为只读变量，只读变量的值不能被改变。
+### 删除变量
+使用 unset 命令可以删除变量,变量被删除后不能再次使用。unset 命令不能删除只读变量。
+
 ## 关于注释
 除脚本首行外,所有以 `#` 开头的语句都将成为注释。
 
@@ -240,7 +222,7 @@ log_error(){
 我脚本移植到别人的计算机上执行,我更不可能知道别人的计算机是Ubuntu还是Arch或是Centos。为了提高程序的移植性,
 本Shell规约规定使用 #!/usr/bin/env bash, #!/usr/bin/env bash 会自己判断使用的Shell是目录在哪,并加载相应的环境变量。
 
-我们看一下下面一段脚本,在改变第一行头部的时候,Shellcheck给出的建议是什么
+我们看一下下面一段脚本,在改变第一行头部的时候,shellcheck给出的建议是什么
 $ cat test.sh
 
 ```bash
@@ -296,14 +278,14 @@ In base_file.sh line 4:
 
 # 关于函数
 函数定义的形式是
-```bash
+```
 function main(){
   #函数执行的操作
   #函数的返回结果
 }
 ```
 或
-```bash
+```
 main(){
   #函数执行的操作
   #函数的返回结果
@@ -316,13 +298,10 @@ main(){
 说明:本Shell规约这样做的目的就在于使脚本具有一定的封装性,看到 `function` 修饰的就知道这个函数能被外部调用, 没有被修饰的函数就仅供内部调用。你就知道如果你修改了改函数的影响范围. 如果是 被function 修饰的函数,修改后可能影响到外部调用他的脚本, 而修改未被function修饰的函数的时候,仅仅影响本文件中其他函数。
 ```
 如 core.sh 脚本内容如下是
-```
+```bash
 # 重新设置DNS地址 []<-()
 function setNameServer(){
-  > /etc/resolv.conf
-  echo nameserver 114.114.114.114 >> /etc/resolv.conf
-  echo nameserver 8.8.8.8 >> /etc/resolv.conf
-  cat /etc/resolv.conf
+  log_info "setNameServer is ok"
 }
 # info级别的日志 []<-(msg:String)
 log_info(){
@@ -338,7 +317,7 @@ log_error(){
 则我可以使用 `sh core.sh setNameServer` 的形式调用  `set_name_server` 函数,
 但就不推荐使用 `sh core.sh log_info "Hello World"` 的形式使用 `log_info` 和 `log_error` 函数,注意是不推荐不是不能。
 
-## 关于函数调用
+## 函数调用
 变量、函数调用必须在函数声明之后,也就是说在用一个函数的时候,这一行命令的前面必须出现了该函数,因为Shell的执行是从上向下解释执行的。
 
 同一个脚本内调用、执行调用另一个脚本、调用另一脚本中的命令实例
@@ -357,7 +336,7 @@ main                                       #在脚本内部调用当前脚本内
 bash ChangBaiShanFetcher.sh                #执行其他脚本
 bash ChangBaiShanFetcher.sh main           #执行其他脚本的main方法,前提是 ChangBaiShanFetcher.sh 脚本 支持按函数名调用
 ```
-## 关于函数参数
+## 函数参数
 | 参数 | 说明                                                                                                                   |   |
 |----------|------------------------------------------------------------------------------------------------------------------------|---|
 | $#       | 传递到脚本的参数个数                                                                                                   |   |
@@ -370,7 +349,7 @@ bash ChangBaiShanFetcher.sh main           #执行其他脚本的main方法,前�
 ```
 【强制】 在函数内部首先使用有意义的变量名接受参数,然后在使用这些变量进行操作,禁止直接操作$1,$2等,除非这些变量只用一次
 ```
-## 关于函数注释
+## 函数注释
 函数类型的概念是从函数编程语言中的概念偷过来的,Shell函数的函数类型指的是函数的输入到函数的输入的映射关系
 ```bash
 # 主函数 []<-()                  <-------函数注释这样写
@@ -398,8 +377,8 @@ log_info(){
 [Boolean]<-(var1:String,var2:Int)
 []<-(var1:String)
 ```
-## 关于返回值
-Shell 函数的返回值比较复杂,获取函数的返回值又有多种方式.
+## 返回值
+Shell 函数的返回值比较复杂,获取函数的返回值又有多种方式.一般来说，一个函数内的所有标准输出都作为函数的返回值。注意是标准输出。
 我们先来说,我们执行一条命令的时候, 比如 pwd 正常情况下它输出的结果是 当前所处的目录
 ```
 Last login: Sat Jan 20 17:39:16 on ttys000
@@ -410,41 +389,11 @@ chenshang@chenshangMacBook-Pro:~$ pwd
 
 所以 pwd 这条命令如果执行成功的话,命令的执行结果状态一定是0,然后返回值才是当前目录。如果这条命令执行失败的话,命令的执行结果状态一定不是0,有可能是1 代表命令不存在，然后输出 not found，也有可能执行结果状态是2 代表超时，然后什么也不输出。(不要以为pwd这种linux内带的命令就一定执行成功,有可能你拿到的就是一台阉割版的linux呢)
 
-如何获取pwd的返回值呢
-```bash
-function main(){
-  local dir=$(pwd)
-  echo "dir is ${dir}"
-}
-```
-如果想要获取pwd的执行结果的状态呢
-```bash
-function main(){
-  pwd
-  local status=$?
-  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
-
-  pwdd
-  local status=$?
-  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
-
-  local dir
-  dir=$(pwdd)
-  status=$?
-  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
-  echo "dir is ${dir}"
-
-  local dir=$(pwdd)
-  status=$?
-  echo "pwd run status is ${status}" #这个stauts一定有值,且是int类型,取值范围在0-255之间
-  echo "dir is ${dir}"
-}
-```
 ### 显示return
 return 用来显示的返回函数的返回结果,例如
 ```bash
 # 检查当前系统版本 [Integer]<-()
-function check_version(){
+function checkVersion(){
   (log_info "check_version ...") #log_info是我写的工具类中的一个函数
   local version #这里是先定义变量,在对变量进行赋值,我们往往是直接初始化,而不是像这样先定义在赋值,这里只是告诉大家可以这么用
   version=$(sed -r 's/.* ([0-9]+)\..*/\1/' /etc/redhat-release)
@@ -452,12 +401,11 @@ function check_version(){
   return "${version}" 
 }
 ```
-用显示return的方式的原因是因为我明确知道我方法的返回值一定是一个0-225之间的整数,且我要保留中间的日志输出。
 显示的return结果,返回值只能是[0-255]的数值,常常用在状态判断的时候
 
-这样这个函数的返回值是一个数值类型,我在脚本的任何地方调用 check_version 这个函数后,使用 $? 获取返回值
+这样这个函数的返回值是一个数值类型,我在脚本的任何地方调用 checkVersion 这个函数后,使用 $? 获取返回值
 ```bash
-check_version
+checkVersion
 version=$?
 echo "${version}"
 ```
@@ -465,8 +413,8 @@ echo "${version}"
   
 本Shell规约规定:
 ```
-【推荐】返回结果类型是Boolean类型,也就是说函数的功能是起判断作用,返回结果是真或者假的时候使用显示 return 返回结果
 【推荐】不推荐使用return方式返回,推荐使用echo方式返回结果
+【推荐】返回结果类型是Boolean类型,也就是说函数的功能是起判断作用,返回结果是真或者假的时候使用显示 return 返回结果
 ```
 例如
 ```bash
@@ -486,8 +434,6 @@ function check_network(){
 ```
 
 ### 隐式echo
-会将所有标准输出当做返回值
-
 echo 用来显示的返回函数的返回结果,例如
 ```bash
 # 将json字符串格式化树形结构 [String]<-(json_string:String)
@@ -543,56 +489,58 @@ BODY_END
 【强制】将BODY_BEGIN同样放在第一行；
 【强制】复合命令中的BODY部分以2个空格缩进；
 【强制】BODY_END部分独立一行放在最后；
+【推荐】parameters部分test表达式变量取值都用""包裹；
+【推荐】parameters部分test表达式统一使用=等符号, 在明确是数字的时候可以使用 -eq等参数；
 ```
 1. if
 if 的一般模式
-```
+```bash
 if [[ condition ]]; then
-  # statements
+  echo statements
 fi
 
 if [[ condition ]]; then
-  # statements
+  echo statements
 else
-  # statements
+  echo statements
 fi
 
 if [[ condition ]]; then
-  # statements
+  echo statements
 elif [[ condition ]]; then
-  # statements
+  echo statements
 else
-  # statements
+  echo statements
 fi
 ```
 2. while
-```
+```bash
 while [[ condition ]]; do
-  # statements
+  echo statements
 done
 
 while read -r item ;do
-  # statements
+  echo "${item}"
 done < 'file_name'
 ```
 3. until
-```
+```bash
 until [[ condition ]]; do
-  # statements
+  echo statements
 done
 ```
 4. for
-```
+```bash
 for (( i = 0; i < 10; i++ )); do
-  # statements
+  echo statements
 done
 
 for item in ${array}; do
-  # statements
+  echo "${item}"
 done
 ```
 5. case
-```
+```bash
 case word in
   pattern )
     #statements
@@ -606,21 +554,32 @@ esac
 【强制】 if\while\until 后面的判断 使用 双中括号`[[]]`
 ```
 # 数学计算
+注释 1：shell 的自加、自减操作符在使用上和 c 语言一样。-- 或者 ++ 出现在变量前面是前缀形式，先运算后赋值；-- 或者 ++ 出现在变量后面是后缀形式，先赋值后运算。
 ```
-【推荐】简单计算使用`$(())`包裹计算,(())内对变量的操作不用$取值
+【推荐】明确知道变量是整数,计算使用$(())包裹计算,(())内对变量的操作不用$取值
  正确 a=$((1+1))
  反例 a=$(($a++))
 【推荐】复杂计算使用bc计算器,前提是得安装bc计算器命令
 ```
-# 关于文件
-```bash
-while read line;do
-  echo ${line}
-done < 文件名
-```
 
 # 关于进程间通信
-# 关于单元测试
+## 管道
+前一个命令的标砖输出作为下一个命令的标准输入`ps -ef|grep java`
+## 有名管道
+命名管道也被称为FIFO文件，是一种特殊的文件。由于linux所有的事物都可以被视为文件，所以对命名管道的使用也就变得与文件操作非常统一。
+
+若对管道文件直接进行操作，可实现阻塞读写，如果没有读则写阻塞，如果没有写则读阻塞
+若使用文件描述符与有名管道文件进行关联，可实现非阻塞读写，如果没有读，则写不阻塞，如果没有内容则读阻塞
+使用read 可以设置读超时，并且读取管道中的值
+
+基于以上原理可以实现Concurrent包下的函数库
+# 重定向
+
+# 测试与调试
+1. sh -x 
+2. 在合适位置 set -x
+3. bashdb 单步调试
+## 单元测试
 以test-开头的都会进行测试
 ```bash
 #!/usr/bin/env bash
@@ -629,22 +588,9 @@ done < 文件名
 source ./../../BaseShell/Collection/BaseHashMap.sh
 ###################下面写单元测试#################
 
-test-map_put(){
-  map=($(new_hashMap))
-  map=($(map_put "${map[*]}" "one" "1"))
-  map=($(map_put "${map[*]}" "two" "1"))
-  map=($(map_put "${map[*]}" "three" "1"))
-  echo ${map[*]}
-}
-
 ###################上面写单元测试#################
 source ./../../BaseShell/Utils/BaseTestUtil.sh
 ```
-重定向
-测试与调试
-1. sh -x 
-2. 在合适位置 set -x
-3. bashdb 单步调试
 
 # 命名风格 
 <a name="style"></a>
@@ -708,3 +654,4 @@ function search_user_info(){
                                          "${url}/userName=${user_name}")
 }
 ``
+

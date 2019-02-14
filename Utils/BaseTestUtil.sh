@@ -9,7 +9,7 @@ assertSuccessCount=0 #断言命中次数
 
 # 断言相等
 function assertEquals(){
-  ((assertTotalCount ++))
+  assertTotalCount=$((assertTotalCount+1))
 
   # 结果校验
   local sourceValue=$1 #测试结果
@@ -22,7 +22,7 @@ function assertEquals(){
 
 # 断言为真
 function assertTrue(){
-  ((assertTotalCount ++))
+  assertTotalCount=$((assertTotalCount+1))
 
   # 结果校验
   local sourceValue=$1 #测试结果
@@ -35,7 +35,7 @@ function assertTrue(){
 
 # 断言为假
 function assertFalse(){
-  ((assertTotalCount ++))
+  assertTotalCount=$((assertTotalCount+1))
 
   # 结果校验
   local sourceValue=$1 #测试结果
@@ -54,10 +54,10 @@ test_checkResult(){
   local description=$4 #描述
   # 测试统计
   if [[ ${result} -eq ${TRUE} ]]; then
-    ((assertSuccessCount ++))
+    assertSuccessCount=$((assertSuccessCount+1))
     log_success "${description} test ok[100%],hit ${targetValue}"
   else
-    ((assertFailCount ++))
+    assertFailCount=$((assertFailCount+1))
     log_fail "${description} test fail[100%],expect ${targetValue} but ${sourceValue}"
   fi
 }

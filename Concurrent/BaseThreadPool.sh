@@ -8,7 +8,7 @@ source ./../../BaseShell/Utils/BaseUuidUtil.sh
 function new_threadPool(){
   ^NotNull "$1" && ^Numeric "$1" && ^Min "0" "$1"
 
-  enum_available_fd #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
+  available_fd #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
   local FD=$?
 
   local coreSize=$1
@@ -24,9 +24,9 @@ function threadPool_submit(){
   local threadPool=$1
   shift
   local action="$*"
-  read -r -u "${threadPool}" item #从线程池获取一个任务执行令牌，获取不到则挂起
+  read -r -u "${threadPool}" item       #从线程池获取一个任务执行令牌，获取不到则挂起,禁止提交任务,说明已经达到任务并发阈值
   {
-    ${action}
-    echo "${item}" >& "${threadPool}"
+    eval ${action}                      #执行任务动作
+    echo "${item}" >& "${threadPool}"   #执行完成退还令牌给其他人用
   } &
 }
