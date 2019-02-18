@@ -48,7 +48,7 @@ function log_success(){
  | tee -a "${LOG_DIR}/$(localdate_now).log"
 }
 
-# 用来标识失败状态的,用红色 []<-(msg:String)
+# 用来标识失败状态的,当前子进程会退出,用红色, []<-(msg:String)
 function log_fail(){
   echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" 1>&2 \
  | tee -a "${LOG_DIR}/$(localdate_now).info.log" \
