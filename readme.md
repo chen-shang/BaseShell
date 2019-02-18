@@ -493,7 +493,6 @@ BODY_END
 【推荐】parameters部分test表达式统一使用=等符号, 在明确是数字的时候可以使用 -eq等参数；
 ```
 1. if
-if 的一般模式
 ```bash
 if [[ condition ]]; then
   echo statements
@@ -653,5 +652,5 @@ function search_user_info(){
   local result=$(httpclient_get --cookie "${cookie}" \
                                          "${url}/userName=${user_name}")
 }
-``
+```
 

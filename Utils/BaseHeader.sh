@@ -17,8 +17,8 @@ if [[ "${BASE_HEADER_IMPORTED}" != "0" ]]; then
            | sed "s/function //g"          \
            | sed "s/(){//g"                \
            | sed "s/#//g"                  \
-           | sed 'N;s/\n/:/'               \
-           | awk -F ':' '{print $2,$1,$3}' \
+           | sed 'N;s/\n/ /'               \
+           | awk '{print $3,$1,$2}'        \
            | column -t
   }
 fi

@@ -77,7 +77,7 @@ test_run(){
   local methodList=("$(test_getMethodList)")
   for method in ${methodList[*]}; do
     log_info "开始执行测试函数==============》${method}《=============="
-    ${method}
+    eval "${method}"
   done
 
   echo "
