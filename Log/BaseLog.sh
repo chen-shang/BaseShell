@@ -63,6 +63,6 @@ function log_fail(){
 # 用来标识追踪日志 []<-(msg:String)
 function log_trace(){
   if [[ ${LOG_TRACE_MODEL} -eq ${TRUE} ]];then
-    echo -e "[$(localdatetime_now)][$$ $BASHPID] [TRACE]:   $*" >>${LOG_DIR}/"$(localdate_now)".trace.log 2>&1
+    echo -e "[$(localdatetime_now)][$$ $BASHPID] [TRACE]:   $*" >>"${LOG_DIR}/$(localdate_now)".trace.log 2>&1
   fi
 }

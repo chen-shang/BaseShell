@@ -3,7 +3,7 @@
 source ./../../BaseShell/Utils/BaseHeader.sh
 ######################################################################
 main(){
- log_info "hello word"
+ echo "hello word"
 }
 ######################################################################
 source ./../../BaseShell/Utils/BaseEnd.sh
