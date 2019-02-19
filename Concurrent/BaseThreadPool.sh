@@ -26,7 +26,7 @@ function threadPool_submit(){
   local action="$*"
   read -r -u "${threadPool}" item       #从线程池获取一个任务执行令牌，获取不到则挂起,禁止提交任务,说明已经达到任务并发阈值
   {
-    eval ${action}                      #执行任务动作
+    eval "${action}"                      #执行任务动作
     echo "${item}" >& "${threadPool}"   #执行完成退还令牌给其他人用
   } &
 }

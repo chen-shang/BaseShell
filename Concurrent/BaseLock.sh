@@ -18,23 +18,23 @@ function lock_action(){
   local lock=$1 ; local action=$2
   private_lock_tryLock "${lock}"
   {
-     ${action}
+    eval "${action}"
   }
   private_lock_releaseLock "${lock}"
 }
 
 function new_flock() {
   local lock="$(uuid_toString)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
-  echo ${lock}
+  echo "${lock}"
 }
 
-function flcok_action(){
+function flock_action(){
   local lock=$1 ; local action=$2
   {
     flock -n 1024 || log_fail "lock error"
     ${action}
-    rm -rf /tmp/${lock}
-  } 1024<> /tmp/${lock}
+    rm -rf "/tmp/${lock}"
+  } 1024<> "/tmp/${lock}"
 }
 
 private_lock_tryLock(){
