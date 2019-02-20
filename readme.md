@@ -711,3 +711,137 @@ function search_user_info(){
 2. `${var:num1:num2}`,num1是位置,num2是长度。表示从$var字符串的第$num1个位置开始提取长度为$num2的子串。不能为负数。
 3. `${var/pattern1/pattern2}`表示将var字符串的第一个匹配的pattern1替换为另一个pattern2。
 4. `${var//pattern1/pattern2}`表示将var字符串中的所有能匹配的pattern1替换为另一个pattern2。
+
+# 使用脚本抓取某网站报价
+```bash
+#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2155
+source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Concurrent/BaseThreadPool.sh
+source ./../../BaseShell/Lang/BaseString.sh
+source ./PcCbmpService.sh
+#===============================================================================
+# @return Header
+# 登陆 [Header]<-(username,password)
+function login(){
+  @NotNull "$1" "username can not be null" && @NotNull "$2" "password can not be null"
+  local username=$1;local password=$2
+  log_info "登陆 长白山官网:$username=$username,password=$password"
+  local timestamp=$(gdate +%s)
+  curl -s -i 'http://www.ichangbaishan.com/auth/sign-in/' \
+  -H 'Connection: keep-alive' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Origin: http://www.ichangbaishan.com' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'Content-Type: application/x-www-form-urlencoded' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36' \
+  -H 'Referer: http://www.ichangbaishan.com/auth/sign-in/' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7' \
+  -H "Cookie: csrftoken=OjWiKKerEdFPjyWA09vlHrzJsK9gtFHz; sessionid=b27a121648b1ebb524174d1ac0e1fbb6; Hm_lvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}; Hm_lpvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}" \
+  --data "csrfmiddlewaretoken=OjWiKKerEdFPjyWA09vlHrzJsK9gtFHz&username=${username}&password=${password}" \
+  --compressed
+}
+
+COOKIES="${NONE}"
+# 全局Cookies
+getCookiesFromHeader(){
+  local header=$1
+  echo "${header}" |grep "Set-Cookie"
+}
+
+SESSION="${NONE}"
+#SESSION="sessionid=2cc6c21b7458a3927d486ee46919d6d7"
+getSessionFromCookie(){
+  local cookie=$1
+  echo "${cookie}" |awk -F '=' '{print $2}'|awk -F ';' '{print $1}'
+}
+# Poi 列表
+getPoiList(){
+  local timestamp=$(gdate +%s)
+  curl -s 'http://www.ichangbaishan.com/ticket/' \
+  -H 'Connection: keep-alive' \
+  -H 'Cache-Control: max-age=0' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' \
+  -H 'Referer: http://www.ichangbaishan.com/' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7' \
+  -H "Cookie: csrftoken=OjWiKKerEdFPjyWA09vlHrzJsK9gtFHz; Hm_lvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}; sessionid=d891e32c723bd018f765033d5aaa88db; Hm_lpvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}" \
+  --compressed\
+  |grep "ticket_config=\""\
+  |awk -F '"' '{print $2}'\
+  |awk -F '_' '{print $1"_"$3"_"$4}'\
+  |sort -u
+}
+# Deal 列表
+getDealList(){
+  local sourcePoiId=$1;local date=$2
+  local tag=$(echo "${sourcePoiId}"|awk -F '_' '{print $1}') #园区标识
+  local sta=$(echo "${sourcePoiId}"|awk -F '_' '{print $2}') #入园时间
+  local end=$(echo "${sourcePoiId}"|awk -F '_' '{print $3}') #离园时间
+  local ticket_config="${tag}_${date}_${sta}_${end}_景区"
+  local timestamp=$(gdate +%s)
+  log_debug "timestamp=${timestamp},SESSION=${SESSION},ticket_config=${ticket_config}"
+  curl -s -i "http://www.ichangbaishan.com/ticket/add_customer?ticket_config=${ticket_config}" \
+  -H 'Connection: keep-alive' \
+  -H 'Upgrade-Insecure-Requests: 1' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36' \
+  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' \
+  -H 'Referer: http://www.ichangbaishan.com/ticket/' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7' \
+  -H "Cookie: csrftoken=OjWiKKerEdFPjyWA09vlHrzJsK9gtFHz; Hm_lvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}; sessionid=${SESSION}; Hm_lpvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}" \
+  --compressed
+
+#  log_debug "curl -s -i "http://www.ichangbaishan.com/ticket/add_customer?ticket_config=${ticket_config}" \
+#  -H 'Connection: keep-alive' \
+#  -H 'Upgrade-Insecure-Requests: 1' \
+#  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36' \
+#  -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8' \
+#  -H 'Referer: http://www.ichangbaishan.com/ticket/' \
+#  -H 'Accept-Encoding: gzip, deflate' \
+#  -H 'Accept-Language: zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7' \
+#  -H \"Cookie: csrftoken=OjWiKKerEdFPjyWA09vlHrzJsK9gtFHz; Hm_lvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}; sessionid=${SESSION}; Hm_lpvt_3539a59f0b41c585d6a62a9907a6e69c=${timestamp}\" \
+#  --compressed"
+}
+
+# 获取POI下deal信息 [String]<-(poi)
+function getDealInfo(){
+  local poi=$1
+  local dealList=$(getDealList "${poi}" "2019-02-21")
+  if [[ $(isBlank "${dealList}") ]] ;then
+    log_error "dealList is null"
+  fi
+  local code=$(echo "${dealList}"|grep -A1 'class="ticket-buy-form"'|awk '{print $4}'|awk -F '=' '{print $2}'|tr -d "\"")
+  local dealName=$(echo "${dealList}"|grep -A1 'class="ticket-titles"'|tail -1)
+  local dealPrice=$(echo "${dealList}"|grep -A1 'class="total-price"'|tail -1|tr -d "<i>￥/"|awk '{print $1}')
+  echo "${poi} ${dealName:-$NULL} ${code:-$NULL} ${dealPrice:-$NULL} ${TRUE}"|column -t
+}
+
+main(){
+  local header=$(login "15197805144" "****") # 登陆
+  COOKIES=$(getCookiesFromHeader "${header}")  # 获取并设置COOKIES
+  log_info "COOKIES=${COOKIES}"
+  SESSION=$(getSessionFromCookie "${COOKIES}") # 获取并设置SESSION
+  log_info "SESSION=${SESSION}"
+  local poiList=$(getPoiList)                  # 获取商品类目POI
+  log_info "poiList=${poiList}"
+
+  new_threadPool 2
+  local pool=$?
+  for poi in ${poiList};do
+#    threadPool_submit "${pool}" "getDealInfo ${poi}" # 并发获取产品信DEAL
+    getDealInfo ${poi} # 并发获取产品信DEAL
+  done
+  wait
+  terminal-notifier -sound default -title '' -message "执行成功!!" -activate "com.googlecode.iterm2"
+}
+
+######################################################################
+source ./../../BaseShell/Utils/BaseEnd.sh
+```
+
+输出结果
+![](https://github.com/chen-shang/Picture/blob/master/result.jpg)
