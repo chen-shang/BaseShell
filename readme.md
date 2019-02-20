@@ -84,10 +84,6 @@ chenshang@chenshangMacBook-Pro:~$ cat test.sh
 echo \\\\
 a=(1 2 3)
 echo "${a}"
-chenshang@chenshangMacBook-Pro:~$ vim test.sh
-chenshang@chenshangMacBook-Pro:~$ ./test.sh
-\
-1 2 3
 chenshang@chenshangMacBook-Pro:~$ sh test.sh
 \
 1 2 3
