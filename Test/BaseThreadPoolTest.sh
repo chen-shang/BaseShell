@@ -22,12 +22,12 @@ function supplier(){
   echo "$1"
 }
 test-threadPool_submit(){
-  new_threadPool 500
+  new_threadPool 5
   local pool=$?
-  runnable="echo $(gdate +%s.%N):I am running"
+#  runnable="echo $(gdate +%s.%N):I am running"
   # 没有输入参数和输出参数的
-  for i in {1..5000};do
-    threadPool_submit "${pool}" "${runnable}"
+  for i in {1..10};do
+    threadPool_submit "${pool}" "runnable"
   done
 
 #  new_threadPool 300
@@ -37,6 +37,7 @@ test-threadPool_submit(){
 #  done
   wait
   say "运行完毕"
+  terminal-notifier -sound default -title '' -message "执行成功!!" -activate "com.googlecode.iterm2"
 
 #  new_threadPool 10
 #  local pool2=$?
