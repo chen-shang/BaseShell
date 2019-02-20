@@ -36,7 +36,7 @@ chenshangMacBook-Pro% echo ${a}
 1 2 3
 chenshangMacBook-Pro%
 ```
-总之,Shell脚本中的坑很多,林林总总,写脚本的时候一定要小心,否则脚本的移植性堪忧。这也就是为什么Shell不适合开发大型应用的原因之一。但辅助开发还是绰绰有余的。尤其是在运维服务器的过程中,与linux的亲和性让它占尽了优势。
+总之,Shell脚本中的坑很多,林林总总,写脚本的时候一定要小心,否则脚本的移植性堪忧。这也就是为什么Shell不适合开发大型应用的原因之一。但辅助开发还是绰绰有余的。尤其是在运维服务器和对文本处理的过程中,与linux的亲和性让它占尽了优势。
 
 本Shell规约是以bash为标准,在Mac OS 10.14上进行验证。
 ```
@@ -79,9 +79,6 @@ sed、awk、grep、tr、column、ssh、scp、expect、ps、top、htop、tree、p
 ## 运行方式
 既可以在命令行交互的运行,又可以将指令固化到文件中执行
 ```
-chenshang@chenshangMacBook-Pro:~$ ./test.sh
-\
-1 2 3
 chenshang@chenshangMacBook-Pro:~$ cat test.sh
 #!/bin/zsh
 echo \\\\
@@ -89,8 +86,20 @@ a=(1 2 3)
 echo "${a}"
 chenshang@chenshangMacBook-Pro:~$ vim test.sh
 chenshang@chenshangMacBook-Pro:~$ ./test.sh
+\
+1 2 3
+chenshang@chenshangMacBook-Pro:~$ sh test.sh
+\
+1 2 3
+chenshang@chenshangMacBook-Pro:~$ zsh test.sh
 \\
 1
+chenshang@chenshangMacBook-Pro:~$ chmod u+x test.sh
+chenshang@chenshangMacBook-Pro:~$ ll test.sh
+-rw-rw-rw-  1 chenshang  staff    40 Feb 18 17:32 test.sh
+chenshang@chenshangMacBook-Pro:~$ ./test.sh
+\
+1 2 3
 chenshang@chenshangMacBook-Pro:~$
 ```
 
