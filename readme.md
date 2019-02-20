@@ -82,8 +82,8 @@ sed、awk、grep、tr、column、ssh、scp、expect、ps、top、htop、tree、p
 chenshang@chenshangMacBook-Pro:~$ cat test.sh
 #!/bin/zsh
 echo \\\\
-a=(1 2 3)
-echo "${a}"
+array=(1 2 3)
+echo "${array}"
 chenshang@chenshangMacBook-Pro:~$ sh test.sh
 \
 1 2 3
@@ -113,40 +113,60 @@ chenshang@chenshangMacBook-Pro:~$
 $ cat test.sh
 
 ```bash
-function main(){
-  local string="Hello World!!!"
-  echo $string
-}
+echo \\\\
+array=(1 2 3)
+echo "${array}"
+```
+不使用首行的时候
+```
+In test.sh line 1:
+echo \\\\
+^-- SC2148: Tips depend on target shell and yours is unknown. Add a shebang.
+
+
+In test.sh line 3:
+echo "${array}"
+      ^------^ SC2128: Expanding an array without an index only gives the first element.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2148 -- Tips depend on target shell and y...
+  https://www.shellcheck.net/wiki/SC2128 -- Expanding an array without an ind...
 ```
 
 使用 #!/bin/bash 或 #!/usr/bin/env bash
 ```
-$ Shellchek test.sh
-In base_file.sh line 4:
-  echo $string
-       ^-- SC2086: Double quote to prevent globbing and word splitting.
+In test.sh line 4:
+echo "${array}"
+      ^------^ SC2128: Expanding an array without an index only gives the first element.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2128 -- Expanding an array without an ind...
 ```
 
 使用 #!/bin/zsh
 ```
-$ Shellchek test.sh
-In base_file.sh line 1:
+In test.sh line 1:
 #!/bin/zsh
 ^-- SC1071: ShellCheck only supports sh/bash/dash/ksh scripts. Sorry!
+
+For more information:
+  https://www.shellcheck.net/wiki/SC1071 -- ShellCheck only supports sh/bash/...
 ```
 
 使用 #!/bin/sh
 ```
-$ Shellchek test.sh
-In base_file.sh line 2:
-function main(){
-^-- SC2112: 'function' keyword is non-standard. Delete it.
-In base_file.sh line 3:
-  local string="Hello World!!!"
-  ^-- SC2039: In POSIX sh, 'local' is undefined.
-In base_file.sh line 4:
-  echo $string
-       ^-- SC2086: Double quote to prevent globbing and word splitting.
+In test.sh line 3:
+array=(1 2 3)
+      ^-----^ SC2039: In POSIX sh, arrays are undefined.
+
+
+In test.sh line 4:
+echo "${array}"
+      ^------^ SC2128: Expanding an array without an index only gives the first element.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2039 -- In POSIX sh, arrays are undefined.
+  https://www.shellcheck.net/wiki/SC2128 -- Expanding an array without an ind...
 ```
 
 这一行不写大多数时候我们运行脚本的时候也没有问题,但在使用Shellcheck进行检查的时候,会提示
