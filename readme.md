@@ -75,7 +75,10 @@ cat       csh       df        expr      ksh       ln        mv        pwd       
 ```
 sed、awk、grep、tr、column、ssh、scp、expect、ps、top、htop、tree、pstree、curl、wget、java相关的工具
 ```
-
+本Shell规约规定
+```
+【强制】Linux 工具的使用不必死记硬背,不必死记硬背,不必死记硬背,即查即用即可。
+```
 ## 运行方式
 既可以在命令行交互的运行,又可以将指令固化到文件中执行
 ```
