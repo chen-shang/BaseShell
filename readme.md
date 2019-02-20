@@ -467,8 +467,8 @@ echo 用来显示的返回函数的返回结果,例如
 ```bash
 # 将json字符串格式化树形结构 [String]<-(json_string:String)
 function json_format(){
-  local json_string=$1
-  echo "${json_string}"|jq . #jq是Shell中处理json的一个工具
+  local jsonString=$1
+  echo "${jsonString}"|jq . #jq是Shell中处理json的一个工具
 }
 ```
 函数中所有的echo照理都应该输出到控制台上 例如
@@ -490,9 +490,9 @@ echo "${json}" #如果没有这句,上面的语句执行完成后,不会在控�
 ```bash
 # 将json字符串格式化树形结构 [String]<-(json_string:String)
 function json_format(){
-  local json_string=$1
-  echo "为格式化之前:${json_string}" #其实新添加的这一句只是用来记录一行日志的,但是返回结果会被外层变量接收
-  echo "${json_string}"|jq . #jq是Shell中处理json的一个工具
+  local jsonString=$1
+  echo "为格式化之前:${jsonString}" #其实新添加的这一句只是用来记录一行日志的,但是返回结果会被外层变量接收
+  echo "${jsonString}"|jq . #jq是Shell中处理json的一个工具
 }
 ```
 echo "为格式化之前:${json_string}" 其实新添加的只一句只是用来记录一行日志的,但是json=$(json_format "{\"1\":\"one\"}")
@@ -502,10 +502,10 @@ echo "为格式化之前:${json_string}" 其实新添加的只一句只是用来
 ```bash
 # 将json字符串格式化树形结构 [String]<-(json_string:String)
 function json_format(){
-  local json_string=$1
-  log_trace "为格式化之前:${json_string}" #其实新添加的只一句只是用来记录一行日志的
-  log_info  "为格式化之前:${json_string}" #其实新添加的只一句只是用来记录一行日志的
-  echo "${json_string}"|jq . #jq是Shell中处理json的一个工具
+  local jsonString=$1
+  log_trace "为格式化之前:${jsonString}" #其实新添加的只一句只是用来记录一行日志的
+  log_info  "为格式化之前:${jsonString}" #其实新添加的只一句只是用来记录一行日志的
+  echo "${jsonString}"|jq . #jq是Shell中处理json的一个工具
 }
 ```
 详情请看 BaseLog.sh 中对日志的处理
