@@ -11,7 +11,7 @@ action(){
 
 flock=$(new_flock)
 for i in {1..5} ; do
-  flcok_action "${flock}" "action" &
+  flock_action "${flock}" "action" &
 done
 
 wait

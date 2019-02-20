@@ -85,7 +85,7 @@ test_run(){
    执行断言[${assertTotalCount}]个
    成功:${assertSuccessCount}
    失败:${assertFailCount}
-  "
+  " |boxes -d dog -a c|lolcat
 }
 
 # 测试函数执行入口
