@@ -8,13 +8,14 @@ Shell中文译名叫 壳(ke,又读qiao) 外壳的意思,有壳就要有核.核�
 
 坑一:echo 在 zsh 和其他 Shell解释器中对特殊字符转义的输出就不同。
 
-以下是切换到bash后 echo 命令的输出
 ```
 chenshang@chenshangMacBook-Pro:~$ bash
 chenshang@chenshangMacBook-Pro:~$ echo \\
 \
 chenshang@chenshangMacBook-Pro:~$ echo \\\\
 \\
+```
+```
 chenshang@chenshangMacBook-Pro:~$ zsh
 chenshangMacBook-Pro% echo \\
 \
