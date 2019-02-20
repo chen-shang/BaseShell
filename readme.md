@@ -28,7 +28,8 @@ chenshang@chenshangMacBook-Pro:~$ bash
 chenshang@chenshangMacBook-Pro:~$ a=(1 2 3)
 chenshang@chenshangMacBook-Pro:~$ echo ${a}
 1
-
+```
+```
 chenshang@chenshangMacBook-Pro:~$ zsh
 chenshangMacBook-Pro% a=(1 2 3)
 chenshangMacBook-Pro% echo ${a}
