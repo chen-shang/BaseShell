@@ -608,7 +608,7 @@ esac
 
 基于以上原理可以实现Concurrent包下的函数库
 
-# 测试与调试
+# debug
 1. sh -x 
 2. 在合适位置 set -x
 3. bashdb 单步调试
