@@ -169,7 +169,7 @@ For more information:
   https://www.shellcheck.net/wiki/SC2128 -- Expanding an array without an ind...
 ```
 
-这一行不写大多数时候我们运行脚本的时候也没有问题,但在使用Shellcheck进行检查的时候,会提示
+这一行不写大多数时候我们运行脚本的时候也没有问题,但在使用Shellcheck进行静态代码检查的时候,会提示
 ```
 ^-- SC2148: Tips depend on target Shell and yours is unknown. Add a shebang.
 ```
@@ -321,9 +321,9 @@ main(){
 ```
 【推荐】使用关键字 `function` 显示定义的函数为 public 的函数,可以供 外部脚本以 `sh 脚本 函数 函数入参` 的形式调用,可以认为成Java当中的public的方法
 【推荐】未使用关键字 `function` 显示定义的函数为 private 的函数, 仅供本脚本内部调用,可以认为成Java中的私有方法,注意这种private是人为规定的,并不是Shell的语法,不推荐以 `sh 脚本 函数 函数入参` 的形式调用,注意是不推荐而不是不能。
-
-说明:本Shell规约这样做的目的就在于使脚本具有一定的封装性,看到 `function` 修饰的就知道这个函数能被外部调用, 没有被修饰的函数就仅供内部调用。你就知道如果你修改了改函数的影响范围. 如果是 被function 修饰的函数,修改后可能影响到外部调用他的脚本, 而修改未被function修饰的函数的时候,仅仅影响本文件中其他函数。
 ```
+说明:本Shell规约这样做的目的就在于使脚本具有一定的封装性,看到 `function` 修饰的就知道这个函数能被外部调用, 没有被修饰的函数就仅供内部调用。你就知道如果你修改了改函数的影响范围. 如果是 被function 修饰的函数,修改后可能影响到外部调用他的脚本, 而修改未被function修饰的函数的时候,仅仅影响本文件中其他函数。
+
 如 core.sh 脚本内容如下是
 ```bash
 # 重新设置DNS地址 []<-()
