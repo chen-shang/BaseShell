@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
-
-# 注: 数组最大长度255
-#${arrayList[*]} 数组的传递方式
 source ./../../BaseShell/Utils/BaseHeader.sh
 
-#list 本身不能带空格
-######################################################################
+# @attention list最大长度255
+# @attention list本身不能带空格
+# @attention list的传递方式
+#===============================================================
 
 # @return a new list with your element
 function new_arrayList(){

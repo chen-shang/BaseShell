@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
-
 source ./../../BaseShell/Date/BaseTimeUnit.sh
 source ./../../BaseShell/Collection/BaseArrayList.sh
-# shellcheck disable=SC1091
-######################################################################
+#===============================================================
+
 function month_EN_now(){
   local month=$(date +%m) # month (01..12)
   echo "${MONTH_ENGLISH_ENUM[month-1]}"

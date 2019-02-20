@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Constant/BaseConstant.sh
+#===============================================================
 
 # @return {@code true} if the arguments are equal to each other
 function equals(){

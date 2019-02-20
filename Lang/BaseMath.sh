@@ -2,6 +2,8 @@
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Utils/BaseHeader.sh
 source ./../../BaseShell/Lang/BaseString.sh
+#===============================================================
+
 # D开头的数字代表十进制、B代表二进制、H代表十六进制、O代表八进制
 function math_abs(){
   local param=$1

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # shellcheck disable=SC1091
 #################引入需要测试的脚本################
 source ./../../BaseShell/Lang/BaseObject.sh

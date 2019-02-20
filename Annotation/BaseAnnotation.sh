@@ -2,6 +2,8 @@
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Constant/BaseConstant.sh
 source ./../../BaseShell/Log/BaseLog.sh
+#===============================================================
+
 # 判断传入参数是否为空
 function ^NotNull(){
   local param=$1;local err_msg=$2

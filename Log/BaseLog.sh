@@ -4,13 +4,13 @@ source ./../../BaseShell/Constant/BaseConstant.sh
 source ./../../BaseShell/Date/BaseLocalDate.sh
 source ./../../BaseShell/Date/BaseLocalDateTime.sh
 
+# @attention 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
+#===============================================================
+
 LOG_DIR="${HOME}/.baseshell"
 if [[ ! -d ${LOG_DIR} ]]; then mkdir -p "${LOG_DIR}" ;fi
 LOG_TRACE_MODEL="${TRUE}"
 LOG_DEBUG_MODEL="${TRUE}"
-
-######################################################################
-# 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
 
 # 默认关闭,debug级别的日志会忽略
 # debug级别的日志 []<-(msg:String)

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Utils/BaseHeader.sh
-# shellcheck disable=SC1091,SC1117
-######################################################################
+#===============================================================
+
 timeout=60
 # @param ip   登陆ip地址
 # @param port 登陆端口号

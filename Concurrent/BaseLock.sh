@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-
 source ./../../BaseShell/Utils/BaseHeader.sh
 source ./../../BaseShell/Utils/BaseUuidUtil.sh
+#===============================================================
 
 function new_lock(){
   enum_available_fd #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
