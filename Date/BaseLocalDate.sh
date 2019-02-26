@@ -3,8 +3,6 @@
 source ./../../BaseShell/Date/BaseTimeUnit.sh
 #===============================================================
 
-LOCALDATE_FORMAT="+%Y-%m-%d"
-
 function localdate(){
   local myLocaldate="${FUNCNAME[0]}"
   case $1 in
@@ -34,27 +32,27 @@ function localdate_of(){
 # 格式 2018-03-09
 # 当前日期 [String]<-()
 function localdate_now(){
-  gdate "${LOCALDATE_FORMAT}"
+  date "${LOCALDATE_FORMAT}"
 }
 # 格式 2018
 # 当前日期 [String]<-()
 function localdate_now_year(){
-  gdate +%Y
+  date +%Y
 }
 # 格式 03
 # 当前日期 [String]<-()
 function localdate_now_month(){
-  gdate +%m
+  date +%m
 }
 # 格式 09
 # 当前日期 [String]<-()
 function localdate_now_day(){
-  gdate +%d
+  date +%d
 }
 # 格式 Saturday
 # 当前日期 [String]<-()
 function localdate_now_week(){
-  gdate +%A
+  date +%A
 }
 # 格式 Saturday
 # 当前日期 [String]<-()
