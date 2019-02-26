@@ -17,13 +17,13 @@ function new_queue(){
 
   available_fd
   local QUEUE=$? #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
-  local QUEUE_NAME="$(uuid_toString)"
+  local QUEUE_NAME="$(uuid_randomUUID)"
   [[ -e "${QUEUE_NAME}" ]] || mkfifo "${QUEUE_NAME}"
   eval "exec ${QUEUE}<>${QUEUE_NAME} && rm -rf ${QUEUE_NAME}"
 
   available_fd
   local LOCK_POOL=$? #
-  local LOCK_POOL_NAME="$(uuid_toString)"
+  local LOCK_POOL_NAME="$(uuid_randomUUID)"
   [[ -e "${LOCK_POOL_NAME}" ]] || mkfifo "${LOCK_POOL_NAME}"
   eval "exec ${LOCK_POOL}<>${LOCK_POOL_NAME} && rm -rf ${LOCK_POOL_NAME}"
   for ((i=0;i<size;i++));do echo "${i}" >& "${LOCK_POOL}";done

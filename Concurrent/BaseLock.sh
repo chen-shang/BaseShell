@@ -7,7 +7,7 @@ source ./../../BaseShell/Utils/BaseUuidUtil.sh
 function new_lock(){
   enum_available_fd #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
   local FD=$?
-  local lockName="$(uuid_toString)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
+  local lockName="$(uuid_randomUUID)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
   [[ -e "${lockName}" ]] || mkfifo "${lockName}" #如果有名管道不存在,则创建一个有名管道当做线程池,利用有名管道作为阻塞队列来调度任务的执行
   eval "exec ${FD}<>${lockName} && rm -rf ${lockName}"
   for ((i=0;i<1;i++));do echo "${i}" >& "${FD}";done
@@ -24,7 +24,7 @@ function lock_action(){
 }
 
 function new_flock() {
-  local lock="$(uuid_toString)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
+  local lock="$(uuid_randomUUID)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
   echo "${lock}"
 }
 

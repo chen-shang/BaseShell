@@ -25,11 +25,11 @@ test-threadPool_submit(){
   new_threadPool 5
   local pool=$?
 
-#  runnable="echo $(gdate +%s.%N):I am running"
-  # 没有输入参数和输出参数的
-#  for i in {1..100};do
-#    threadPool_submit "${pool}" "runnable"
-#  done
+  runnable="echo $(gdate +%s.%N):I am running"
+#   没有输入参数和输出参数的
+  for i in {1..100};do
+    threadPool_submit "${pool}" "runnable"
+  done
 
 #  new_threadPool 300
 #  local pool=$?
@@ -37,13 +37,13 @@ test-threadPool_submit(){
 #    threadPool_submit "${pool}" "runnable"
 #  done
 
-  a=10
-  for i in {1..10};do
-    ((a++))
-  done
-  wait
+#  a=10
+#  for i in {1..10};do
+#    ((a++))
+#  done
+#  wait
   say "运行完毕"
-  echo "${a}"
+#  echo "${a}"
   terminal-notifier -sound default -title '' -message "执行成功!!" -activate "com.googlecode.iterm2"
 
 #  new_threadPool 10
