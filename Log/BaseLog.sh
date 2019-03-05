@@ -16,46 +16,46 @@ LOG_DEBUG_MODEL="${TRUE}"
 # debug级别的日志 []<-(msg:String)
 function log_debug(){
   if [[ ${LOG_DEBUG_MODEL} -eq ${TRUE} ]];then
-    echo -e "[$(localdatetime_now)][$$ $BASHPID] [DEBUG]:   $*" 1>&2 \
-   | tee -a "${LOG_DIR}/$(localdate_now).debug.log" \
-   | tee -a "${LOG_DIR}/$(localdate_now).log"
+    echo -e "[$(localdatetime_now)][$$ $BASHPID] [DEBUG]:   $*" 1>&2
+    echo -e "[$(localdatetime_now)][$$ $BASHPID] [DEBUG]:   $*" >> "${LOG_DIR}/$(localdate_now).debug.log" 2>&1
+    echo -e "[$(localdatetime_now)][$$ $BASHPID] [DEBUG]:   $*" >> "${LOG_DIR}/$(localdate_now).log" 2>&1
   fi
 }
 
 # info级别的日志 []<-(msg:String)
 function log_info(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*" 1>&2 \
- | tee -a "${LOG_DIR}/$(localdate_now).info.log" \
- | tee -a "${LOG_DIR}/$(localdate_now).log"
+  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*" 1>&2
+  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*" >> "${LOG_DIR}/$(localdate_now).info.log"  2>&1
+  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*" >> "${LOG_DIR}/$(localdate_now).log"  2>&1
 }
 
 # warn级别的日志 []<-(msg:String)
 function log_warn(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*" 1>&2 \
- | tee -a "${LOG_DIR}/$(localdate_now).info.log" \
- | tee -a "${LOG_DIR}/$(localdate_now).log"
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*" 1>&2
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*" >> "${LOG_DIR}/$(localdate_now).info.log" 2>&1
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*" >> "${LOG_DIR}/$(localdate_now).log" 2>&1
 }
 
 # error级别的日志 []<-(msg:String)
 function log_error(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*" 1>&2 \
- | tee -a "${LOG_DIR}/$(localdate_now).error.log" \
- | tee -a "${LOG_DIR}/$(localdate_now).log"
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*" 1>&2
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*" >> "${LOG_DIR}/$(localdate_now).error.log" 2>&1
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*" >> "${LOG_DIR}/$(localdate_now).log" 2>&1
 }
 
 # 用来标识成功状态的,用绿色 []<-(msg:String)
 function log_success(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*" 1>&2 \
- | tee -a "${LOG_DIR}/$(localdate_now).info.log" \
- | tee -a "${LOG_DIR}/$(localdate_now).log"
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*" 1>&2
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*" >> "${LOG_DIR}/$(localdate_now).info.log" 2>&1
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*" >> "${LOG_DIR}/$(localdate_now).log" 2>&1
 }
 
 # @attention 当前子进程会退出
 # 用来标识失败状态的,用红色, []<-(msg:String)
 function log_fail(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" 1>&2 \
- | tee -a "${LOG_DIR}/$(localdate_now).info.log" \
- | tee -a "${LOG_DIR}/$(localdate_now).log"
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" 1>&2
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" >> "${LOG_DIR}/$(localdate_now).info.log" 2>&1
+  echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" >> "${LOG_DIR}/$(localdate_now).log" 2>&1
  exit
 }
 
