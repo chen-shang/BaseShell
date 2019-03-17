@@ -34,7 +34,7 @@ function ssh_checkLogin(){
 
   local status=$?
   case ${status} in
-    0)   log_info  "登陆成功 ${key}" ;;
+    0)   log_trace  "登陆成功 ${key}" ;;
     1)   log_error "连接过多 ${key}" ;;
     2)   log_error "拒绝连接 ${key}" ;;
     3)   log_error "密码错误 ${key}" ;;
