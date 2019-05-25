@@ -49,17 +49,41 @@ function string_isNotBlank(){
 
 # 去掉字符串前后空格
 function string_trim(){
-  echo $(echo "$1") #可去掉首尾的空格
+  action(){
+    echo $(echo "$*") #可去掉首尾的空格
+  }
+  local param=$*
+  if [[ $# -ne 0 ]];then
+    action "${param}"
+    return
+  fi
+  read -t 1 param && action "${param}"
 }
 
 # 转大写
 function string_toUpperCase(){
-  echo "$1" | tr '[:lower:]' '[:upper:]'
+  action(){
+    echo "$*" | tr '[:lower:]' '[:upper:]'
+  }
+  local param=$*
+  if [[ $# -ne 0 ]];then
+    action "${param}"
+    return
+  fi
+  read -t 1 param && action "${param}"
 }
 
 # 转小写
 function string_toLowerCase(){
-  echo "$1" | tr '[:upper:]' '[:lower:]'
+  action(){
+    echo "$*" | tr '[:upper:]' '[:lower:]'
+  }
+  local param=$*
+  if [[ $# -ne 0 ]];then
+    action "${param}"
+    return
+  fi
+  read -t 1 param && action "${param}"
 }
 
 # 判断两个字符串是否相等
