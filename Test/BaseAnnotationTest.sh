@@ -5,32 +5,32 @@ source ./../../BaseShell/Annotation/BaseAnnotation.sh
 ###################下面写单元测试#################
 
 f1(){
-  ^NotNull "$1" "param1 can not be null"
+  ANO_NotNull "$1" "param1 can not be null"
   echo "ok"
 }
 
 f2(){
-  ^NotNull "$2" "param2 can not be null"
+   ANO_NotNull "$2" "param2 can not be null"
   echo "ok"
 }
 
 f3(){
-  ^NotNull "$1" "param1 can not be null" && ^Numeric "$1" "param1 nust be xxx" && ^NotNull "$2" "param2 can not be null" && ^Min "1" "$2" && ^Max "10" "$2"
+   ANO_NotNull "$1" "param1 can not be null" && ^Numeric "$1" "param1 nust be xxx" && ^NotNull "$2" "param2 can not be null" && ^Min "1" "$2" && ^Max "10" "$2"
   echo "ok"
 }
 
 f4(){
-  @NotNull "$1" "param1 can not be null"
+  ANO_NotNull "$1" "param1 can not be null"
   echo "ok"
 }
 
 f5(){
-  @NotNull "$2" "param2 can not be null"
+  ANO_NotNull "$2" "param2 can not be null"
   echo "ok"
 }
 
 f6(){
-  @NotNull "$1" "param1 can not be null" && ^Numeric "$1" "param1 nust be xxx" && ^NotNull "$2" "param2 can not be null" && ^Min "1" "$2" && ^Max "10" "$2"
+  ANO_NotNull "$1" "param1 can not be null" && ^Numeric "$1" "param1 nust be xxx" && ^NotNull "$2" "param2 can not be null" && ^Min "1" "$2" && ^Max "10" "$2"
   echo "ok"
 }
 
