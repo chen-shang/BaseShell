@@ -75,7 +75,7 @@ function localdate_dayOf(){
 
 # 返回 ${duration} ${timeUnit}后的时间
 function localdate_plus(){
-  ^NotNull "$1" &&  ^NotNull "$2" && ^NotNull "$3"
+  _NotNull "$1" &&  _NotNull "$2" && _NotNull "$3"
   local myLocaldate=$1 ; local duration=$2 ; local timeUnit=$3
   gdate -d "${myLocaldate} ${duration} ${timeUnit}" "${LOCALDATE_FORMAT}"
 }

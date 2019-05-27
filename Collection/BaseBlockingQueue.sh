@@ -12,7 +12,7 @@ fi
 
 # 初始化队列
 function new_queue(){
-  ^NotNull $1 && ^Numeric $1 && ^Min "0" "$1"
+  _NotNull $1 && _Numeric $1 && _Min "0" "$1"
   local size=$1
 
   available_fd

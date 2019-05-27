@@ -6,7 +6,7 @@ source ./../../BaseShell/Utils/BaseUuidUtil.sh
 
 # new a thread pool
 function new_threadPool(){
-  ^NotNull "$1" && ^Numeric "$1" && ^Min "0" "$1"
+  _NotNull "$1" && _Numeric "$1" && _Min "0" "$1"
 
   available_fd #在同一进程中,使用 4..250 之间的文件描述符关联有名管道, #下次new_threadPool,文件描述符+1
   local FD=$?

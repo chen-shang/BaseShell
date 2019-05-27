@@ -9,7 +9,7 @@ timeout=60
 # @param pass 登陆密码
 # 检查机器登陆 [String]<-(ip:String,port:Int,pass:String)
 function ssh_checkLogin(){
-  ^NotNull "$1" "ip can not be null" && ^NotNull "$2" "port can not be null" && ^NotNull "$3" "password can not bull"
+  _NotNull "$1" "ip can not be null" && _NotNull "$2" "port can not be null" && _NotNull "$3" "password can not bull"
   local ip=$1 ;local port=$2 ;local user="root" ;local pass=$3
   local key="ssh root@${ip} -p ${port} [${pass}]"
   expect -c "
@@ -53,7 +53,7 @@ function ssh_checkLogin(){
 # @param pass 登陆密码
 # 登陆远程机器 []<-(ip:String,port:Int,pass:String)
 function ssh_login(){
-  ^NotNull "$1" "ip can not be null" && ^NotNull "$2" "port can not be null" && ^NotNull "$3" "password can not bull"
+  _NotNull "$1" "ip can not be null" && _NotNull "$2" "port can not be null" && _NotNull "$3" "password can not bull"
   local ip=$1 ;local port=$2 ;local user="root" ;local pass=$3
   ssh_checkLogin "${ip}" "${port}" "${pass}" || return
   expect -c "

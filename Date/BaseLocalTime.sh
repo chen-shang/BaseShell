@@ -60,7 +60,7 @@ function localdate_secondsOf(){
 # 格式 00
 # 当前时间 [String]<-()
 function localtime_plus(){
-  ^NotNull "$1" &&  ^NotNull "$2" && ^NotNull "$3"
+  _NotNull "$1" &&  _NotNull "$2" && _NotNull "$3"
   local myLocaldate=$1 ; local duration=$2 ; local timeUnit=$3
   gdate -d "${myLocaldate} ${duration} ${timeUnit}" "${LOCALTIME_FORMAT}"
 }
