@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155,SC2034
 if [[ "${BASE_CONSTANT_IMPORTED}" != "0" ]]; then
-  BASE_CONSTANT_IMPORTED=0
   readonly TRUE=0                         # Linux 中一般0代表真非0代表假
   readonly FALSE=1
   readonly NONE=''
@@ -18,6 +17,8 @@ if [[ "${BASE_CONSTANT_IMPORTED}" != "0" ]]; then
   #这里定义的是系统全局变量,任何地方都可以用到这个值
   #当前进程使用到了那个文件描述符的下标
   LATEST_FD_INDEX=3
+
+  readonly BASE_CONSTANT_IMPORTED=0
 fi
 
 function available_fd(){

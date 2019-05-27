@@ -6,8 +6,7 @@ source ./../../BaseShell/Concurrent/BaseThreadPool.sh
 
 function cache_set() {
   _NotNull "$1" "key can not be null" && _NotNull "$2" "value can not be null"
-  local result
-  result=$(redis-cli -c set "$1" "$2")
+  local result=$(redis-cli -c set "$1" "$2")
   if [[ "${result}" -eq "OK" ]];then
     echo "${TRUE}"
   else

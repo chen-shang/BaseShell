@@ -56,7 +56,7 @@ function log_fail(){
   echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" 1>&2
   echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" >> "${LOG_DIR}/$(localdate_now).info.log" 2>&1
   echo -e "[$(localdatetime_now)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*" >> "${LOG_DIR}/$(localdate_now).log" 2>&1
- exit
+  exit
 }
 
 # @attention 日志只会输出到日志文件中,不会输出在控制台上,默认开启

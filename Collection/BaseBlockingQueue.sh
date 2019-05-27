@@ -95,6 +95,5 @@ function queue_clear(){
   cat <& ${queueName} > /dev/null
   local lockPool=${LOCK_POOL_MAP[queueName]}
   for ((i=0;i<size;i++));do echo "${i}" >& "${lockPool}";done
-
 }
 
