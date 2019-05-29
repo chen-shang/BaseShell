@@ -4,6 +4,7 @@ source ./../../BaseShell/Utils/BaseHeader.sh
 source ./../../BaseShell/Lang/BaseString.sh
 source ./../../BaseShell/Lang/BaseMath.sh
 source ./../../BaseShell/Collection/BaseArrayList.sh
+#todo update
 
 # @attention 使用数组结构模拟JAVA中的HashMap实现
 # @attention JAVA中的HashMap在hash冲突的时候使用链表,这里使用->串联的字符串模拟JAVA中的链表,如([0]=[k1=v1]->[k2=v2] [1]=[one=1]->[two=2])
@@ -15,7 +16,6 @@ function new_hashMap(){
   # 使用[]占位符,这样才能获取到传入参数中hashMap桶的大小,不得已而为之
 #  echo "[] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] [] []"
   echo "[] [] [] []"
-
 }
 
 private_map_bucketSize(){

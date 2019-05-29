@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
+# @attention 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
+#===============================================================
+if [[ "${BASE_LOG_IMPORTED}" == 0 ]]; then
+  return
+fi
+readonly BASE_LOG_IMPORTED=0
+#===============================================================
 source ./../../BaseShell/Constant/BaseConstant.sh
 source ./../../BaseShell/Date/BaseLocalDate.sh
 source ./../../BaseShell/Date/BaseLocalDateTime.sh
-
-# @attention 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
-#===============================================================
 
 LOG_DIR="${HOME}/.baseshell"
 if [[ ! -d ${LOG_DIR} ]]; then mkdir -p "${LOG_DIR}" ;fi

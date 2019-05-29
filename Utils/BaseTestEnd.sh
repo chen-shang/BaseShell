@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Lang/BaseString.sh
-source ./../../BaseShell/Collection/BaseArrayList.sh
 
 assertTotalCount=0 #断言总次数
 assertFailCount=0 #断言失败次数
@@ -75,17 +74,20 @@ test_getMethodList(){
 # 测试函数执行函数
 test_run(){
   local methodList=("$(test_getMethodList)")
+  local count=1
   for method in ${methodList[*]}; do
-    log_info "开始执行测试函数==============》${method}《=============="
+    log_info "开始执行测试函数[${count}]==============》${method}《=============="
+    ((count++))
     eval "${method}"
   done
 
+  ((count--))
   echo "
-   测试方法[$(list_size "${methodList[*]}")]个
+   测试方法[${count}]个
    执行断言[${assertTotalCount}]个
    成功:${assertSuccessCount}
    失败:${assertFailCount}
-  " |boxes -d dog -a c -s 100|lolcat
+  "
 }
 
 # 测试函数执行入口

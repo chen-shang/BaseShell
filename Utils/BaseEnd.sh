@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
-
+#===============================================================
+if [[ "${BASE_END_IMPORTED}" == 0 ]]; then
+  return
+fi
+readonly BASE_END_IMPORTED=0
+#===============================================================
 # 执行函数 [Any]<-(functionName,functionParameters:List<Any>)
 execute(){
   local functionName=$1

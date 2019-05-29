@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Utils/BaseHeader.sh
-source ./../../BaseShell/Utils/BaseUuidUtil.sh
+source ./../../BaseShell/Utils/BaseUuid.sh
 #===============================================================
-
+#todo update
 if [[ ${BASE_BLOCKING_QUEUE_IMPORTED} != 0 ]]; then
-  BASE_BLOCKING_QUEUE_IMPORTED=0
   LOCK_POOL_MAP=()
   SIZE_MAP=()
 fi
+readonly BASE_BLOCKING_QUEUE_IMPORTED=0
 
 # 初始化队列
 function new_queue(){

@@ -1,89 +1,49 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-source ./../../BaseShell/Utils/BaseHeader.sh
+#===============================================================
+if [[ "${BASE_STRING_IMPORTED}" == 0 ]]; then
+  return
+fi
+readonly BASE_STRING_IMPORTED=0
 #===============================================================
 
-# 字符串长度
-function string_length(){
-  local string=$1
-  echo "${#string}"
-}
+source ./../../BaseShell/Utils/BaseHeader.sh
 
-# string_isEmpty ""  -> 0
-# string_isEmpty " " -> 1
-# string_isEmpty "1" -> 1
-# string_isEmpty  1  -> 1
-# 判断一个字符串是否为空
-function string_isEmpty(){
-  local string=$1
-  $(isEmpty "${string}") && echo "${TRUE}" || echo "${FALSE}"
-}
-
-# string_isNotEmpty ""  -> 1
-# string_isNotEmpty " " -> 0
-# string_isNotEmpty "1" -> 0
-# string_isNotEmpty  1  -> 0
-# 判断一个字符串是否不为空
-function string_isNotEmpty(){
-  local string=$1
-  $(isNotEmpty "${string}") && echo "${TRUE}" || echo "${FALSE}"
-}
-
-# string_isBlank ""  -> 0
-# string_isBlank " " -> 0
-# string_isBlank "1" -> 1
-# string_isBlank  1  -> 1
-# 判断一个字符串是否为空
-function string_isBlank(){
-  $(isBlank "$1") && echo  "${TRUE}" || echo "${FALSE}"
-}
-
-# string_isNotBlank ""  -> 1
-# string_isNotBlank " " -> 1
-# string_isNotBlank "1" -> 0
-# string_isNotBlank  1  -> 0
-# 判断一个字符串是否不为空
-function string_isNotBlank(){
-  $(isNotBlank "$1") && echo "${TRUE}" || echo "${FALSE}"
-}
-
-# 去掉字符串前后空格
-function string_trim(){
-  action(){
-    echo $(echo "$*") #可去掉首尾的空格
-  }
+# 字符串长度 [Int]<-(param:String)
+function length(){
   local param=$*
-  if [[ $# -ne 0 ]];then
-    action "${param}"
-    return
-  fi
-  read -t 1 param && action "${param}"
+  _action(){
+    local param=$*
+    echo "${#param}"
+  }
+  pip "${param}"
+}
+
+# 去掉字符串前后空格 [String]<-(param:String)
+function trim(){
+  local param=$*
+  _action(){
+    local param=$*
+    echo ${param}
+  }
+  pip "${param}"
 }
 
 # 转大写
-function string_toUpperCase(){
-  action(){
+function toUpperCase(){
+  _action(){
     echo "$*" | tr '[:lower:]' '[:upper:]'
   }
-  local param=$*
-  if [[ $# -ne 0 ]];then
-    action "${param}"
-    return
-  fi
-  read -t 1 param && action "${param}"
+  pip "$*"
 }
 
 # 转小写
-function string_toLowerCase(){
-  action(){
+function toLowerCase(){
+  _action(){
     echo "$*" | tr '[:upper:]' '[:lower:]'
   }
   local param=$*
-  if [[ $# -ne 0 ]];then
-    action "${param}"
-    return
-  fi
-  read -t 1 param && action "${param}"
+  pip "$*"
 }
 
 # 判断两个字符串是否相等
@@ -137,32 +97,38 @@ function string_contains(){
 
 # 判断是否是自然数
 function string_isNatural(){
-  local param=$1
-  [[ $(grep '^[[:digit:]]*$' <<<"${param}") ]] && echo "${TRUE}" || echo "${FALSE}"
+  local param=$*
+  _action(){
+    local param=$*
+    (echo "${param}"|grep -q '^[[:digit:]]*$') && echo "${TRUE}"|| echo "${FALSE}"
+  }
+  pip "${param}"
 }
 
 # 字符串下标所在位置的字符
 function string_indexOf(){
   local param=$1
   local index=$2
-  echo ${param:${index}:1}
+  echo "${param:${index}:1}"
 }
 
 # 字符串下标所在位置的字符
 function string_lastIndexOf(){
   local param=$1
   local index=$2
-  echo ${param:0-${index}:1}
+  echo "${param:0-${index}:1}"
 }
 
 function string_subString(){
   local param=$1 #传入的字符串
   if [[ $# -eq 2 ]];then
     local begin=$2 #起始位置
-    echo ${param:${begin}}
+    echo "${param:${begin}}"
   elif [[ $# -eq 3 ]];then
     local begin=$2 #起始位置
     local end=$3
-    echo ${param:${begin}:$(( $end - $begin + 1))}
+    echo "${param:${begin}:$((end-begin + 1))}"
   fi
 }
+
+readonly -f length trim toUpperCase toLowerCase

@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
+#===============================================================
+if [[ "${BASE_ARRAY_LIST_IMPORT}" == 0 ]]; then
+  return
+fi
+readonly BASE_ARRAY_LIST_IMPORT=0
+#===============================================================
 source ./../../BaseShell/Utils/BaseHeader.sh
 
 # @attention list最大长度255
