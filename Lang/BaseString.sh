@@ -6,8 +6,7 @@ if [[ "${BASE_STRING_IMPORTED}" == 0 ]]; then
 fi
 readonly BASE_STRING_IMPORTED=0
 #===============================================================
-
-source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Lang/BaseObject.sh
 
 # 字符串长度 [Int]<-(param:String)
 function length(){

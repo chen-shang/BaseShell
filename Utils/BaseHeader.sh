@@ -8,7 +8,6 @@ readonly BASE_HEADER_IMPORTED=0
 #===============================================================
 
 # Header 的引入是为了引进每个脚本都公共的函数、常量等
-source ./../../BaseShell/Constant/BaseConstant.sh
 source ./../../BaseShell/Lang/BaseObject.sh
 source ./../../BaseShell/Log/BaseLog.sh
 source ./../../BaseShell/Annotation/BaseAnnotation.sh

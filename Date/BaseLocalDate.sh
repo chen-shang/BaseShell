@@ -2,37 +2,10 @@
 # shellcheck disable=SC1091,SC2206,SC2155
 source ./../../BaseShell/Date/BaseTimeUnit.sh
 #===============================================================
-
-function localdate(){
-  local myLocaldate="${FUNCNAME[0]}"
-  case $1 in
-  'getYear')
-     localdate_yearOf "${myLocaldate}"
-     ;;
-  'getMonth')
-     localdate_monthOf "${myLocaldate}"
-     ;;
-  'getDay')
-     localdate_dayOf "${myLocaldate}"
-     ;;
-  'getDayOfYear')
-     localdate_dayOfYear "${myLocaldate}"
-     ;;
-  'plus')
-     localdate_plus "${myLocaldate}" "$1" "$2"
-  esac
-}
-
-#将一个日期转换成类似对象
-function localdate_of(){
-  local myLocaldate=$1
-  test -n "$(declare -f localdate)" || return
-  eval "${_/localdate/${myLocaldate}}"
-}
 # 格式 2018-03-09
 # 当前日期 [String]<-()
 function localdate_now(){
-  date "${LOCALDATE_FORMAT}"
+  date "${DEFAULT_LOCALDATE_FORMAT}"
 }
 # 格式 2018
 # 当前日期 [String]<-()
@@ -77,5 +50,5 @@ function localdate_dayOf(){
 function localdate_plus(){
   _NotNull "$1" &&  _NotNull "$2" && _NotNull "$3"
   local myLocaldate=$1 ; local duration=$2 ; local timeUnit=$3
-  gdate -d "${myLocaldate} ${duration} ${timeUnit}" "${LOCALDATE_FORMAT}"
+  gdate -d "${myLocaldate} ${duration} ${timeUnit}" "${DEFAULT_LOCALDATE_FORMAT}"
 }

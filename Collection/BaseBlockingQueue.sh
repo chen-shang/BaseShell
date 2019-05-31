@@ -3,7 +3,6 @@
 source ./../../BaseShell/Utils/BaseHeader.sh
 source ./../../BaseShell/Utils/BaseUuid.sh
 #===============================================================
-#todo update
 if [[ ${BASE_BLOCKING_QUEUE_IMPORTED} != 0 ]]; then
   LOCK_POOL_MAP=()
   SIZE_MAP=()
