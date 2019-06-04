@@ -3,7 +3,6 @@
 source ./../../BaseShell/Lang/BaseObject.sh
 source ./../../BaseShell/Date/BaseTimeUnit.sh
 #===============================================================
-
 function week_EN_now(){
   local week=$(date +%w) # month (01..12)
   echo "${WEEKDAYS_ENGLISH_ENUM[week-1]}"

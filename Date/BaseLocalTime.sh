@@ -1,25 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
+source ./../../BaseShell/Lang/BaseObject.sh
 source ./../../BaseShell/Date/BaseTimeUnit.sh
 #===============================================================
-
-LOCALTIME_FORMAT="+%H:%M:%S"
-function localdate(){
-  local myLocaldate="${FUNCNAME[0]}"
-  case $1 in
-  getHour)
-     localdate_hourOf "${myLocaldate}"
-     ;;
-  getMinutes)
-     localdate_minutesOf "${myLocaldate}"
-     ;;
-  getSecond)
-     localdate_secondsOf "${myLocaldate}"
-     ;;
-  plus)
-     localtime_plus "${myLocaldate}" "$1" "$2"
-  esac
-}
 # 格式 00:53:26
 # 当前时间 [String]<-()
 function localtime_now(){

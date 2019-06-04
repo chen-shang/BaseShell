@@ -15,7 +15,7 @@ source ./../../BaseShell/Lang/BaseString.sh
 LOG_DIR="${HOME}/.baseshell"
 if [[ ! -d ${LOG_DIR} ]]; then mkdir -p "${LOG_DIR}" ;fi
 LOG_TRACE_MODEL="${TRUE}"
-LOG_DEBUG_MODEL="${FALSE}"
+LOG_DEBUG_MODEL="${TRUE}"
 
 # 默认关闭,debug级别的日志会忽略
 # debug级别的日志 []<-(msg:String)
@@ -29,7 +29,7 @@ function log_debug(){
 
 # info级别的日志 []<-(msg:String)
 function log_info(){
-  echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*"|trim 1>&2
+  echo -e "\\033[37m[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*\\033[0m"|trim 1>&2
   echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*"|trim >> "${LOG_DIR}/$(localdate_now).info.log"  2>&1
   echo -e "[$(localdatetime_now)][$$ $BASHPID] [INFO]:    $*"|trim >> "${LOG_DIR}/$(localdate_now).log"  2>&1
 }

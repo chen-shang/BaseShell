@@ -129,5 +129,29 @@ function string_subString(){
     echo "${param:${begin}:$((end-begin + 1))}"
   fi
 }
+function string_firstLetter_toUpperCase(){
+  local param=$1 #传入的字符串
+  _action(){
+    local param=$*
+    echo "$(string_indexOf "${param}" "0"|trim|toUpperCase)$(string_subString "${param}" "1")"
+  }
+  pip "${param}"
+}
 
-readonly -f length trim toUpperCase toLowerCase
+# 下划线转驼峰
+function toCamelCase(){
+  local param=$1 #传入的字符串
+  _action(){
+    # 第一个单词
+    local firstWord=$(echo "${param}"|awk -F '_' '{ print $1 }')
+    # 去除首单词后的部分,放到一个数组中
+    local remainWordList=($(echo "${param}"|awk -F '_' '{ for (i = 2; i <= NF; i++) print $i }'))
+    local remainWord
+    for item in "${remainWordList[@]}";do
+        remainWord+=$(echo ${item}|string_firstLetter_toUpperCase)
+    done
+    echo "${firstWord}${remainWord}"
+  }
+  pip "${param}"
+}
+readonly -f length trim toUpperCase toLowerCase toCamelCase
