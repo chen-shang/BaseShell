@@ -23,7 +23,7 @@ function trim(){
   local param=$*
   _action(){
     local param=$*
-    echo ${param}
+    echo -e $(echo "${param}")
   }
   pip "${param}"
 }

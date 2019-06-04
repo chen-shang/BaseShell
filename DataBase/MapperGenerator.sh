@@ -12,7 +12,7 @@ local tableName=$(echo "${table}"|awk -F '/' '{print $NF}')
 log_debug "gen ${dbName} ${tableName}"
 local header=$(head -1 < "${table}")
 echo '#!/usr/bin/env bash'
-echo '# shellcheck disable=SC1091,SC2155'
+echo '# shellcheck disable=SC1091,SC2155,SC2116'
 echo 'source ../../BaseShell/Utils/BaseHeader.sh'
 echo '#==============================================================================='
 echo "readonly TABLE_${tableName}='${table}'"
@@ -26,137 +26,145 @@ i=1
 for column in ${header};do
 columnName=$(echo "${column}"|toCamelCase|string_firstLetter_toUpperCase)
 echo -e "get${columnName}(){
-  while read line;do
-    param+=\"\${line}\\\n\"
+  local param
+  while read -r -t 1 line;do
+    param=\"\${param}\${line}\\\n\"
   done
+  param=\$(echo \"\${param##\\\n}\")
+  param=\$(echo \"\${param%%\\\n}\")
   echo -e \"\${param}\"|awk '{print \$${i}}'
 }"
 echo -e "and${columnName}EqualTo(){
   local param=\$1
-  local criteria='\$${i}'==\${param}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}==\${param}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}NotEqualTo(){
   local param=\$1
-  local criteria='\$${i}'!=\${param}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}!=\${param}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}EqualToColumn(){
   local columnName=\$1
   local index=\$(echo \"\${columnName}\"|awk -F ':' '{print \$1}')
-  local result='\$1'==\\$\${index}
-  echo \"&& \${criteria}\"
+  local result=\"\\\$1==\\$\${index}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}NotEqualToColumn(){
   local columnName=\$1
   local index=\$(echo \"\${columnName}\"|awk -F ':' '{print \$1}')
-  local result='\$1'!=\\$\${index}
-  echo \"&& \${criteria}\"
+  local result=\"\\\$1!=\\$\${index}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}GreaterThan(){
   local param=\$1
-  local criteria='\$${i}'>\${param}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}>\${param}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}GreaterThanColumn(){
   local columnName=\$1
   local index=\$(echo \"\${columnName}\"|awk -F ':' '{print \$1}')
-  local criteria='\$1'>\\$\${index}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$1>\\$\${index}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}GreaterThanOrEqualTo(){
   local param=\$1
-  local criteria='\$${i}'>=\${param}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}>=\${param}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}GreaterThanOrEqualToColumn(){
   local columnName=\$1
   local index=\$(echo \"\${columnName}\"|awk -F ':' '{print \$1}')
-  local criteria='\$1'>=\\$\${index}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$1>=\\$\${index}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThan(){
   local param=\$1
-  local criteria='\$${i}'<\${param}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}'<\${param}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThanColumn(){
   local columnName=\$1
   local index=\$(echo \"\${columnName}\"|awk -F ':' '{print \$1}')
-  local criteria='\$1'<\\$\${index}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$1<\\$\${index}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThanOrEqualTo(){
   local param=\$1
-  local criteria='\$${i}'<=\${param}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}<=\${param}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThanOrEqualToColumn(){
   local columnName=\$1
   local index=\$(echo \"\${columnName}\"|awk -F ':' '{print \$1}')
-  local criteria='\$${i}'<=\\$\${index}
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}<=\\$\${index}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}In(){
-  local param=(\$*)
+  local param=( \"\$@\" )
+  local criteria
   for item  in \"\${param[@]}\";do
-    criteria+=\"\$${i}==\${item} ||\"
+    criteria+=\"\\\$${i}==\${item} ||\"
   done
-  echo \"&& \${criteria%%\|\|}\"
+  echo -n \" && \${criteria%%\|\|}\"
 }"
 echo "and${columnName}NotIn(){
-  local param=(\$*)
-  log_info \"\${param[@]}\"
+  local param=( \"\$@\" )
   for item  in \"\${param[@]}\";do
-    criteria+=\"&& \$${i}!=\${item}\"
+    criteria+=\"&& \\\$${i}!=\${item}\"
   done
-  echo \"\${criteria}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}Between(){
   local min=\$1;local max=\$2
   local criteria=\"\${min}<\\\$${i} && \\\$${i}<\${max}\"
-  echo \"&& \${criteria}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}NotBetween(){
   local min=\$1;local max=\$2
   local criteria=\"\${min}>\\\$${i} || \\\$${i}>\${max}\"
-  echo \"&& \${criteria}\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}Like(){
   local param=\$1
-  local criteria='\$${i}'~/\${param}/
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}~/\${param}/\"
+  echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}NotLike(){
   local param=\$1
-  local criteria='\$${i}'!~/\${param}/
-  echo \"&& \${criteria}\"
+  local criteria=\"\\\$${i}!~/\${param}/\"
+  echo -n \" && \${criteria}\"
+}"
+echo "with${columnName}Asc(){
+  local criteria='${i}asc==${i}asc'
+  echo -n \" && \${criteria}\"
+}"
+echo "with${columnName}Desc(){
+  local criteria='${i}desc==${i}desc'
+  echo -n \" && \${criteria}\"
+}"
+echo "with${columnName}Distinct(){
+  local criteria='${i}distinct==${i}distinct'
+  echo -n \" && \${criteria}\"
 }"
 ((i++))
 done
 
-echo "asc(){
- :
-}"
-echo "desc(){
- :
-}"
-
 echo "or(){
-  local criteria1=\$(echo \$1|trim)
+  local criteria1=\$(echo \"\$1\"|trim)
   read -r -t 1 -a param
   criteria2=\$(echo \"\${param[@]}\"|trim)
 
-  criteria1=\$(echo \${criteria1##\&\&})
-  criteria2=\$(echo \${criteria2##\&\&})
+  criteria1=\$(echo \"\${criteria1##\&\&}\")
+  criteria2=\$(echo \"\${criteria2##\&\&}\")
 
-  echo -n \"\${criteria1} || \${criteria2}\"
+  echo -n \" \${criteria1} || \${criteria2}\"
 }"
 echo "${tableName}Mapper_select(){
     ${tableName}Mapper_run \"\$1\"
 }"
 echo "${tableName}Mapper_selectOne(){
-    ${tableName}Mapper_run \"(\$1) && NR==2\"
+    ${tableName}Mapper_run \"\$1 && selectOne==selectOne\"
 }"
 echo "${tableName}Mapper_count(){
     count=\$(${tableName}Mapper_run \"\$1\"|wc -l)
@@ -194,11 +202,41 @@ echo "${tableName}Mapper_selectOneSelective(){
 }"
 
 echo "${tableName}Mapper_run(){
-  local criteria=\$(echo \$1|trim)
-  criteria=\$(echo \${criteria##\&\&})
-  criteria=\$(echo \${criteria##\|\|})
-  log_debug \"awk (\${criteria})||NR==1 '{print \$0}' \${TABLE_${tableName}}|column -t\"
-  awk \"(\${criteria})||NR==1\"'{print \$0}' \${TABLE_${tableName}}|column -t
+  local criteria=\$(echo \"\$1\"|trim)
+  # 去掉请求参数中开头或结尾的 &&、||符号
+  criteria=\$(echo \"\${criteria##\&\&}\")
+  criteria=\$(echo \"\${criteria##\|\|}\")
+  criteria=\$(echo \"\${criteria%%\&\&}\")
+  criteria=\$(echo \"\${criteria%%\|\|}\")
+  # 打印awk语句
+  log_debug \"awk (\${criteria}) '{print \\\$0}' \${TABLE_${tableName}}|column -t\"
+  # 实际的执行语句
+  # 不输出表头
+  local result=\$(awk \"(\${criteria:-NR!=1}) && NR!=1\"'{print \$0}' \${TABLE_${tableName}})
+
+  # 对指定列进行排序处理
+  for item in \${criteria};do
+    if [[ \$(string_contains \"\${item}\" \"distinct\") -eq \"\${TRUE}\" ]];then
+      distinct=\$(echo \"\${item}\" |awk -F 'distinct' '{print \$1}')
+      result=\$(echo \"\${result}\"|sort -b -k \"\${distinct}\",\"\${distinct}\" -u)
+      continue
+    fi
+
+    if [[ \$(string_contains \"\${item}\" \"asc\") -eq \"\${TRUE}\" ]];then
+      asc=\$(echo \"\${item}\" |awk -F 'asc' '{print \$1}')
+      result=\$(echo \"\${result}\"|sort -b -k\"\${asc}\")
+      break
+    fi
+    if [[ \$(string_contains \"\${item}\" \"desc\") -eq \"\${TRUE}\" ]];then
+      desc=\$(echo \"\${item}\"|awk -F 'desc' '{print \$1}')
+      result=\$(echo \"\${result}\"|sort -b -rk\"\${desc}\")
+      break
+    fi
+  done
+  if [[ \$(string_contains \"\${criteria}\" \"selectOne\") -eq \"\${TRUE}\" ]];then
+      result=\$(echo \"\${result}\"|head -1)
+  fi
+  echo -e \"${header}\\\n\${result}\"|column -t
 }"
 
 }

@@ -11,6 +11,8 @@ test-log(){
   log_trace   "1"
   log_warn    "1"
   log_success "1"
+  log_info "    1\n2 "
+  echo -e "1\n2"|trim #
   log_fail    "1"
 }
 

@@ -31,7 +31,7 @@ test-length(){ #ignore
   assertEquals "${result}" "7"
 
 }
-test-trim(){ #ignore
+test-trim(){
   local result=$(trim "  1 ")
   assertEquals "${result}" "1"
   local result=$(trim "  1 2 ")

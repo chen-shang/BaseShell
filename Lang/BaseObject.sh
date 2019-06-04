@@ -105,9 +105,13 @@ function pip(){
   #参数长度==0 尝试从标准输出获取参数
   if [[ ${#param} -eq 0 ]];then
     OLD_IFS=${IFS};IFS=,
-    read -r -t 1 param
+    while read -r -t 1 line1 line2;do
+      param+="${line1}\n"
+    done
     IFS=${OLD_IFS}
   fi
+  param=$(echo "${param##\\\n}")
+  param=$(echo "${param%%\\\n}")
   _action "${param}"
 }
 
