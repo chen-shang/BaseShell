@@ -72,6 +72,34 @@ function isNotBlank(){
   pip "${param}"
 }
 
+# isNull "null"  -> 0
+# isNull " " -> 1
+# isNull "1" -> 1
+# isNull  1  -> 1
+function isNull(){
+  local param=$1
+  _action(){
+    local param=$*
+    # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
+    [[ "${param}" == "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
+  }
+  pip "${param}"
+}
+
+# isNotNull "null"  -> 1
+# isNotNull " " -> 0
+# isNotNull "1" -> 0
+# isNotNull  1  -> 0
+function isNotNull(){
+  local param=$1
+  _action(){
+    local param=$*
+    # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
+    [[ "${param}" != "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
+  }
+  pip "${param}"
+}
+
 function hashCode(){
   local param=$1
   _action(){
@@ -104,7 +132,8 @@ function pip(){
   local param=$*
   #参数长度==0 尝试从标准输出获取参数
   if [[ ${#param} -eq 0 ]];then
-    param=$(cat <&0)
+    # timeout 设置5秒的超时
+    param=$(timeout 1 cat <&0)
   fi
   _action "${param}"
 }

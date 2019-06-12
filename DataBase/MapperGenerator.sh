@@ -18,7 +18,7 @@ echo '#=========================================================================
 echo "readonly TABLE_${tableName}='${table}'"
 i=1
 for column in ${header};do
-  columnName=$(echo "${column}"|toCamelCase)
+  columnName=$(echo "${column}"|toCamelCase|string_firstLetter_toUpperCase)
   echo "readonly ${tableName}_Column_${columnName}='${i}:${column}'"
   ((i++))
 done
@@ -29,14 +29,28 @@ echo -e "get${columnName}(){
   local param=\$(cat <&0)
   echo -e \"\${param}\"|awk '{print \$${i}}'
 }"
+
+echo -e "set${columnName}(){
+  local param=\$1
+  echo -e \"${i}=\${param}\"
+}"
+
 echo -e "and${columnName}EqualTo(){
   local param=\$1
-  local criteria=\"\\\$${i}==\${param}\"
+  local criteria=\"\\\$${i}==\\\"\${param}\\\"\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}NotEqualTo(){
   local param=\$1
   local criteria=\"\\\$${i}!=\${param}\"
+  echo -n \" && \${criteria}\"
+}"
+echo -e "and${columnName}NotNull(){
+  local criteria=\"\\\$${i}!=\\\"\${NULL}\\\"\"
+  echo -n \" && \${criteria}\"
+}"
+echo -e "and${columnName}IsNull(){
+  local criteria=\"\\\$${i}==\\\"\${NULL}\\\"\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}EqualToColumn(){
@@ -53,7 +67,7 @@ echo "and${columnName}NotEqualToColumn(){
 }"
 echo "and${columnName}GreaterThan(){
   local param=\$1
-  local criteria=\"\\\$${i}>\${param}\"
+  local criteria=\"\\\$${i}>\\\"\${param}\\\"\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}GreaterThanColumn(){
@@ -64,7 +78,7 @@ echo "and${columnName}GreaterThanColumn(){
 }"
 echo "and${columnName}GreaterThanOrEqualTo(){
   local param=\$1
-  local criteria=\"\\\$${i}>=\${param}\"
+  local criteria=\"\\\$${i}>=\\\"\${param}\\\"\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}GreaterThanOrEqualToColumn(){
@@ -75,7 +89,7 @@ echo "and${columnName}GreaterThanOrEqualToColumn(){
 }"
 echo "and${columnName}LessThan(){
   local param=\$1
-  local criteria=\"\\\$${i}<\${param}\"
+  local criteria=\"\\\$${i}<\\\"\${param}\\\"\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThanColumn(){
@@ -86,7 +100,7 @@ echo "and${columnName}LessThanColumn(){
 }"
 echo "and${columnName}LessThanOrEqualTo(){
   local param=\$1
-  local criteria=\"\\\$${i}<=\${param}\"
+  local criteria=\"\\\$${i}<=\\\"\${param}\\\"\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThanOrEqualToColumn(){
@@ -99,14 +113,14 @@ echo "and${columnName}In(){
   local param=( \"\$@\" )
   local criteria
   for item  in \"\${param[@]}\";do
-    criteria+=\"\\\$${i}==\${item} ||\"
+    criteria+=\"\\\$${i}==\\\"\${item}\\\" ||\"
   done
   echo -n \" && \${criteria%%\|\|}\"
 }"
 echo "and${columnName}NotIn(){
   local param=( \"\$@\" )
   for item  in \"\${param[@]}\";do
-    criteria+=\"&& \\\$${i}!=\${item}\"
+    criteria+=\"&& \\\$${i}!=\\\"\${item}\\\"\"
   done
   echo -n \" && \${criteria}\"
 }"
@@ -156,24 +170,42 @@ echo "or(){
   echo -n \" \${criteria1} || \${criteria2}\"
 }"
 echo "${tableName}Mapper_select(){
-    local result=\$(${tableName}Mapper_run \"\$1\")
-    echo -e \"line ${header}\\\n\${result}\"|column -t
+    local criteria=\$(echo \"\$1\")
+    local result=\$(${tableName}Mapper_run \"\${criteria}\")
+    # 排除第一列行号
+    local data=\$(echo \"\${result}\"|awk '{\$1=\"\";print \$0}')
+    echo -e \"${header}\\\n\${data}\"|column -t
 }"
 echo "${tableName}Mapper_selectOne(){
-    local result=\$(${tableName}Mapper_run \"\$1\")
-    echo \"\${result}\"|head -1
+    local criteria=\$(echo \"\$1\")
+    local result=\$(${tableName}Mapper_run \"\${criteria}\")
+    local data=\$(echo \"\${result}\"|head -1|awk '{\$1=\"\";print \$0}')
+    echo -e \"${header}\\\n\${data}\"|column -t
 }"
 echo "${tableName}Mapper_count(){
-    count=\$(${tableName}Mapper_run \"\$1\"|wc -l)
-    echo \$((count-1))
+    local result=\$(${tableName}Mapper_run \"\$1\")
+    isNotNull \"\${result}\" && echo \"\${result}\"|wc -l|trim || echo 0
 }"
 echo "${tableName}Mapper_insert(){
- :
+  local param=\"\$1\"
+  local init=\"$(eval printf %.snull'\ '  \{1..$((${i}-1))\}|trim)\"
+  # 回去最后一个ID,+1为下一个ID
+  local id=\$(tail -n +2 \${TABLE_User}|tail -1|getId)
+  id=\$((\${id:-0}+1))
+  init=\$(echo \"\${init}\"|awk -v \"id=\${id}\" '{\$1=id}1')
+
+  for filed in \${param};do
+     key=\$(echo \${filed}|awk -F '=' '{print \$1}')
+     value=\$(echo \${filed}|awk -F '=' '{print \$2}')
+     init=\$(echo \"\${init}\"|awk -v \"key=\${key}\" -v \"value=\${value}\" '{\$key=value}1')
+  done
+
+  echo \"\${init}\" >> \${TABLE_${tableName}}
 }"
 echo "${tableName}Mapper_delete(){
   local result=\$(${tableName}Mapper_run \"\$1\")
   local lines=\$(echo -e \"\${result}\"|awk -v 'separator=d;' '{print \$1+1separator}')
-  sed -i '' \"\${lines}\" \${TABLE_${tableName}}
+  isNotNull \"\${result}\" && sed -i '' \"\${lines}\" \${TABLE_${tableName}}
 }"
 echo "${tableName}Mapper_update(){
  :
@@ -234,7 +266,7 @@ echo "${tableName}Mapper_run(){
       fi
     done
   fi
-  echo \"\${result}\"
+  echo \"\${result:-null}\"
 }"
 }
 
