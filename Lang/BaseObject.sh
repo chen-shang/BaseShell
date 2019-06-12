@@ -104,6 +104,16 @@ function pip(){
   local param=$*
   #参数长度==0 尝试从标准输出获取参数
   if [[ ${#param} -eq 0 ]];then
+    param=$(cat <&0)
+  fi
+  _action "${param}"
+}
+
+# 废弃
+function pip2(){
+  local param=$*
+  #参数长度==0 尝试从标准输出获取参数
+  if [[ ${#param} -eq 0 ]];then
     OLD_IFS=${IFS};IFS=,
     while read -r -t 1 line1 line2;do
       param+="${line1}\n"

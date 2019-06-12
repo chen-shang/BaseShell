@@ -2,7 +2,7 @@
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Utils/BaseHeader.sh
 #===============================================================================
-readonly DataBase_TABLES=('./../../DataBase/DataBase/User')
+readonly DataBase_TABLES=('./../../DataBase/DataBase/User' './../../DataBase/DataBase/Machine')
 readonly DataBase_DAO_PATH='/Users/chenshang/Learn/BaseShell/DataBase/Dao'
 function gen(){
 function genOne(){
@@ -26,12 +26,7 @@ i=1
 for column in ${header};do
 columnName=$(echo "${column}"|toCamelCase|string_firstLetter_toUpperCase)
 echo -e "get${columnName}(){
-  local param
-  while read -r -t 1 line;do
-    param=\"\${param}\${line}\\\n\"
-  done
-  param=\$(echo \"\${param##\\\n}\")
-  param=\$(echo \"\${param%%\\\n}\")
+  local param=\$(cat <&0)
   echo -e \"\${param}\"|awk '{print \$${i}}'
 }"
 echo -e "and${columnName}EqualTo(){
@@ -80,7 +75,7 @@ echo "and${columnName}GreaterThanOrEqualToColumn(){
 }"
 echo "and${columnName}LessThan(){
   local param=\$1
-  local criteria=\"\\\$${i}'<\${param}\"
+  local criteria=\"\\\$${i}<\${param}\"
   echo -n \" && \${criteria}\"
 }"
 echo "and${columnName}LessThanColumn(){
@@ -135,11 +130,11 @@ echo "and${columnName}NotLike(){
   local criteria=\"\\\$${i}!~/\${param}/\"
   echo -n \" && \${criteria}\"
 }"
-echo "with${columnName}Asc(){
+echo "orderBy${columnName}Asc(){
   local criteria='${i}asc==${i}asc'
   echo -n \" && \${criteria}\"
 }"
-echo "with${columnName}Desc(){
+echo "orderBy${columnName}Desc(){
   local criteria='${i}desc==${i}desc'
   echo -n \" && \${criteria}\"
 }"
@@ -151,9 +146,9 @@ echo "with${columnName}Distinct(){
 done
 
 echo "or(){
-  local criteria1=\$(echo \"\$1\"|trim)
+  local criteria1=\$(echo \"\$1\")
   read -r -t 1 -a param
-  criteria2=\$(echo \"\${param[@]}\"|trim)
+  criteria2=\$(echo \"\${param[@]}\")
 
   criteria1=\$(echo \"\${criteria1##\&\&}\")
   criteria2=\$(echo \"\${criteria2##\&\&}\")
@@ -161,10 +156,12 @@ echo "or(){
   echo -n \" \${criteria1} || \${criteria2}\"
 }"
 echo "${tableName}Mapper_select(){
-    ${tableName}Mapper_run \"\$1\"
+    local result=\$(${tableName}Mapper_run \"\$1\")
+    echo -e \"line ${header}\\\n\${result}\"|column -t
 }"
 echo "${tableName}Mapper_selectOne(){
-    ${tableName}Mapper_run \"\$1 && selectOne==selectOne\"
+    local result=\$(${tableName}Mapper_run \"\$1\")
+    echo \"\${result}\"|head -1
 }"
 echo "${tableName}Mapper_count(){
     count=\$(${tableName}Mapper_run \"\$1\"|wc -l)
@@ -174,33 +171,23 @@ echo "${tableName}Mapper_insert(){
  :
 }"
 echo "${tableName}Mapper_delete(){
- :
+  local result=\$(${tableName}Mapper_run \"\$1\")
+  local lines=\$(echo -e \"\${result}\"|awk -v 'separator=d;' '{print \$1+1separator}')
+  sed -i '' \"\${lines}\" \${TABLE_${tableName}}
 }"
 echo "${tableName}Mapper_update(){
  :
 }"
-echo "${tableName}Mapper_updateByPrimaryKeySelective(){
- :
+echo "limit(){
+  local param=\$1
+  local criteria=\"\${param}limit==\${param}limit\"
+  echo -n \" && \${criteria}\"
 }"
-echo "${tableName}Mapper_updateByPrimaryKey(){
- :
+echo "offset(){
+  local param=\$1
+  local criteria=\"\${param}offset==\${param}offset\"
+  echo -n \" && \${criteria}\"
 }"
-echo "${tableName}Mapper_updateSelective(){
- :
-}"
-echo "${tableName}Mapper_selectSelective(){
-  :
-}"
-echo "${tableName}Mapper_selectByPrimaryKey(){
-  :
-}"
-echo "${tableName}Mapper_selectByPrimaryKeySelective(){
- :
-}"
-echo "${tableName}Mapper_selectOneSelective(){
- :
-}"
-
 echo "${tableName}Mapper_run(){
   local criteria=\$(echo \"\$1\"|trim)
   # 去掉请求参数中开头或结尾的 &&、||符号
@@ -212,33 +199,43 @@ echo "${tableName}Mapper_run(){
   log_debug \"awk (\${criteria}) '{print \\\$0}' \${TABLE_${tableName}}|column -t\"
   # 实际的执行语句
   # 不输出表头
-  local result=\$(awk \"(\${criteria:-NR!=1}) && NR!=1\"'{print \$0}' \${TABLE_${tableName}})
+  local result=\$(awk \"(\${criteria:-NR!=1}) && NR!=1\"'{print NR-1,\$0}' \${TABLE_${tableName}})
 
   # 对指定列进行排序处理
   for item in \${criteria};do
     if [[ \$(string_contains \"\${item}\" \"distinct\") -eq \"\${TRUE}\" ]];then
       distinct=\$(echo \"\${item}\" |awk -F 'distinct' '{print \$1}')
-      result=\$(echo \"\${result}\"|sort -b -k \"\${distinct}\",\"\${distinct}\" -u)
-      continue
+      result=\$(echo \"\${result}\"|sort -n -b -k \"\${distinct}\",\"\${distinct}\" -u)
     fi
-
     if [[ \$(string_contains \"\${item}\" \"asc\") -eq \"\${TRUE}\" ]];then
       asc=\$(echo \"\${item}\" |awk -F 'asc' '{print \$1}')
-      result=\$(echo \"\${result}\"|sort -b -k\"\${asc}\")
-      break
+      result=\$(echo \"\${result}\"|sort -n -b -k\"\${asc}\")
     fi
     if [[ \$(string_contains \"\${item}\" \"desc\") -eq \"\${TRUE}\" ]];then
       desc=\$(echo \"\${item}\"|awk -F 'desc' '{print \$1}')
-      result=\$(echo \"\${result}\"|sort -b -rk\"\${desc}\")
-      break
+      result=\$(echo \"\${result}\"|sort -n -b -rk\"\${desc}\")
     fi
   done
-  if [[ \$(string_contains \"\${criteria}\" \"selectOne\") -eq \"\${TRUE}\" ]];then
-      result=\$(echo \"\${result}\"|head -1)
-  fi
-  echo -e \"${header}\\\n\${result}\"|column -t
-}"
 
+  if [[ \$(string_contains \"\${criteria}\" \"offset\") -eq \"\${TRUE}\" ]];then
+    for item in \${criteria};do
+      if [[ \$(string_contains \"\${item}\" \"offset\") -eq \"\${TRUE}\" ]];then
+        offset=\$(echo \"\${item}\" |awk -F 'offset' '{print \$1}')
+        result=\$(echo \"\${result}\"|tail -n +\$((\${offset}+1)))
+      fi
+    done
+  fi
+
+  if [[ \$(string_contains \"\${criteria}\" \"limit\") -eq \"\${TRUE}\" ]];then
+    for item in \${criteria};do
+      if [[ \$(string_contains \"\${item}\" \"limit\") -eq \"\${TRUE}\" ]];then
+        limit=\$(echo \"\${item}\" |awk -F 'limit' '{print \$1}')
+        result=\$(echo \"\${result}\"|head -\${limit})
+      fi
+    done
+  fi
+  echo \"\${result}\"
+}"
 }
 
 for table in "${DataBase_TABLES[@]}";do
