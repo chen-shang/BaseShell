@@ -7,6 +7,14 @@
      .-"-.   \      |      /   .-"-.
 .---{     }--|  /,.-'-.,\  |--{     }---.
  )  (_)_)_)  \_/`~-===-~`\_/  (_(_(_)  (
+ 
+#
+```
+brew install jq
+brew install terminal-notifier
+brew install shellcheck
+brew install coreutils
+``` 
 
 # 序
 Shell脚本实在是太灵活了,相比标准的Java、C、C++ 等,它不过是一些现有命令的堆叠,这是他的优势也是他的劣势,太灵活导致不容易写规范。本人在写Shell脚本的过程中形成了自己一些规范,这些规范仍在实践中,在此分享出来.
