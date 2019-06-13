@@ -2,7 +2,7 @@
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Utils/BaseHeader.sh
 #===============================================================================
-readonly DataBase_TABLES=('./../../DataBase/DataBase/User' './../../DataBase/DataBase/Machine' './../../DataBase/DataBase/ID')
+readonly DataBase_TABLES=('./../../DataBase/DataBase/User' './../../DataBase/DataBase/Machine')
 readonly DataBase_DAO_PATH='/Users/chenshang/Learn/BaseShell/DataBase/Dao'
 function gen(){
 function genOne(){
@@ -14,6 +14,7 @@ local header=$(head -1 < "${table}")
 echo '#!/usr/bin/env bash'
 echo '# shellcheck disable=SC1091,SC2155,SC2116,SC2128,SC2178'
 echo 'source ../../BaseShell/Utils/BaseHeader.sh'
+echo 'source ./../../BaseShell/DataBase/IDMapper.sh'
 echo '#==============================================================================='
 echo "readonly TABLE_${tableName}='${table}'"
 i=1
@@ -26,7 +27,7 @@ i=1
 for column in ${header};do
 columnName=$(echo "${column}"|toCamelCase|string_firstLetter_toUpperCase)
 echo -e "get${columnName}(){
-  local param=\$(cat <&0)
+  local param=\$(timeout 1 cat <&0)
   echo -e \"\${param}\"|awk '{print \$${i}}'
 }"
 
@@ -172,15 +173,16 @@ echo "or(){
 echo "${tableName}Mapper_select(){
   local criteria=\$(echo \"\$1\")
   local result=\$(${tableName}Mapper_run \"\${criteria}\")
-  # 排除第一列行号
-  local data=\$(echo \"\${result}\"|awk '{\$1=\"\";print \$0}')
+  # 排除最后一列行号
+  local data=\$(echo \"\${result}\"|awk '{\$NF=\"\";print \$0}')
   echo -e \"${header}\\\n\${data}\"|column -t
 }"
 echo "${tableName}Mapper_selectOne(){
   local criteria=\$(echo \"\$1\")
   local result=\$(${tableName}Mapper_run \"\${criteria}\")
-  local data=\$(echo \"\${result}\"|head -1|awk '{\$1=\"\";print \$0}')
-  echo -e \"${header}\\\n\${data}\"|column -t
+  # 排除最后一列行号
+  local data=\$(echo \"\${result}\"|head -1|awk '{\$NF=\"\";print \$0}')
+  echo -e \"${header}\\\n\${data}\"|column -t &&   return \${TRUE}
 }"
 echo "${tableName}Mapper_count(){
   local criteria=\$(echo \"\$1\")
@@ -189,9 +191,12 @@ echo "${tableName}Mapper_count(){
 }"
 echo "${tableName}Mapper_insert(){
   local param=( \"\$1\" )
+  log_debug \"inset into ${tableName} with \${param}\"
   local init=\"$(eval printf %.snull'\ '  \{1..$((${i}-1))\}|trim)\"
   # 回去最后一个ID,+1为下一个ID
-  local id=\$(tail -n +2 \${TABLE_User}|tail -1|getId)
+  local criteria=\$(andTableEqualTo \"${tableName}\")
+  local ID=\$(IDMapper_run \"\${criteria}\")
+  id=\$(echo \"\${ID}\"|getNum)
   id=\$((\${id:-0}+1))
   init=\$(echo \"\${init}\"|awk -v \"id=\${id}\" '{\$1=id}1')
 
@@ -202,19 +207,22 @@ echo "${tableName}Mapper_insert(){
   done
 
   echo \"\${init}\" >> \${TABLE_${tableName}}
+  isNull \"\${ID}\" && IDMapper_insert \"\$(setTable \"${tableName}\" && setNum \"\${id}\")\" || IDMapper_update \"\$(setTable \"${tableName}\" && setNum \"\${id}\")\" \"\${criteria}\"
+  return ${TRUE}
 }"
 echo "${tableName}Mapper_delete(){
   local result=\$(${tableName}Mapper_run \"\$1\")
-  local lines=\$(echo -e \"\${result}\"|awk -v 'separator=d;' '{print \$1+1separator}')
-  isNotNull \"\${result}\" && sed -i '' \"\${lines}\" \${TABLE_${tableName}}
+  local lines=\$(echo -e \"\${result}\"|awk -v 'separator=d;' '{print \$NF+1separator}')
+  isNotNull \"\${result}\" && sed -i '' \"\${lines}\" \${TABLE_${tableName}} && return \${TRUE}
 }"
 echo "${tableName}Mapper_update(){
   local new${tableName}=\$1
   local criteria=\$2
   local ${tableName}s=\$(${tableName}Mapper_run \"\${criteria}\")
+  isNull \"\${${tableName}s}\" && return \${FALSE}
   while read -r -t 1 ${tableName};do
-    local line=\$(echo \"\${${tableName}}\"|awk '{print \$1}')
-    local item=\$(echo \"\${${tableName}}\"|awk '{\$1=\"\";print \$0}')
+    local line=\$(echo \"\${${tableName}}\"|awk '{print \$NF}')
+    local item=\$(echo \"\${${tableName}}\"|awk '{\$NF=\"\";print \$0}')
 
     for filed in \${new${tableName}};do
        key=\$(echo \"\${filed}\"|awk -F '=' '{print \$1}')
@@ -223,6 +231,7 @@ echo "${tableName}Mapper_update(){
     done
     sed -i '' \"\$((line+1))s:.*:\${item}:g\" \"\${TABLE_${tableName}}\"
   done <<< \"\${${tableName}s}\"
+  return \${TRUE}
 }"
 echo "limit(){
   local param=( \"\$1\" )
@@ -245,7 +254,7 @@ echo "${tableName}Mapper_run(){
   log_debug \"awk (\${criteria}) '{print \\\$0}' \${TABLE_${tableName}}|column -t\"
   # 实际的执行语句
   # 不输出表头
-  local result=\$(awk \"(\${criteria:-NR!=1}) && NR!=1\"'{print NR-1,\$0}' \${TABLE_${tableName}})
+  local result=\$(awk \"(\${criteria:-NR!=1}) && NR!=1\"'{print \$0,NR-1}' \${TABLE_${tableName}})
 
   # 对指定列进行排序处理
   for item in \${criteria};do
