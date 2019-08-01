@@ -122,23 +122,25 @@ function hashCode(){
 }
 
 # 这是一个辅助函数,意思是被其他函数调用的函数,以扩展原来函数的功能
-# 1. 有参数的时候直接走action 否则执行2
-# 2. 从标准输出中获取参数,并执行action
+# 1. 有参数的时候直接走 _action 否则执行2
+# 2. 从标准输出中获取参数,并执行_action
 # 该方法扩展原函数,使其具备从标准输出获取参数的能力,因此原函数可以类似管道似的调用.
 # @see BaseString.sh trim|string_length
 # @attention 从标准输入读取的参数是以空格分隔的 echo "1 2" "3 4"|trim 最终读取到的参数是 "1 2 3 4" 而不是 "1 2" 和 "3 4"
-#  适用于明确只有一个参数的情况
+# 适用于明确只有一个参数的情况
+
 function pip(){
   local param=$*
   #参数长度==0 尝试从标准输出获取参数
   if [[ ${#param} -eq 0 ]];then
-    # timeout 设置5秒的超时
+    # timeout 设置1秒的超时
     param=$(timeout 1 cat <&0)
   fi
   _action "${param}"
 }
 
-# 废弃
+# 同上,适用于有两个参数的时候
+
 function pip2(){
   local param=$*
   #参数长度==0 尝试从标准输出获取参数
