@@ -25,7 +25,9 @@ manual(){ cat <"$0"                      \
 }
 
 # 显示 Banner 图
-readonly SHOW_BANNER=${TRUE}
-if [[ ${SHOW_BANNER} -eq ${TRUE} ]];then
+if [[ -f ./../config.sh ]];then
+  source ./../config.sh
+fi
+if [[ ${SHOW_BANNER} -ne ${FALSE} ]];then
   cat ./../../BaseShell/Utils/Banner |lolcat
 fi
