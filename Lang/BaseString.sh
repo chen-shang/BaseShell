@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-if [[ "${BASE_STRING_IMPORTED}" == 0 ]]; then
-  return
-fi
-readonly BASE_STRING_IMPORTED=0
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
 source ./../../BaseShell/Lang/BaseObject.sh
 
@@ -49,7 +48,7 @@ function toLowerCase(){
 function string_equals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && echo "${TRUE}" || echo "${FALSE}"
+  [[ "${value1}" == "${value2}" ]] && return ${TRUE} || return "${FALSE}"
 }
 
 # 判断两个字符串是否相等

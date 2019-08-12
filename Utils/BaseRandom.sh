@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-if [[ "${BASE_RANDOM_IMPORTED}" == 0 ]]; then
-  return
-fi
-readonly BASE_RANDOM_IMPORTED=0
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
 source ./../../BaseShell/Utils/BaseHeader.sh
 

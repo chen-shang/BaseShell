@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155
+# shellcheck disable=SC1091
 #===============================================================
-if [[ "${BASE_HEADER_IMPORTED}" == 0 ]]; then
-  return
-fi
-readonly BASE_HEADER_IMPORTED=0
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
-
+source ./../../BaseShell/config.sh
 # Header 的引入是为了引进每个脚本都公共的函数、常量等
-source ./../../BaseShell/Lang/BaseObject.sh
-source ./../../BaseShell/Log/BaseLog.sh
-source ./../../BaseShell/Annotation/BaseAnnotation.sh
-
+source ./../../BaseShell/Utils/BaseStarter.sh
 # 脚本使用帮助文档
 manual(){ cat <"$0"                      \
          | grep -B1 'function'           \
@@ -24,10 +20,12 @@ manual(){ cat <"$0"                      \
          | column -t
 }
 
-# 显示 Banner 图
+# 加载自定义配置
 if [[ -f ./../config.sh ]];then
   source ./../config.sh
 fi
-if [[ ${SHOW_BANNER} -ne ${FALSE} ]];then
-  cat ./../../BaseShell/Utils/Banner |lolcat
+
+# 显示 Banner 图
+if [[ ${SHOW_BANNER} == 0 ]];then
+  cat < "${BANNER_PATH}" |lolcat
 fi

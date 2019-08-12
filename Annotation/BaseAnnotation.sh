@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-if [[ "${BASE_ANNOTATION_IMPORTED}" == 0 ]]; then
-  return
-fi
-readonly BASE_ANNOTATION_IMPORTED=0
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Constant/BaseConstant.sh
+source ./../../BaseShell/Lang/BaseObject.sh
 source ./../../BaseShell/Log/BaseLog.sh
 
 # 判断传入参数是否为空 [Boolean]<-(param:String,err_msg:String)

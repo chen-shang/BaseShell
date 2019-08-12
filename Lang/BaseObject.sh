@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155
+# shellcheck disable=SC1091
 #===============================================================
-if [[ "${BASE_OBJECT_IMPORTED}" == 0 ]]; then
-  return
-fi
-readonly BASE_OBJECT_IMPORTED=0
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
 source ./../../BaseShell/Constant/BaseConstant.sh
 
@@ -54,7 +53,7 @@ function isNotEmpty(){
 function isBlank(){
   local param=$1
   _action(){
-    local param=$(echo "$1" | tr -d " ")
+    param=$(echo "$1" | tr -d " ")
     isEmpty "${param}" && return "${TRUE}" || return "${FALSE}"
   }
   pip "${param}"
@@ -66,7 +65,7 @@ function isBlank(){
 function isNotBlank(){
   local param=$1
   _action(){
-    local param=$(echo "$1" | tr -d " ")
+    param=$(echo "$1" | tr -d " ")
     ! isBlank "${param}"
   }
   pip "${param}"
@@ -128,7 +127,6 @@ function hashCode(){
 # @see BaseString.sh trim|string_length
 # @attention 从标准输入读取的参数是以空格分隔的 echo "1 2" "3 4"|trim 最终读取到的参数是 "1 2 3 4" 而不是 "1 2" 和 "3 4"
 # 适用于明确只有一个参数的情况
-
 function pip(){
   local param=$*
   #参数长度==0 尝试从标准输出获取参数
@@ -136,23 +134,6 @@ function pip(){
     # timeout 设置1秒的超时
     param=$(timeout 1  cat <&0)
   fi
-  _action "${param}"
-}
-
-# 同上,适用于有两个参数的时候
-
-function pip2(){
-  local param=$*
-  #参数长度==0 尝试从标准输出获取参数
-  if [[ ${#param} -eq 0 ]];then
-    OLD_IFS=${IFS};IFS=,
-    while read -r -t 1 line1 line2;do
-      param+="${line1}\n"
-    done
-    IFS=${OLD_IFS}
-  fi
-  param=$(echo "${param##\\\n}")
-  param=$(echo "${param%%\\\n}")
   _action "${param}"
 }
 

@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155,SC2034
+# shellcheck disable=SC1091
 #===============================================================
-if [[ "${BASE_CONSTANT_IMPORTED}" == 0 ]]; then
-  return
-fi
-readonly BASE_CONSTANT_IMPORTED=0
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
 readonly TRUE=0                         # Linux 中一般0代表真非0代表假
 readonly FALSE=1

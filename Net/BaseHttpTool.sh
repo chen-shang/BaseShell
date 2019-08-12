@@ -21,5 +21,5 @@ function http_put() {
 
 # 获取公网IP [String]<-()
 function http_public_ip(){
-  httpclient_get "http://members.3322.org/dyndns/getip"
+  http_get "http://members.3322.org/dyndns/getip"
 }

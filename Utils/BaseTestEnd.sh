@@ -78,7 +78,7 @@ test_run(){
   for method in ${methodList[*]}; do
     log_info "开始执行测试函数[${count}]==============》${method}《=============="
     ((count++))
-    eval "${method}"
+    eval "(${method})"
   done
 
   ((count--))

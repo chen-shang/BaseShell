@@ -131,7 +131,7 @@ chenshang@chenshangMacBook-Pro:~$
 首行关系到运行脚本的时候究竟使用哪种Shell解释器。这也说明Shell是一种解释性语言,脚本从上到下每读一行就执行一行,在遇到第一行是 #!/bin/bash 的时候就会加载 bash 相关的环境,在遇到 #!/bin/sh 就会加载 sh 相关的环境,避免在执行脚本的时候遇到意想不到的错误。但一开始我并不知道我电脑上安装了哪些Shell,默认使用的又是哪一个Shell,我脚本移植到别人的计算机上执行,我更不可能知道别人的计算机是Ubuntu还是Arch或是Centos。为了提高程序的移植性,本Shell规约规定使用 #!/usr/bin/env bash, #!/usr/bin/env bash 会自己判断使用的Shell是目录在哪,并加载相应的环境变量。
 
 我们看一下下面一段脚本,在改变第一行头部的时候,shellcheck给出的建议是什么
-$ cat test.sh
+$ cat jsons.sh
 
 ```bash
 echo \\\\

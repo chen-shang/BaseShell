@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
 #===============================================================
-if [[ ${BASE_TIME_UNIT_IMPORTED} == 0 ]]; then
-  return
-fi
-readonly BASE_TIME_UNIT_IMPORTED=0
+import=$(basename ${BASH_SOURCE} .sh)
+if [[ $(eval echo '$'${import}) == 0 ]]; then return; fi
+eval "${import}=0"
 #===============================================================
 readonly TimeUnit_YEAR="year"
 readonly TimeUnit_MONTH="month"
