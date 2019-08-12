@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-source ./../../BaseShell/Lang/BaseString.sh
+source ../Lang/BaseString.sh
 
 assertTotalCount=0 #断言总次数
 assertFailCount=0 #断言失败次数

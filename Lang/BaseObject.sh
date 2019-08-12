@@ -11,7 +11,7 @@ source ./../../BaseShell/Constant/BaseConstant.sh
 function equals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && return "${TRUE}" || return "${FALSE}"
+  [[ "${value1}" == "${value2}" ]] && return ${TRUE} || return ${FALSE}
 }
 
 # @param timeout the maximum time to wait in seconds.
@@ -46,6 +46,7 @@ function isNotEmpty(){
   local param=$1
   ! isEmpty "${param}"
 }
+
 # isBlank ""  -> 0
 # isBlank " " -> 0
 # isBlank "1" -> 1
@@ -58,6 +59,7 @@ function isBlank(){
   }
   pip "${param}"
 }
+
 # isBlank ""  -> 1
 # isBlank " " -> 1
 # isBlank "1" -> 0
@@ -99,6 +101,7 @@ function isNotNull(){
   pip "${param}"
 }
 
+# 哈希code  [String]<-(str:String)
 function hashCode(){
   local param=$1
   _action(){

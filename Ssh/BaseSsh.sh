@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================
 
 timeout=60
@@ -8,8 +8,7 @@ timeout=60
 # @param port 登陆端口号
 # @param pass 登陆密码
 # 检查机器登陆 [String]<-(ip:String,port:Int,pass:String)
-function ssh_checkLogin(){
-  _NotNull "$1" "ip can not be null" && _NotNull "$2" "port can not be null" && _NotNull "$3" "password can not bull"
+function ssh_checkLogin(){ _NotNull "$1" "ip can not be null" && _NotNull "$2" "port can not be null" && _NotNull "$3" "password can not bull"
   local ip=$1 ;local port=$2 ;local user="root" ;local pass=$3
   local key="ssh root@${ip} -p ${port} [${pass}]"
   expect -c "
@@ -52,8 +51,7 @@ function ssh_checkLogin(){
 # @param port 登陆端口号
 # @param pass 登陆密码
 # 登陆远程机器 []<-(ip:String,port:Int,pass:String)
-function ssh_login(){
-  _NotNull "$1" "ip can not be null" && _NotNull "$2" "port can not be null" && _NotNull "$3" "password can not bull"
+function ssh_login(){ _NotNull "$1" "ip can not be null" && _NotNull "$2" "port can not be null" && _NotNull "$3" "password can not bull"
   local ip=$1 ;local port=$2 ;local user="root" ;local pass=$3
   ssh_checkLogin "${ip}" "${port}" "${pass}" || return
   expect -c "

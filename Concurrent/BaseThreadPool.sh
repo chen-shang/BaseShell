@@ -5,7 +5,7 @@ import=$(basename ${BASH_SOURCE} .sh)
 if [[ $(eval echo '$'${import}) == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Utils/BaseStarter.sh
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Utils/BaseUuid.sh
 #===============================================================
 
@@ -17,7 +17,7 @@ function new_threadPool(){
   local FD=$?
 
   local coreSize=$1
-  local threadPoolName="$(uuid_randomUUID)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
+  local threadPoolName="$(uuid)" #用当前的时间(秒)_当前进程ID最为有名管道名称,代表一个线程池
   [[ -e "${threadPoolName}" ]] || mkfifo "${threadPoolName}" #如果有名管道不存在,则创建一个有名管道当做线程池,利用有名管道作为阻塞队列来调度任务的执行
   eval "exec ${FD}<>${threadPoolName} && rm -rf ${threadPoolName}"
   for ((i=0;i<coreSize;i++));do echo "${i}" >& "${FD}";done

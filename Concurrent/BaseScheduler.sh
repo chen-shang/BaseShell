@@ -5,7 +5,7 @@ import=$(basename ${BASH_SOURCE} .sh)
 if [[ $(eval echo '$'${import}) == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Utils/BaseStarter.sh
+source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================
 
 # 定时执行
@@ -13,7 +13,7 @@ scheduler_timer(){
   local time=$1 ; local action=$2
   while :;do
     # 调用后台任务执行,容易在父进程退出的时候漏掉还有后台进程正在执行,导致一直占用资源
-    log_trace "${LINENO} [${FUNCNAME[*]}] ${action} ${time}"
+    log_debug "${LINENO} [${FUNCNAME[*]}] ${action} ${time}"
     eval "${action}"
     sleep "${time}"
   done

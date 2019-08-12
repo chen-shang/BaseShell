@@ -48,14 +48,14 @@ function toLowerCase(){
 function string_equals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && return ${TRUE} || return "${FALSE}"
+  [[ "${value1}" == "${value2}" ]] && return ${TRUE} || return ${FALSE}
 }
 
 # 判断两个字符串是否相等
 function string_notEquals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && echo "${FALSE}" || echo "${TRUE}"
+  [[ "${value1}" == "${value2}" ]] && return ${FALSE} || return ${TRUE}
 }
 
 # 判断两个字符串是否相等,忽略大小写
@@ -76,21 +76,21 @@ function string_join(){
 function string_startsWith(){
   local value1=$1;
   local value2=$2
-  [[ "${value1}" == "${value2}"* ]] && echo "${TRUE}" || echo "${FALSE}"
+  [[ "${value1}" == "${value2}"* ]] && return ${TRUE} || return ${FALSE}
 }
 
 # 查看尾字母
 function string_endsWith(){
   local value1=$1;
   local value2=$2
-  [[ "${value1}" == *"${value2}" ]] && echo "${TRUE}" || echo "${FALSE}"
+  [[ "${value1}" == *"${value2}" ]] && return ${TRUE} || return ${FALSE}
 }
 
 # 字符串包含
 function string_contains(){
   local value1=$1;
   local value2=$2
-  [[ ${value1} =~ ${value2} ]] && echo "${TRUE}" || echo "${FALSE}"
+  [[ ${value1} =~ ${value2} ]] && return ${TRUE} || return ${FALSE}
 }
 
 # 判断是否是自然数
@@ -153,4 +153,5 @@ function toCamelCase(){
   }
   pip "${param}"
 }
+
 readonly -f length trim toUpperCase toLowerCase toCamelCase

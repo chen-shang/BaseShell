@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================
 function json.format(){
   local param=$1
@@ -16,6 +16,3 @@ function json.get(){ _NotNull "$1" "json can not be null" && _NotNull "$2" "para
   local name=$2
   echo "${json}"|jq .
 }
-
-
-#===============================================================

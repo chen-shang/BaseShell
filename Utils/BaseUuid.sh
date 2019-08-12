@@ -5,9 +5,9 @@ import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Utils/BaseHeader.sh
+source ./../../BaseShell/Starter/BaseStarter.sh
 
 # 返回一个uuid [String]<-()
-function uuid_randomUUID(){
+function uuid(){
   uuidgen
 }
