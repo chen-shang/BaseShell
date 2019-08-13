@@ -28,7 +28,7 @@ function _Min(){ _NotNull "$1" ; _NotNull "$2"
   local err_msg=$3
   err_msg=${err_msg:-"value can not be less than $1"}
   # $2:参数值 < $1:最小值
-  [[ $2 -lt $1 ]] && log_fail "${err_msg}" || return "${TRUE}"
+  [[ $(echo "$2 >= $1" | bc) -gt ${TRUE} ]]&& log_fail "${err_msg}" || return "${TRUE}"
 }
 
 # @param $1:最小值 $2:参数值 $3:err_msg
