@@ -15,5 +15,10 @@ test-trim(){
   trim=$(echo "  123 "|trim)
   assertEquals "${trim}" "123"
 }
+
+test-string_subString(){
+  result=$(string_subString "0 1234 567" "1" "1")
+  assertEquals "${result}" " "
+}
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

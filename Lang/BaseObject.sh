@@ -21,16 +21,6 @@ function equals(){
   fi
 }
 
-# @param timeout the maximum time to wait in seconds.
-function delay(){
-  local timeout=$1
-  _action(){
-    local timeout=$1
-    sleep "${timeout}"
-  }
-  pip "${timeout}"
-}
-
 # isEmpty ""  -> 0
 # isEmpty " " -> 1
 # isEmpty "1" -> 1
@@ -129,6 +119,16 @@ function pip(){
     param=$(timeout 1 cat <&0)
   fi
   _action "${param}"
+}
+
+# @param timeout the maximum time to wait in seconds.
+function delay(){
+  local timeout=$1
+  _action(){
+    local timeout=$1
+    sleep "${timeout}"
+  }
+  pip "${timeout}"
 }
 
 readonly -f equals delay isEmpty isNotEmpty
