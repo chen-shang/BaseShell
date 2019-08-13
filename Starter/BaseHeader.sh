@@ -6,7 +6,7 @@ import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../config.sh
+source ./../../BaseShell/config.sh
 source ./../../BaseShell/Starter/BaseStarter.sh
 # 脚本使用帮助文档
 manual(){ cat <"$0"                      \
@@ -22,7 +22,7 @@ manual(){ cat <"$0"                      \
 
 # 加载自定义配置
 if [[ -f ./../config.sh ]];then
-  source ../config.sh
+  source ./../config.sh
 fi
 
 # 显示 Banner 图

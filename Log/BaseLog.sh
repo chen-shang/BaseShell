@@ -12,7 +12,6 @@ source ./../../BaseShell/Lang/BaseString.sh
 if [[ ! -d ${LOG_DIR} ]]; then mkdir -p "${LOG_DIR}" ;fi
 
 # ERROR<WARN<INFO<DEBUG
-LOG_LEVEL=DEBUG
 case ${LOG_LEVEL} in
    "ERROR") log_level=0 ;;
    "WARN" ) log_level=1 ;;

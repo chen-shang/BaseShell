@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
-source ../Lang/BaseObject.sh
-source ../Log/BaseLog.sh
-source ../Annotation/BaseAnnotation.sh
+source ./../../BaseShell/Lang/BaseObject.sh
+source ./../../BaseShell/Log/BaseLog.sh
+source ./../../BaseShell/Annotation/BaseAnnotation.sh
