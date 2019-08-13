@@ -14,6 +14,7 @@ brew install jq
 brew install terminal-notifier
 brew install shellcheck
 brew install coreutils
+brew install bc
 ``` 
 
 # 序
