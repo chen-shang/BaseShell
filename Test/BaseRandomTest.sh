@@ -16,13 +16,15 @@ test-random_int(){
   fi
   assertTrue ${result}
 
-  random_int
+  int=$(random_int)
+  assertNotNull "${int}"
 }
 
 test-random_string(){
-  local string=$(random_string 1)
+  local string=$(random_string 16)
   assertNotNull "${string}"
-  random_string
+  string=$(random_string)
+  assertNotNull "${string}"
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
