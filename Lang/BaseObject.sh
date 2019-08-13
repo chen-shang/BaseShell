@@ -30,12 +30,8 @@ function delay(){
 # isEmpty  1  -> 1
 function isEmpty(){
   local param=$1
-  _action(){
-    local param=$*
-    # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
-    [[ -z "${param}" ]] && return "${TRUE}" || return "${FALSE}"
-  }
-  pip "${param}"
+  # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
+  [[ -z "${param}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
 # isNotEmpty ""  -> 1
@@ -53,11 +49,8 @@ function isNotEmpty(){
 # isBlank  1  -> 1
 function isBlank(){
   local param=$1
-  _action(){
-    param=$(echo "$1" | tr -d " ")
-    isEmpty "${param}" && return "${TRUE}" || return "${FALSE}"
-  }
-  pip "${param}"
+  param=$(echo "$1" | tr -d " ")
+  isEmpty "${param}" && return "${TRUE}" || return "${FALSE}"
 }
 
 # isBlank ""  -> 1
@@ -66,11 +59,8 @@ function isBlank(){
 # isBlank  1  -> 0
 function isNotBlank(){
   local param=$1
-  _action(){
-    param=$(echo "$1" | tr -d " ")
-    ! isBlank "${param}"
-  }
-  pip "${param}"
+  param=$(echo "$1" | tr -d " ")
+  ! isBlank "${param}"
 }
 
 # isNull "null"  -> 0
@@ -79,12 +69,9 @@ function isNotBlank(){
 # isNull  1  -> 1
 function isNull(){
   local param=$1
-  _action(){
-    local param=$*
-    # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
-    [[ "${param}" == "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
-  }
-  pip "${param}"
+  local param=$*
+  # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
+  [[ "${param}" == "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
 # isNotNull "null"  -> 1
@@ -93,12 +80,9 @@ function isNull(){
 # isNotNull  1  -> 0
 function isNotNull(){
   local param=$1
-  _action(){
-    local param=$*
-    # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
-    [[ "${param}" != "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
-  }
-  pip "${param}"
+  local param=$*
+  # if[[ -z ${value} ]] 中 -z 代表判断字符串的长度是否为0
+  [[ "${param}" != "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
 # 哈希code  [String]<-(str:String)
@@ -135,7 +119,7 @@ function pip(){
   #参数长度==0 尝试从标准输出获取参数
   if [[ ${#param} -eq 0 ]];then
     # timeout 设置1秒的超时
-    param=$(timeout 1  cat <&0)
+    param=$(timeout 1 cat <&0)
   fi
   _action "${param}"
 }

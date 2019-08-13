@@ -8,7 +8,7 @@ eval "${import}=0"
 source ./../../BaseShell/Lang/BaseObject.sh
 
 # 字符串长度 [Int]<-(param:String)
-function length(){
+function string_length(){
   local param=$*
   _action(){
     local param=$*
@@ -154,4 +154,4 @@ function toCamelCase(){
   pip "${param}"
 }
 
-readonly -f length trim toUpperCase toLowerCase toCamelCase
+readonly -f string_length trim toUpperCase toLowerCase toCamelCase
