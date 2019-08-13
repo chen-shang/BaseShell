@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155
+# shellcheck disable=SC1091
 #===============================================================
 import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
@@ -24,7 +24,7 @@ function _Numeric(){
 
 # @param $1:最小值 $2:参数值 $3:err_msg
 # 判断传入参数是否大于 [Boolean]<-(Number,Number,String)
-function _Min(){ _NotNull $1 ; _NotNull $2
+function _Min(){ _NotNull "$1" ; _NotNull "$2"
   local err_msg=$3
   err_msg=${err_msg:-"value can not be less than $1"}
   # $2:参数值 < $1:最小值
@@ -33,7 +33,7 @@ function _Min(){ _NotNull $1 ; _NotNull $2
 
 # @param $1:最小值 $2:参数值 $3:err_msg
 # 判断传入参数是否小于 [Boolean]<-(Number,Number,String)
-function _Max(){ _NotNull $1 ; _NotNull $2
+function _Max(){ _NotNull "$1" ; _NotNull "$2"
   local err_msg=$3
   err_msg=${err_msg:-"value can not be bigger than  $1"}
   # $2:参数值 > $1:最小值

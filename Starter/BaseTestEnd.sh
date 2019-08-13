@@ -7,7 +7,7 @@ assertEquals(){
   $(equals "$1" "$2") && {
     log_success "test ok[100%],hit [${2}]"
   }||{
-    log_fail "test fail[100%],expect ${2} but ${1}"
+    log_error "test fail[100%],expect [${2}] but [${1}]"
   }
 }
 
@@ -16,7 +16,7 @@ assertNotNull(){
   $(isNotBlank "$1") && {
      log_success "test ok[100%],hit [${1}]"
    }||{
-     log_fail "test fail[100%],expect not null"
+     log_error "test fail[100%],expect not null"
    }
 }
 
@@ -25,7 +25,7 @@ assertNull(){
   $(isBlank "$1") && {
     log_success "test ok[100%],hit [${1}]"
   }||{
-    log_fail "test fail[100%],expect null but ${1}"
+    log_error "test fail[100%],expect null but [${1}]"
   }
 }
 
@@ -34,7 +34,7 @@ assertFalse(){
   $(equals "$1" "${FALSE}") && {
     log_success "test ok[100%],hit [FALSE]"
   }||{
-    log_fail "test fail[100%],expect false FALSE but TRUE"
+    log_error "test fail[100%],expect false [FALSE] but [TRUE]"
   }
 }
 
@@ -43,7 +43,7 @@ assertTrue(){
   $(equals "$1" "${TRUE}") && {
     log_success "test ok[100%],hit [TRUE]"
   }||{
-    log_fail "test fail[100%],expect TRUE but FALSE"
+    log_error "test fail[100%],expect [TRUE] but [FALSE]"
   }
 }
 

@@ -11,7 +11,14 @@ source ./../../BaseShell/Constant/BaseConstant.sh
 function equals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && return ${TRUE} || return ${FALSE}
+
+  local length1=$(echo "${#value1}")
+  local length1=$(echo "${#value2}")
+  if [[ "${length1}" -eq "${length1}" && "${value1}" == "${value2}"  ]];then
+    return "${TRUE}"
+  else
+    return "${FALSE}"
+  fi
 }
 
 # @param timeout the maximum time to wait in seconds.

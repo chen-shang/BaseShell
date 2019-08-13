@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155
+# shellcheck disable=SC1091
 #===============================================================
 import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
@@ -22,7 +22,7 @@ function trim(){
   local param=$*
   _action(){
     local param=$*
-    echo -e $(echo "${param}")
+    echo "${param}" | grep -o "[^ ]\+\( \+[^ ]\+\)*"
   }
   pip "${param}"
 }
@@ -48,21 +48,19 @@ function toLowerCase(){
 function string_equals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && return ${TRUE} || return ${FALSE}
+  equals "${value1}" "${value2}"
 }
 
 # 判断两个字符串是否相等
 function string_notEquals(){
   local value1=$1 #一参
   local value2=$2 #二参
-  [[ "${value1}" == "${value2}" ]] && return ${FALSE} || return ${TRUE}
+  [[ "${value1}" == "${value2}" ]] && return "${FALSE}" || return "${TRUE}"
 }
 
 # 判断两个字符串是否相等,忽略大小写
 function string_equalsIgnoreCase(){
-  local value1=$(string_toUpperCase "$1");
-  local value2=$(string_toUpperCase "$2")
-  string_equals "${value1}" "${value2}"
+  string_equals "$(toUpperCase "$1")" "$(toUpperCase "$2")"
 }
 
 # 连接两个字符串
@@ -76,21 +74,21 @@ function string_join(){
 function string_startsWith(){
   local value1=$1;
   local value2=$2
-  [[ "${value1}" == "${value2}"* ]] && return ${TRUE} || return ${FALSE}
+  [[ "${value1}" == "${value2}"* ]] && return "${TRUE}" || return "${FALSE}"
 }
 
 # 查看尾字母
 function string_endsWith(){
   local value1=$1;
   local value2=$2
-  [[ "${value1}" == *"${value2}" ]] && return ${TRUE} || return ${FALSE}
+  [[ "${value1}" == *"${value2}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
 # 字符串包含
 function string_contains(){
   local value1=$1;
   local value2=$2
-  [[ ${value1} =~ ${value2} ]] && return ${TRUE} || return ${FALSE}
+  [[ ${value1} =~ ${value2} ]] && return "${TRUE}" || return "${FALSE}"
 }
 
 # 判断是否是自然数
@@ -132,7 +130,7 @@ function string_firstLetter_toUpperCase(){
   local param=$1 #传入的字符串
   _action(){
     local param=$*
-    echo "$(string_indexOf "${param}" "0"|trim|toUpperCase)$(string_subString "${param}" "1")"
+    echo "$(string_indexOf "${param}" "0"|trim "$@"|toUpperCase)$(string_subString "${param}" "1")"
   }
   pip "${param}"
 }
@@ -142,12 +140,13 @@ function toCamelCase(){
   local param=$1 #传入的字符串
   _action(){
     # 第一个单词
-    local firstWord=$(echo "${param}"|awk -F '_' '{ print $1 }')
+    local firstWord
+    firstWord=$(echo "${param}"|awk -F '_' '{ print $1 }')
     # 去除首单词后的部分,放到一个数组中
-    local remainWordList=($(echo "${param}"|awk -F '_' '{ for (i = 2; i <= NF; i++) print $i }'))
-    local remainWord
-    for item in "${remainWordList[@]}";do
-        remainWord+=$(echo ${item}|string_firstLetter_toUpperCase)
+    local remainWordList
+    remainWordList=$(echo "${param}"|awk -F '_' '{ for (i = 2; i <= NF; i++) print $i }')
+    for item in ${remainWordList};do
+        remainWord+=$(echo "${item}"|string_firstLetter_toUpperCase "$@")
     done
     echo "${firstWord}${remainWord}"
   }

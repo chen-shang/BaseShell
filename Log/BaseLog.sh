@@ -73,8 +73,8 @@ function log_fail(){
     echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*"|trim 1>&2
     echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
     echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    exit
   fi
-  exit
 }
 
 # @attention 日志只会输出到日志文件中,不会输出在控制台上,默认开启
