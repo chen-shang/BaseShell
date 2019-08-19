@@ -134,37 +134,37 @@ function toCamelCase(){
   }
   pip "${param}"
 }
-
-function string_charAt(){
-:
-}
-function string_compareTo(){
-:
-}
-function string_compareToIgnoreCase(){
-:
-}
-function string_concat(){
-:
-}
-function string_equals(){
-:
-}
-function string_format(){
-:
-}
-function string_isEmpty(){
-:
-}
-function string_join(){
-:
-}
-function string_replace(){
-:
-}
-function string_replaceAll(){
-:
-}
+#
+#function string_charAt(){
+#:
+#}
+#function string_compareTo(){
+#:
+#}
+#function string_compareToIgnoreCase(){
+#:
+#}
+#function string_concat(){
+#:
+#}
+#function string_equals(){
+#:
+#}
+#function string_format(){
+#:
+#}
+#function string_isEmpty(){
+#:
+#}
+#function string_join(){
+#:
+#}
+#function string_replace(){
+#:
+#}
+#function string_replaceAll(){
+#:
+#}
 
 readonly -f string_length trim toUpperCase toLowerCase toCamelCase
 
