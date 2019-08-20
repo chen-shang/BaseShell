@@ -38,3 +38,4 @@ LOG_LEVEL=DEBUG
 
 echo "# ${module}
 " > readme.md
+tree ./../../${project}
