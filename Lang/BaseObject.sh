@@ -82,6 +82,12 @@ function isNotNull(){
   [[ "${param}" != "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
+
+function isNatural(){
+  local param=$1
+  grep -q '^[[:digit:]]*$' <<< "${param}" && return "${TRUE}" || return "${FALSE}"
+}
+
 # 哈希code  [String]<-(str:String)
 function hashCode(){
   local param=$1

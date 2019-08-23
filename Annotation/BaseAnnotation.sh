@@ -15,8 +15,8 @@ function _NotNull(){
   [[ -z "${param}" ]] && log_fail "${err_msg}" || return "${TRUE}"
 }
 
-# 判断传入参数是否为数字 [Boolean]<-(param:String,err_msg:String)
-function _Numeric(){
+# 判断传入参数是否为自然数 [Boolean]<-(param:String,err_msg:String)
+function _Natural(){
   local param=$1;local err_msg=$2
   err_msg=${err_msg:-'parameter must be numeric'}
   ! grep -q '^[[:digit:]]*$' <<< "${param}" && log_fail "${err_msg}" ||  return "${TRUE}"

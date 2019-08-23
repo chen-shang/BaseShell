@@ -14,18 +14,18 @@ if [[ -z "${module}"  ]];then
 fi
 
 # 新建项目目录
-mkdir "${project}"
+mkdir -p "${project}"
 cd  "${project}"
 
 # 引入BaseShell
 BASE_SHELL=$(dirname ${BASH_SOURCE[0]})
-ln -s "${BASE_SHELL}" ./BaseShell
+ln -nsf "${BASE_SHELL}" ./BaseShell
 
 # 新建模块
-mkdir "${module}"
+mkdir -p "${module}"
 cd "${module}"
 
-mkdir Resources Service Test
+mkdir -p Resources Service Test
 
 # 写入默认的配置文件
 echo "#!/usr/bin/env bash
@@ -47,7 +47,8 @@ import=\$(basename \"\${BASH_SOURCE[0]}\" .sh)
 if [[ \$(eval echo '$'\"\${import}\") == 0 ]]; then return; fi
 eval \"\${import}=0\"
 #===============================================================
-source ../../BaseShell/Starter/BaseHeader.sh
+source ./../../BaseShell/Starter/BaseHeader.sh
+source ./../config.sh
 #导入工具包
 #===============================================================================
 #业务代码

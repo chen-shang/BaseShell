@@ -42,27 +42,27 @@ function log_info(){
 # warn级别的日志 []<-(msg:String)
 function log_warn(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\033[33m [WARN]\033[0m:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    echo -e "\033[33m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN]:    $*\033[0m"|trim 1>&2
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
 # error级别的日志 []<-(msg:String)
 function log_error(){
   if [[ ${log_level} -ge 0 ]];then
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).error.log" 2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [ERROR]\\033[0m:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    echo -e "\\033[31m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR]:   $*\\033[0m"|trim 1>&2
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR]:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).error.log" 2>&1
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR]:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
 # 用来标识成功状态的,用绿色 []<-(msg:String)
 function log_success(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[32m [SUCCESS]\\033[0m: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    echo -e "\\033[32m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS]: $*\\033[0m"|trim 1>&2
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS]: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS]: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
@@ -70,10 +70,10 @@ function log_success(){
 # 用来标识失败状态的,用红色, []<-(msg:String)
 function log_fail(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID]\\033[31m [FAIL]\\033[0m:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
-    exit
+    echo -e "\\033[31m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL]:    $*\\033[0m"|trim 1>&2
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    exit 1
   fi
 }
 

@@ -72,16 +72,6 @@ function string_contains(){
   [[ ${value1} =~ ${value2} ]] && return "${TRUE}" || return "${FALSE}"
 }
 
-# 判断是否是自然数
-function string_isNatural(){
-  local param=$*
-  _action(){
-    local param=$*
-    ! grep -q '^[[:digit:]]*$' <<< "${param}" && return "${TRUE}" || return "${FALSE}"
-  }
-  pip "${param}"
-}
-
 # 字符串下标所在位置的字符,从左向右
 function string_indexOf(){
   local param=$1

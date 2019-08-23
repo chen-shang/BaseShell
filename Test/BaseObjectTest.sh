@@ -3,41 +3,36 @@
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
-source ./../../BaseShell/Annotation/BaseAnnotation.sh
+source ./../../BaseShell/Lang/BaseObject.sh
 #===============================================================
-test-_Min(){ #ignore
-  _Min "2" "3"
-  assertEquals $? "0"
-  _Min "2" "1"
-}
-
-test-_Max(){ #ignore
-  _Max "2" "1"
-  assertEquals $? "0"
-  _Max "2" "3"
-}
-
-test-_Natural(){
-  _Natural "1"
+test-equals(){
+  equals "1" "1"
   assertTrue $?
 
-  _Natural "123"
+  equals "1" "1 "
+  assertFalse $?
+
+  equals "a" "a"
   assertTrue $?
 
-  (_Natural "1.2" >/dev/null 2>&1)
+  equals "11" ""
   assertFalse $?
 
-  (_Natural "-1.2" >/dev/null 2>&1)
-  assertFalse $?
+  equals "" ""
+  assertTrue $?
 
-  (_Natural "1 " >/dev/null 2>&1)
-  assertFalse $?
-
-  (_Natural " 1 " >/dev/null 2>&1)
-  assertFalse $?
-
-  (_Natural "12 3" >/dev/null 2>&1)
+  equals "" "0"
   assertFalse $?
 }
+
+
+test-isNatural(){
+  isNatural "1"
+  assertTrue $?
+
+  isNatural "2.1"
+  assertFalse $?
+}
+
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
