@@ -14,7 +14,7 @@ execute(){
 }
 
 case $1 in
-  "-h" | "--help" | "?") (manual) ;;# -h 是 --help 的缩写,执行 manual
-  "") (main) ;;                     # 默认执行当前脚本中的main方法
-  *) (execute "$*") ;;              # 执行当前脚本指定函数
+  "-h" | "--help" | "?") manual ;;# -h 是 --help 的缩写,执行 manual
+  "") main ;;                     # 默认执行当前脚本中的main方法
+  *) execute "$*" ;;              # 执行当前脚本指定函数
 esac
