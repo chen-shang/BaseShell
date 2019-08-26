@@ -21,6 +21,7 @@ new_lock(){ _NotBlank "$1" "lock fd can not be null"
 # 尝试加锁 []<-(lock_fd:String)
 lock_tryLock(){ _NotBlank "$1" "lock fd can not be null"
   local fd=$1
+  new_fifo "${fd}"
   read -r -u "${fd}"
 }
 
@@ -30,4 +31,11 @@ lock_tryLock(){ _NotBlank "$1" "lock fd can not be null"
 lock_unLock(){ _NotBlank "$1" "lock fd can not be null"
   local fd=$1
   echo 0 >& "${fd}"
+}
+
+function lock_run(){ _NotBlank "$1" "lock fd can not be null" && _NotBlank "$2" "function can not be null"
+  local fd=$1;shift ; local task=$*
+  lock_tryLock "${fd}"
+  eval "${task}"
+  lock_unLock "${fd}"
 }

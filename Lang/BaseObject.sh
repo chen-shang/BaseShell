@@ -143,8 +143,8 @@ function new_fd(){
     flock 3
     local find=${NULL}
     for((fd=4;fd<1024;fd++));do
-      rco="$(true 2>/dev/null >& ${fd}; echo $?)"
-      rci="$(true 2>/dev/null <& ${fd}; echo $?)"
+      local rco="$(true 2>/dev/null >& ${fd}; echo $?)"
+      local rci="$(true 2>/dev/null <& ${fd}; echo $?)"
       [[ "${rco}${rci}" == "11" ]] && find=${fd} && break
     done
     echo "${find}"
@@ -154,15 +154,19 @@ function new_fd(){
 # 那文件描述符关联一个fifo,不关心文件名字
 function new_fifo(){
   local fd=$1
-  [[ -z "${fd}" ]] && {
-    echo "fd can not be blank"
-    exit
-  }
+  [[ -z "${fd}" ]] && { echo "fd can not be blank" ;exit ; }
 
-  # 关联一个fifo有名管道
-  local fifo=$(uuidgen)
-  [[ -e "${fifo}" ]] || mkfifo "${fifo}"
-  eval "exec ${fd}<>${fifo} && rm -rf ${fifo}"
+  {
+    flock 3
+    local rco=$(true 2>/dev/null >& "${fd}"; echo $?)
+    local rci=$(true 2>/dev/null <& "${fd}"; echo $?)
+    [[ "${rco}${rci}" == "00" ]] && return #存在则退出
+
+    # 不存在则关联一个fifo有名管道
+    local fifo=$(uuidgen)
+    [[ -e "${fifo}" ]] || mkfifo "${fifo}"
+    eval "exec ${fd}<>${fifo} && rm -rf ${fifo}"
+  } 3<>/tmp/base_shell.lock
 }
 
 readonly -f isEmpty isNotEmpty isBlank isNotBlank

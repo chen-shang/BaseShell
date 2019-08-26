@@ -13,4 +13,4 @@ SHOW_BANNER=0
 # 日志记录位置
 LOG_DIR="${HOME}/.baseshell"
 # 日志级别
-LOG_LEVEL=DEBUG
+LOG_LEVEL=SYSTEM

@@ -47,5 +47,9 @@ test-new_fd(){
   assertEquals "${fd}" "4"
 }
 
+test-new_fifo(){
+  new_fifo "30"
+  new_fifo "30"
+}
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

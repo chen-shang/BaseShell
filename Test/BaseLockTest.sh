@@ -6,7 +6,7 @@ source ./../../BaseShell/Starter/BaseTestHeader.sh
 source ./../../BaseShell/Concurrent/BaseLock.sh
 source ./../../BaseShell/Concurrent/BaseThreadPool.sh
 #===============================================================
-test-new_lock(){
+test-new_lock(){ #ignore
   lock=$(new_fd)
   log_debug "lock_fd:${lock}"
   new_lock "${lock}"
@@ -38,6 +38,31 @@ test-new_lock(){
   new_lock "${lock}"
   read -r -u "${lock}" result
   assertTrue "${result}"
+}
+echo 1 > file
+add(){
+  read item < file
+  ((item++))
+  echo ${item} > file
+}
+
+test-lock_run(){
+#  set -x
+  fd=$(new_fd)
+  new_lock ${fd}
+
+  for ((x=0;x<5;x++)){
+    {
+     log_info "${x}开始加一"
+
+     lock_run "${fd}" "add"
+     res=$(cat file)
+     log_info "中间值:${res}"
+    } &
+  }
+
+  wait
+  cat file
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
