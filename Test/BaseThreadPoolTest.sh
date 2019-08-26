@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2155
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
@@ -22,6 +22,8 @@ test-new_threadPool(){
     for x in {1..10};do
       threadPool_submit "${pool2}" "sleep 1;log_info 2:${x}"
     done
+
+    wait
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

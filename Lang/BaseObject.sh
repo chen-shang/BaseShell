@@ -137,19 +137,21 @@ function delay(){
   pip "${timeout}"
 }
 
+# 获取一个可用的文件描述符号
 function new_fd(){
   {
-    flock 4
+    flock 3
     local find=${NULL}
-    for((fd=5;fd<1024;fd++));do
+    for((fd=4;fd<1024;fd++));do
       rco="$(true 2>/dev/null >& ${fd}; echo $?)"
       rci="$(true 2>/dev/null <& ${fd}; echo $?)"
       [[ "${rco}${rci}" == "11" ]] && find=${fd} && break
     done
     echo "${find}"
-  } 4<>/tmp/base_shell.lock
+  } 3<>/tmp/base_shell.lock
 }
 
+# 那文件描述符关联一个fifo,不关心文件名字
 function new_fifo(){
   local fd=$1
   [[ -z "${fd}" ]] && {

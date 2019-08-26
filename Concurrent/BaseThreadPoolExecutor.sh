@@ -20,7 +20,7 @@ source ./../../BaseShell/Concurrent/BaseLock.sh
 # 新建线程池 [int]<-(coreSize:Integer,keepAliveTime:Long)
 new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
   local coreSize=$1 #核心线程数
-  local keepAliveTime=$2 #线程的存活时间
+  local keepAliveTime=${2:-1} #线程的存活时间
 
   local lock=$(new_fd)
   new_lock "${lock}"
@@ -28,20 +28,20 @@ new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural
   local fd=$(new_fd)
   new_fifo "${fd}"
 
-  for((i=0;i<${coreSize};i++));do
+  for((i=0;i<coreSize;i++));do
     {
       while :;do
         trap 'echo you hit Ctrl-C/Ctrl-\, now exiting.....; exit' SIGINT SIGQUIT
-        lock_tryLock ${lock} #这个地方必须加锁,防止read并发读导致task错乱
-        read -t ${keepAliveTime} -u ${fd} task
-        lock_unLock ${lock}
+        lock_tryLock "${lock}" #这个地方必须加锁,防止read并发读导致task错乱
+        read -t "${keepAliveTime}" -r -u "${fd}" task
+        lock_unLock "${lock}"
         isBlank "${task}" && exit
         eval "${task}"
       done
     } &
   done
 
-  return ${fd}
+  return "${fd}"
 }
 
 executor_run(){

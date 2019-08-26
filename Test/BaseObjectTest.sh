@@ -38,7 +38,7 @@ test-new_fd(){
   fd=$(new_fd)
   assertEquals "${fd}" "4"
 
-  exec 4<>file
+  exec 4<>file && rm file
   fd=$(new_fd)
   assertEquals "${fd}" "5"
 

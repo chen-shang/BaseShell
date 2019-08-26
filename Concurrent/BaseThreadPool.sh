@@ -20,11 +20,11 @@ new_threadPool(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" &&
   local coreSize=$1
   local fd=$(new_fd)
   new_fifo "${fd}"
-  for((i=0;i<${coreSize};i++));do
+  for((i=0;i<coreSize;i++));do
     #写入令牌
     eval "echo ${i} >& ${fd}"
   done
-  return ${fd}
+  return "${fd}"
 }
 
 # 注意这个方法是阻塞方法
