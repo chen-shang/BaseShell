@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091
+# shellcheck disable=SC1091,SC2155
 #===============================================================
 import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
@@ -12,8 +12,8 @@ function equals(){
   local value1=$1 #一参
   local value2=$2 #二参
 
-  local length1=$(echo "${#value1}")
-  local length1=$(echo "${#value2}")
+  local length1=${#value1}
+  local length1=${#value2}
   if [[ "${length1}" -eq "${length1}" && "${value1}" == "${value2}"  ]];then
     return "${TRUE}"
   else
