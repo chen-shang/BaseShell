@@ -137,5 +137,31 @@ function delay(){
   pip "${timeout}"
 }
 
-readonly -f equals delay isEmpty isNotEmpty
-readonly -f isBlank isNotBlank hashCode pip
+function new_fd(){
+  {
+    flock 4
+    local find=${NULL}
+    for((fd=5;fd<1024;fd++));do
+      rco="$(true 2>/dev/null >& ${fd}; echo $?)"
+      rci="$(true 2>/dev/null <& ${fd}; echo $?)"
+      [[ "${rco}${rci}" == "11" ]] && find=${fd} && break
+    done
+    echo "${find}"
+  } 4<>/tmp/base_shell.lock
+}
+
+function new_fifo(){
+  local fd=$1
+  [[ -z "${fd}" ]] && {
+    echo "fd can not be blank"
+    exit
+  }
+
+  # 关联一个fifo有名管道
+  local fifo=$(uuidgen)
+  [[ -e "${fifo}" ]] || mkfifo "${fifo}"
+  eval "exec ${fd}<>${fifo} && rm -rf ${fifo}"
+}
+
+readonly -f isEmpty isNotEmpty isBlank isNotBlank
+readonly -f hashCode equals delay pip new_fd new_fifo

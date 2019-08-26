@@ -20,6 +20,4 @@ function random_int(){
 function random_string(){
   local length=${1:-16}
   head -c ${length} /dev/random |base32
-  # head -c ${length} /dev/urandom |base32
-  # openssl rand
 }

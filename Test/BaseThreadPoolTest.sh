@@ -10,20 +10,18 @@ test-new_threadPool(){
     new_threadPool 10
     local pool=$?
 
+    log_debug "pool:${pool}"
     for i in {1..10};do
-      threadPool_run "${pool}" "log_info 1:${i}"
+      threadPool_submit "${pool}" "sleep 1;log_info 1:${i}"
     done
 
+    new_threadPool 10
+    local pool2=$?
 
-  new_threadPool 5
-  local pool2=$?
-
-  for i in {1..10};do
-    threadPool_run "${pool2}" "log_info 2:${i}"
-  done
-  wait
-
-  wait
+    log_debug "pool2:${pool2}"
+    for x in {1..10};do
+      threadPool_submit "${pool2}" "sleep 1;log_info 2:${x}"
+    done
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
