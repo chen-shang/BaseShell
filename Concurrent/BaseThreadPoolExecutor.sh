@@ -47,5 +47,4 @@ new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural
 executor_run(){
   local fd=$1 ;shift ;local task=$*
   echo "${task}" >& "${fd}"
-  log_system "[${LINENO}]: pool ${fd} submit task success. ${task}"
 }

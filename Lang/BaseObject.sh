@@ -151,6 +151,19 @@ function new_fd(){
   } 3<>/tmp/base_shell.lock
 }
 
+isExist(){
+  local fd=$1
+  {
+    flock 3
+    [[ -z "${fd}" ]] && { echo "fd can not be blank" ;exit ; }
+
+    local rco=$(true 2>/dev/null >& "${fd}"; echo $?)
+    local rci=$(true 2>/dev/null <& "${fd}"; echo $?)
+    [[ "${rco}${rci}" == "00" ]] && return ${TRUE} || return ${FALSE}
+  } 3<>/tmp/base_shell.lock
+}
+
+
 # 那文件描述符关联一个fifo,不关心文件名字
 function new_fifo(){
   local fd=$1

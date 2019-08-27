@@ -39,10 +39,12 @@ test-new_lock(){ #ignore
   read -r -u "${lock}" result
   assertTrue "${result}"
 }
+
 echo 1 > file
 add(){
   read item < file
   ((item++))
+  log_info "中间值:${item}"
   echo ${item} > file
 }
 
@@ -51,15 +53,11 @@ test-lock_run(){
   fd=$(new_fd)
   new_lock ${fd}
 
-  for ((x=0;x<5;x++)){
+  for ((x=0;x<5;x++));do
     {
-     log_info "${x}开始加一"
-
      lock_run "${fd}" "add"
-     res=$(cat file)
-     log_info "中间值:${res}"
     } &
-  }
+  done
 
   wait
   cat file
