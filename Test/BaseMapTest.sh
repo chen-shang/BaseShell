@@ -5,28 +5,33 @@ source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
 source ./../../BaseShell/Collection/BaseMap.sh
 #===============================================================
-test-map(){ #ignore
+test-map(){
   map_put "one" "1"
+  assertTrue $?
   map_put "two" "2"
+  assertTrue $?
   map_put "three" "3"
+  assertTrue $?
   map_put "four" "4"
+  assertTrue $?
 
-  map_get "one"
-  map_containsKey "one" && echo "包含one" || echo "不包含one"
-  map_containsKey "five" && echo "包含five" || echo "不包含five"
-  map_size
+  local result=$(map_get "one")
+  assertEquals ${result} "1"
+  map_containsKey "one"
+  assertTrue $?
+  map_containsKey "five"
+  assertFalse $?
+  size=$(map_size)
+  assertEquals "${size}" "4"
   map_remove "one"
-  map_containsKey "one" && echo "包含one" || echo "不包含one"
+  assertTrue $?
+  map_containsKey "one"
+  assertFalse $?
 
-  map_containsValue 1  && echo "contains" || echo "! contains"
-  map_containsValue 2  && echo "contains" || echo "! contains"
-
-  map_size
-  map_keys
-  map_values
-
-  map_entrySet
-
+  map_containsValue 1
+  assertFalse $?
+  map_containsValue 2
+  assertTrue $?
   map_forEach log
 }
 
@@ -39,10 +44,9 @@ log(){
 test-new_map(){
   declare -A qq=()
   new_map qq
-#  qq_put "one" "1"
-#  qq_put "two" "2"
-#  qq_put "three" "3"
-#  qq_forEach log
+  qq_put "one" "1"
+  qq_put "two" "2"
+  qq_put "three" "3"
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155
+# shellcheck disable=SC1091,SC2155,SC2034
 #===============================================================
 import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
@@ -12,7 +12,6 @@ function map_put(){
   local cmd="${mapName}[$1]=$2"
   eval "${cmd}"
 }
-
 function map_get(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd="{${mapName}[$1]}"
@@ -38,9 +37,9 @@ function map_containsValue(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local values=$(eval echo '$'"{${mapName}[@]}")
   for value in ${values};do
-    ! equals "${value}" "$1" && continue || return ${TRUE}
+    ! equals "${value}" "$1" && continue || return "${TRUE}"
   done
-  return ${FALSE}
+  return "${FALSE}"
 }
 
 function map_forEach(){
@@ -57,7 +56,7 @@ function map_forEach(){
 function map_isEmpty(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local size=$(eval echo '$'"{#${mapName}[@]}")
-  equals "${size}" 0 && return ${TRUE} || return ${FALSE}
+  equals "${size}" 0 && return "${TRUE}" || return "${FALSE}"
 }
 function map_keys(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
@@ -71,53 +70,18 @@ function map_values(){
 
 declare -A map=()
 function new_map(){ _NotBlank "$1" "mapName can not be null"
-  local map=$1
-  local func="map_put"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_get"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_containsKey"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_remove"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_size"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_containsValue"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_entrySet"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_forEach"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_getOrDefault"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_isEmpty"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_keys"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
-  local func="map_values"
-  local suffix=$(echo ${func}|awk -F '_' '{print $2}')
-  test -n "$(declare -f ${func})" || return
-  eval "${_/${func}/${map}_${suffix}}"
+  local mapName=$1
+
+  # 重命名函数
+  rename(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
+    test -n "$(declare -f $1)" || return
+    eval "${_/$1/$2}"
+  }
+
+  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
+
+  for func in ${functions} ;do
+     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
+     rename "${func}" "${mapName}_${suffix}"
+  done
 }
