@@ -155,7 +155,3 @@ function toCamelCase(){
 #function string_replaceAll(){
 #:
 #}
-
-readonly -f string_length trim toUpperCase toLowerCase toCamelCase
-
-

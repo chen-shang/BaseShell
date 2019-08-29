@@ -70,16 +70,49 @@ function map_values(){
   eval echo '$'"{${mapName}[@]}"
 }
 
+function map_kv(){
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd="{!${mapName}[@]}"
+  local keys=$(eval echo '$'"${cmd}")
+
+  local result=""
+  for key in ${keys};do
+    cmd="{${mapName}[${key}]}"
+    local value=$(eval echo '$'"${cmd}")
+    result+="[${key}]=${value} "
+  done
+
+  echo "${result}"
+}
+
+function map_of(){
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd="${mapName}=($*)"
+  eval ${cmd}
+}
+
+function map_toString(){ :
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  eval "${mapName}_kv"
+}
+
+function map_clear(){
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd="{!${mapName}[@]}"
+  local keys=$(eval echo '$'"${cmd}")
+  for key in ${keys};do
+    cmd="unset ${mapName}[${key}]"
+    eval unset "${cmd}"
+  done
+}
+
 declare -A map=()
 function new_map(){ _NotBlank "$1" "mapName can not be null"
   local mapName=$1
-  local cmd="${mapName}=()"
-  eval declare -A "${cmd}"
-
   local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
-
   for func in ${functions} ;do
      local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
      new_function "${func}" "${mapName}_${suffix}"
   done
+  ${mapName}_clear
 }

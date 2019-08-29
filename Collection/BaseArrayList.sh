@@ -8,10 +8,17 @@ eval "${import}=0"
 source ../../BaseShell/Starter/BaseHeader.sh
 #导入工具包
 #===============================================================================
-function list_add(){ :
+function list_add(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local size=$(eval echo '$'"{#${listName}[@]}")
-  local cmd="${listName}[${size}]=$1"
+  local cmd="${listName}[${size}]='$1'"
+  eval "${cmd}"
+}
+
+function list_set(){
+  local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local size=$(eval echo '$'"{#${listName}[@]}")
+  local cmd="${listName}[$1]='$2'"
   eval "${cmd}"
 }
 

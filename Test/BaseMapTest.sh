@@ -7,13 +7,13 @@ source ./../../BaseShell/Collection/BaseMap.sh
 #===============================================================
 test-map(){
   map_put "one" "1"
-#  assertTrue $?
+  assertTrue $?
   map_put "two" "2"
-#  assertTrue $?
+  assertTrue $?
   map_put "three" "3"
-#  assertTrue $?
+  assertTrue $?
   map_put "four" "4"
-#  assertTrue $?
+  assertTrue $?
 
   local result=$(map_get "one")
   assertEquals ${result} "1"
@@ -33,6 +33,8 @@ test-map(){
   map_containsValue 2
   assertTrue $?
   map_forEach log
+
+  map_kv
 }
 
 log(){
