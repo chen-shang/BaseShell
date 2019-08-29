@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155,SC2034
+# shellcheck disable=SC1091,SC2155,SC2034,SC2086
 #===============================================================
 import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
@@ -71,17 +71,18 @@ function map_values(){
 declare -A map=()
 function new_map(){ _NotBlank "$1" "mapName can not be null"
   local mapName=$1
-
+  local cmd="${mapName}=()"
+  eval declare -A "${cmd}"
   # 重命名函数
-  rename(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
+  new_function(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
     test -n "$(declare -f $1)" || return
     eval "${_/$1/$2}"
   }
 
-  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
+  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
 
   for func in ${functions} ;do
      local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
-     rename "${func}" "${mapName}_${suffix}"
+     new_function "${func}" "${mapName}_${suffix}"
   done
 }

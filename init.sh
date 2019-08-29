@@ -53,10 +53,10 @@ source ./../config.sh
 #===============================================================================
 #业务代码
 main(){
-  manual
+  echo \"hello world\"
 }
 #===============================================================================
 source ../../BaseShell/Starter/BaseEnd.sh
-" > "./Service/${module}Service.sh"
+" > "./Service/Main.sh"
 
 tree "./../../${project}"

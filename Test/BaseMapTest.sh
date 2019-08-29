@@ -7,13 +7,13 @@ source ./../../BaseShell/Collection/BaseMap.sh
 #===============================================================
 test-map(){
   map_put "one" "1"
-  assertTrue $?
+#  assertTrue $?
   map_put "two" "2"
-  assertTrue $?
+#  assertTrue $?
   map_put "three" "3"
-  assertTrue $?
+#  assertTrue $?
   map_put "four" "4"
-  assertTrue $?
+#  assertTrue $?
 
   local result=$(map_get "one")
   assertEquals ${result} "1"
@@ -42,11 +42,15 @@ log(){
 }
 
 test-new_map(){
-  declare -A qq=()
+#  declare -A qq=()
   new_map qq
   qq_put "one" "1"
   qq_put "two" "2"
   qq_put "three" "3"
+
+  declare -A user=(['chenshang']='{"age":2,"name":"frank"}')
+  new_map user
+  user_get "chenshang"|jq .name
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
