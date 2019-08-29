@@ -70,7 +70,7 @@ function map_values(){
   eval echo '$'"{${mapName}[@]}"
 }
 
-#declare -A map=()
+declare -A map=()
 function new_map(){ _NotBlank "$1" "mapName can not be null"
   local mapName=$1
   local cmd="${mapName}=()"

@@ -123,7 +123,7 @@ function list_values(){
   eval echo "${cmd}"
 }
 
-#declare -a list=()
+declare -a list=()
 function new_arrayList(){ _NotBlank "$1" "arrayList name can not be null"
   local listName=$1
   local cmd="${listName}=()"
