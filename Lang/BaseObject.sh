@@ -182,5 +182,11 @@ function new_fifo(){
   } 3<>/tmp/base_shell.lock
 }
 
-readonly -f isEmpty isNotEmpty isBlank isNotBlank
+# 重命名函数
+new_function(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
+  test -n "$(declare -f $1)" || return
+  eval "${_/$1/$2}"
+}
+
+readonly -f isEmpty isNotEmpty isBlank isNotBlank new_function
 readonly -f hashCode equals delay pip new_fd new_fifo

@@ -128,11 +128,6 @@ function new_arrayList(){ _NotBlank "$1" "arrayList name can not be null"
   local listName=$1
   local cmd="${listName}=()"
   eval declare -a "${cmd}"
-  # 重命名函数
-  new_function(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
-    test -n "$(declare -f $1)" || return
-    eval "${_/$1/$2}"
-  }
 
   local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
 

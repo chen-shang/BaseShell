@@ -7,12 +7,12 @@ eval "${import}=0"
 #===============================================================
 source ../../BaseShell/Starter/BaseHeader.sh
 
-function map_put(){
+function map_put(){ _NotBlank "$1" "key can not be null" && _NotBlank "$2" "value can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd="${mapName}[$1]=$2"
   eval "${cmd}"
 }
-function map_get(){
+function map_get(){ _NotBlank "$1" "key can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd="{${mapName}[$1]}"
   eval echo '$'"${cmd}"
@@ -24,16 +24,8 @@ function map_containsKey(){ _NotBlank "$1" "key can not be blank"
   local result=$(eval echo '$'"${cmd}")
   isNotBlank "${result}"
 }
-function map_remove(){
-  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  local cmd="${mapName}[$1]"
-  eval unset "${cmd}"
-}
-function map_size(){
-  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  eval echo '$'"{#${mapName}[@]}"
-}
-function map_containsValue(){
+
+function map_containsValue(){ _NotBlank "$1" "value can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local values=$(eval echo '$'"{${mapName}[@]}")
   for value in ${values};do
@@ -42,7 +34,17 @@ function map_containsValue(){
   return "${FALSE}"
 }
 
-function map_forEach(){
+function map_remove(){ _NotBlank "$1" "key can not be null"
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd="${mapName}[$1]"
+  eval unset "${cmd}"
+}
+function map_size(){
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  eval echo '$'"{#${mapName}[@]}"
+}
+
+function map_forEach(){ _NotBlank "$1" "function can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd="{!${mapName}[@]}"
   local keys=$(eval echo '$'"${cmd}")
@@ -68,16 +70,11 @@ function map_values(){
   eval echo '$'"{${mapName}[@]}"
 }
 
-declare -A map=()
+#declare -A map=()
 function new_map(){ _NotBlank "$1" "mapName can not be null"
   local mapName=$1
   local cmd="${mapName}=()"
   eval declare -A "${cmd}"
-  # 重命名函数
-  new_function(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
-    test -n "$(declare -f $1)" || return
-    eval "${_/$1/$2}"
-  }
 
   local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
 
