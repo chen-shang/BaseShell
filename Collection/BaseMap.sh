@@ -1,11 +1,21 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155,SC2034,SC2086
+# shellcheck disable=SC1091,SC2155,SC2034
 #===============================================================
 import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
 source ../../BaseShell/Starter/BaseHeader.sh
+declare -A map=()
+function new_map(){ _NotBlank "$1" "mapName can not be null"
+  local mapName=$1
+  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
+  for func in ${functions} ;do
+     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
+     new_function "${func}" "${mapName}_${suffix}"
+  done
+  eval "${mapName}_clear"
+}
 
 function map_put(){ _NotBlank "$1" "key can not be null" && _NotBlank "$2" "value can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
@@ -39,9 +49,11 @@ function map_remove(){ _NotBlank "$1" "key can not be null"
   local cmd="${mapName}[$1]"
   eval unset "${cmd}"
 }
+
 function map_size(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  eval echo '$'"{#${mapName}[@]}"
+  local cmd='$'"{#${mapName}[@]}"
+  eval echo "${cmd}"
 }
 
 function map_forEach(){ _NotBlank "$1" "function can not be null"
@@ -55,6 +67,7 @@ function map_forEach(){ _NotBlank "$1" "function can not be null"
     eval "$1 ${key} ${value}"
   done
 }
+
 function map_isEmpty(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local size=$(eval echo '$'"{#${mapName}[@]}")
@@ -67,7 +80,8 @@ function map_keys(){
 }
 function map_values(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  eval echo '$'"{${mapName}[@]}"
+  local cmd='$'"{${mapName}[@]}"
+  eval echo "${cmd}"
 }
 
 function map_kv(){
@@ -88,7 +102,7 @@ function map_kv(){
 function map_of(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd="${mapName}=($*)"
-  eval ${cmd}
+  eval "${cmd}"
 }
 
 function map_toString(){ :
@@ -106,13 +120,28 @@ function map_clear(){
   done
 }
 
-declare -A map=()
-function new_map(){ _NotBlank "$1" "mapName can not be null"
-  local mapName=$1
-  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
-  for func in ${functions} ;do
-     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
-     new_function "${func}" "${mapName}_${suffix}"
+function map_mapper(){ _NotBlank "$1" "function can not be null"
+  local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd="{!${mapName}[@]}"
+  local keys=$(eval echo '$'"${cmd}")
+  # 新建一个map
+  local newMap="newMap$(uuidgen | sed 's/-//g')"
+  new_map "${newMap}"
+
+  local cmd="declare -A ${newMap}=()"
+  eval "${cmd}"
+
+  for key in ${keys};do
+    local cmd="{${mapName}[${key}]}"
+    local value=$(eval echo '$'"${cmd}")
+    local newValue=$(eval "$1 ${key} ${value}")
+    local cmd="${newMap}[${key}]=${newValue}"
+    eval "${cmd}"
   done
-  ${mapName}_clear
+
+  eval "${newMap}_kv"
+}
+
+#todo
+function map_reducer(){ _NotBlank "$1" "function can not be null"
 }
