@@ -35,6 +35,13 @@ test-map(){
   map_forEach log
 
   map_kv
+
+}
+
+mapper(){
+  k=$1
+  v=$2
+  echo ${v}-$(uuidgen)
 }
 
 log(){
@@ -44,8 +51,8 @@ log(){
 }
 
 test-new_map(){
-#  declare -A qq=()
   new_map qq
+  declare -A qq=()
   qq_put "one" "1"
   qq_put "two" "2"
   qq_put "three" "3"
@@ -53,6 +60,19 @@ test-new_map(){
   declare -A user=(['chenshang']='{"age":2,"name":"frank"}')
   new_map user
   user_get "chenshang"|jq .name
+}
+
+test-map_mapper(){
+  map_put "one" "1"
+  map_put "two" "2"
+  map_mapper mapper
+
+  new_map qq
+  declare -A qq=()
+  qq_put "one" "1"
+  qq_put "two" "2"
+  qq_put "three" "3"
+  qq_mapper mapper
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
