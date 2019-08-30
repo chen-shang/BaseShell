@@ -118,6 +118,7 @@ function list_sub(){ _NotBlank "$1" "from can not be null"
     eval echo "${cmd}"
   }
 }
+
 function list_copy(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd='$'"{${listName}[@]}"
@@ -128,6 +129,43 @@ function list_values(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd='$'"{${listName}[@]}"
   eval echo "${cmd}"
+}
+
+function list_mapper(){
+  local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd='$'"{${listName}[@]}"
+  local values=$(eval echo "${cmd}")
+  local result=""
+  for value in ${values};do
+     result+="$(eval $1 "${value}") "
+  done
+
+  echo "${result}"
+}
+
+function list_reducer(){
+  local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+  local cmd='$'"{${listName}[@]}"
+  local values=$(eval echo "${cmd}")
+  local result=$2
+  # 含有初始值
+  isNotBlank "${result}" && {
+    for value in ${values};do
+       result=$(eval $1 "${result}" "${value}")
+    done
+  }
+
+  # 不含初始值
+  isNotBlank "${result}" || {
+    local size=$(${listName}_size)
+    result=$(${listName}_get 0)
+    for ((i=1;i<size;i++)){
+      local value=$(${listName}_get ${i})
+      result=$(eval $1 "${result}" "${value}")
+    }
+  }
+
+  echo "${result}"
 }
 
 declare -a list=()

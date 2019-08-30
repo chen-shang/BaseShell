@@ -142,6 +142,3 @@ function map_mapper(){ _NotBlank "$1" "function can not be null"
   eval "${newMap}_kv"
 }
 
-#todo
-function map_reducer(){ _NotBlank "$1" "function can not be null"
-}
