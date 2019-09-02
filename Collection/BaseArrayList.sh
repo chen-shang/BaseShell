@@ -8,6 +8,20 @@ eval "${import}=0"
 source ../../BaseShell/Starter/BaseHeader.sh
 #导入工具包
 #===============================================================================
+declare -a list=()
+function new_arrayList(){ _NotBlank "$1" "arrayList name can not be null"
+  local listName=$1
+  local cmd="${listName}=()"
+  eval declare -a "${cmd}"
+
+  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
+
+  for func in ${functions} ;do
+     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
+     new_function "${func}" "${listName}_${suffix}"
+  done
+}
+
 function list_add(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local size=$(eval echo '$'"{#${listName}[@]}")
@@ -17,7 +31,6 @@ function list_add(){
 
 function list_set(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  local size=$(eval echo '$'"{#${listName}[@]}")
   local cmd="${listName}[$1]='$2'"
   eval "${cmd}"
 }
@@ -166,18 +179,4 @@ function list_reducer(){
   }
 
   echo "${result}"
-}
-
-declare -a list=()
-function new_arrayList(){ _NotBlank "$1" "arrayList name can not be null"
-  local listName=$1
-  local cmd="${listName}=()"
-  eval declare -a "${cmd}"
-
-  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
-
-  for func in ${functions} ;do
-     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
-     new_function "${func}" "${listName}_${suffix}"
-  done
 }

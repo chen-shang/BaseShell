@@ -7,6 +7,18 @@ eval "${import}=0"
 #===============================================================
 source ../../BaseShell/Starter/BaseHeader.sh
 
+declare -A hashMap=()
+function new_hashMap(){ _NotBlank "$1" "mapName can not be null"
+  local mapName=$1
+
+  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
+
+  for func in ${functions} ;do
+     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
+     new_function "${func}" "${mapName}_${suffix}"
+  done
+}
+
 function hashMap_put(){ _NotBlank "$1" "key can not be null" && _NotBlank "$2" "value can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
 }
@@ -27,6 +39,10 @@ function hashMap_remove(){ _NotBlank "$1" "key can not be null"
 }
 function hashMap_size(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
+
+  local cmd='$'"{${mapName}[@]}"
+  local newHashMap=($(eval echo "${cmd}"))
+  echo ${#newHashMap[@]}
 }
 
 function hashMap_forEach(){ _NotBlank "$1" "function can not be null"
@@ -49,16 +65,3 @@ function hashMap_toString(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
 }
 
-declare -A new_hashMap=()
-function new_hashMap(){ _NotBlank "$1" "mapName can not be null"
-  local mapName=$1
-  local cmd="${mapName}=()"
-  eval declare -A "${cmd}"
-
-  local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
-
-  for func in ${functions} ;do
-     local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
-     new_function "${func}" "${mapName}_${suffix}"
-  done
-}
