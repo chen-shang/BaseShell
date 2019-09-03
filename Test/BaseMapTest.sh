@@ -66,6 +66,8 @@ test-map_mapper(){
   map_put "one" "1"
   map_put "two" "2"
   map_mapper mapper
+  map_clear
+  map_mapper mapper
 
   new_map qq
   declare -A qq=()
@@ -73,6 +75,8 @@ test-map_mapper(){
   qq_put "two" "2"
   qq_put "three" "3"
   qq_mapper mapper
+
+
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

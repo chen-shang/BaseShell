@@ -112,12 +112,8 @@ function map_toString(){ :
 
 function map_clear(){
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  local cmd="{!${mapName}[@]}"
-  local keys=$(eval echo '$'"${cmd}")
-  for key in ${keys};do
-    cmd="unset ${mapName}[${key}]"
-    eval unset "${cmd}"
-  done
+  local cmd="${mapName}=()"
+  eval "${cmd}"
 }
 
 function map_mapper(){ _NotBlank "$1" "function can not be null"
