@@ -7,9 +7,9 @@ eval "${import}=0"
 #===============================================================
 source ../../BaseShell/Starter/BaseHeader.sh
 source ./../../BaseShell/Collection/BaseMap.sh
-declare -A hashMap=()
 readonly defaultSize=2
 
+declare -A hashMap=()
 # 新建一个HashMap  []<-(mapName:String)
 function new_hashMap(){ _NotBlank "$1" "hash map name can not be null"
   local mapName=$1
@@ -34,7 +34,14 @@ function hashMap_get(){ _NotBlank "$1" "key can not be null"
   local mapName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local key=$1
   local hashCode=$(echo "${key}"|hashCode)
-  local size=$(private_size "$(eval "${mapName}_size")")
+  local nowSize=$(eval "${mapName}"_size)
+  local size=$(private_size "${nowSize}")
+
+  # 当前是满的时候,还没有来来得及扩容
+  if [[ $((nowSize*2)) -eq ${size} ]];then
+    size=nowSize
+  fi
+
   local index=$((hashCode % size))
   local cmd='$'"{${mapName}[${index}]}"
 
