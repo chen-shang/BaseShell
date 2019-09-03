@@ -7,6 +7,7 @@ eval "${import}=0"
 #===============================================================
 source ../../BaseShell/Starter/BaseHeader.sh
 declare -A map=()
+# 新建一个Map  []<-(mapName:String)
 function new_map(){ _NotBlank "$1" "mapName can not be null"
   local mapName=$1
   local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
