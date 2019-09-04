@@ -5,39 +5,60 @@ source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
 source ./../../BaseShell/Annotation/BaseAnnotation.sh
 #===============================================================
-test-_Min(){ #ignore
-  _Min "2" "3"
-  assertEquals $? "0"
-  _Min "2" "1"
+test-_Min(){
+  (_Min "2" "3" >/dev/null 2>&1)
+  assertTrue "$?"
+  (_Min "2" "1" >/dev/null 2>&1)
+  assertFalse "$?"
+  (_Min "2" "2" >/dev/null 2>&1)
+  assertFalse "$?"
 }
 
-test-_Max(){ #ignore
-  _Max "2" "1"
-  assertEquals $? "0"
-  _Max "2" "3"
+test-_Max(){
+  (_Max "2" "1" >/dev/null 2>&1)
+  assertTrue "$?"
+  (_Max "2" "3" >/dev/null 2>&1)
+  assertFalse "$?"
+  (_Max "2" "2" >/dev/null 2>&1)
+  assertFalse "$?"
 }
 
 test-_Natural(){
   _Natural "1"
-  assertTrue $?
+  assertTrue "$?"
 
   _Natural "123"
-  assertTrue $?
+  assertTrue "$?"
 
   (_Natural "1.2" >/dev/null 2>&1)
-  assertFalse $?
+  assertFalse "$?"
 
   (_Natural "-1.2" >/dev/null 2>&1)
-  assertFalse $?
+  assertFalse "$?"
 
   (_Natural "1 " >/dev/null 2>&1)
-  assertFalse $?
+  assertFalse "$?"
 
   (_Natural " 1 " >/dev/null 2>&1)
-  assertFalse $?
+  assertFalse "$?"
 
   (_Natural "12 3" >/dev/null 2>&1)
-  assertFalse $?
+  assertFalse "$?"
+}
+
+test-_NotBlank(){
+   (_NotBlank "1" >/dev/null 2>&1)
+   assertTrue "$?"
+
+   (_NotBlank "" >/dev/null 2>&1)
+   assertFalse "$?"
+
+   (_NotBlank " " >/dev/null 2>&1)
+   assertFalse "$?"
+
+   (_NotBlank >/dev/null 2>&1)
+   assertFalse "$?"
+   isBlank
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

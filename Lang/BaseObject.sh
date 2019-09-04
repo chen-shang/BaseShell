@@ -50,10 +50,10 @@ function isBlank(){
   isEmpty "${param}" && return "${TRUE}" || return "${FALSE}"
 }
 
-# isBlank ""  -> 1
-# isBlank " " -> 1
-# isBlank "1" -> 0
-# isBlank  1  -> 0
+# isNotBlank ""  -> 1
+# isNotBlank " " -> 1
+# isNotBlank "1" -> 0
+# isNotBlank  1  -> 0
 function isNotBlank(){
   local param=$1
   param=$(echo "$1" | tr -d " ")

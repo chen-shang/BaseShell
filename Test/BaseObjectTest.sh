@@ -47,9 +47,33 @@ test-new_fd(){
   assertEquals "${fd}" "4"
 }
 
-test-new_fifo(){
-  new_fifo "30"
-  new_fifo "30"
+test-is(){
+  isBlank ""
+  assertTrue $?
+  isBlank " "
+  assertTrue  $?
+  isBlank "1"
+  assertFalse $?
+  isBlank  1
+  assertFalse $?
+
+  isEmpty ""
+  assertTrue $?
+  isEmpty " "
+  assertFalse $?
+  isEmpty "1"
+  assertFalse $?
+  isEmpty  1
+  assertFalse $?
+
+   isNotBlank ""
+   assertFalse $?
+   isNotBlank " "
+   assertFalse $?
+   isNotBlank "1"
+   assertTrue $?
+   isNotBlank  1
+   assertTrue $?
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

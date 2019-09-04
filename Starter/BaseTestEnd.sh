@@ -2,6 +2,8 @@
 # shellcheck disable=SC1091,SC2155
 source ./../../BaseShell/Starter/BaseStarter.sh
 
+#test -n "$(declare -F mock)" && mock
+
 # 断言目标值是
 assertEquals(){
   equals "$1" "$2" && log_success "test ok[100%],hit [${2}]"
