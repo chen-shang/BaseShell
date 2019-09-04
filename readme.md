@@ -5,6 +5,7 @@
 | |_) | (_| \__ \  __/\__ \ | | |  __/ | |
 |____/ \__,_|___/\___||___/_| |_|\___|_|_|
 ```
+
 ![](https://github.com/chen-shang/Picture/blob/master/init.gif)
 
 # BaseShell使用教程
