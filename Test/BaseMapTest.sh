@@ -16,7 +16,7 @@ test-map(){
   assertTrue $?
 
   local result=$(map_get "one")
-  assertEquals ${result} "1"
+  assertEquals "${result}" "1"
   map_containsKey "one"
   assertTrue $?
   map_containsKey "five"

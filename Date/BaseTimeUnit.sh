@@ -23,6 +23,9 @@ readonly MONTH_ENGLISH_ENUM=(JANUARY FEBRUARY MARCH APRIL MAY JUNE JULY AUGUST S
 readonly DEFAULT_LOCALDATETIME_FORMAT='+%Y-%m-%dT%H:%M:%S'
 # 格式 2018-03-09
 readonly DEFAULT_LOCALDATE_FORMAT="+%Y-%m-%d"
+# 格式 2018-03-09
+readonly DEFAULT_LOCALTIME_FORMAT="+%H:%M:%S"
+
 
 function TimeUnit.MILLISECOND.sleep(){
   local sec=$(echo "scale=4;$1/1000"|bc)
