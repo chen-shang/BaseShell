@@ -6,11 +6,9 @@ source ./../../BaseShell/Starter/BaseTestHeader.sh
 source ./../../BaseShell/Date/BaseLocalDateTime.sh
 #===============================================================
 test-localdate(){
-
-  timestamp_toLocaldate $(timestamp_now)
-
-  localdatetime_getLocaldate "2019/10/01"
-  localdatetime_getLocaltime "2019/10/01T10:23"
+  localdatetime_isEqual  "2019-09-09 09:00" "2019-09-09" && echo yes || echo no
+  localdatetime_isBefore "2019-09-09 09:00" "2019-09-09 19:00" && echo yes || echo no
+  localdatetime_isAfter  "2019-09-10" "2019-09-09" && echo yes || echo no
 
 }
 #===============================================================

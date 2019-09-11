@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
 #===============================================================
-import=$(basename ${BASH_SOURCE} .sh)
-if [[ $(eval echo '$'${import}) == 0 ]]; then return; fi
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
 source ./../../BaseShell/Starter/BaseHeader.sh
@@ -132,7 +132,41 @@ function localdate_timestamp(){
   gdate -d "${localdate}" +%s
 }
 
-# 指定时间之间差几天 todo
+localdate_isEqual(){
+  local time1=$(localdate_timestamp "$1")
+  local time2=$(localdate_timestamp "$2")
+
+  if [[ ${time1} -eq ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
+localdate_isAfter(){
+  local time1=$(localdate_timestamp "$1")
+  local time2=$(localdate_timestamp "$2")
+
+  if [[ ${time1} -gt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+localdate_isBefore(){
+  local time1=$(localdate_timestamp "$1")
+  local time2=$(localdate_timestamp "$2")
+
+  if [[ ${time1} -lt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
+# 指定时间之间差几天
 function localdate_duration(){
-  echo 
+  local date1=$(localdate_getDayOfYear "$1")
+  local date2=$(localdate_getDayOfYear "$2")
+  echo $(( date2-date1 ))
 }

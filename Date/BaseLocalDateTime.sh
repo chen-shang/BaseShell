@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2206,SC2155
 #===============================================================
-import=$(basename ${BASH_SOURCE} .sh)
-if [[ $(eval echo '$'${import}) == 0 ]]; then return; fi
+import=$(basename "${BASH_SOURCE[0]}" .sh)
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
 source ./../../BaseShell/Starter/BaseHeader.sh
@@ -14,7 +14,7 @@ source ./../../BaseShell/Date/BaseTimestamp.sh
 # 格式 2018-03-09T00:53:26
 # 当前日期:时间 [String]<-()
 function localdatetime_now(){
-  date ${DEFAULT_LOCALDATETIME_FORMAT}
+  date "${DEFAULT_LOCALDATETIME_FORMAT}"
 }
 
 function localdatetime_now_timestamp(){
@@ -67,24 +67,24 @@ function localdatetime_now_dayOfYear(){
 # 格式 Saturday
 # 当前日期 [String]<-()
 function localdatetime_getDayOfYear(){
-  localdate_getDayOfYear $1
+  localdate_getDayOfYear "$1"
 }
 # 取出给的日期的年份
 function localdatetime_getYear(){
-  localdate_getYear $1
+  localdate_getYear "$1"
 }
 # 取出给的日期的月份
 function localdatetime_getMonth(){
-  localdate_getMonth $1
+  localdate_getMonth "$1"
 }
 # 取出给的日期的日期
 function localdatetime_getDay(){
-  localdate_getDay $1
+  localdate_getDay "$1"
 }
 # 格式 Saturday
 # 取出给的日期是星期几
 function localdatetime_getWeek(){
-  localdate_getWeek $1
+  localdate_getWeek "$1"
 }
 
 # 格式 Saturday
@@ -166,6 +166,46 @@ function localdatetime_format(){ _NotBlank "$1" "date can not be null" &&  _NotB
 }
 
 function localdatetime_timestamp(){
-  local localdate=$(localdatetime_format "$1" "${DEFAULT_LOCALDATE_FORMAT}")
+  local localdate=$(localdatetime_format "$1" "${DEFAULT_LOCALDATETIME_FORMAT}")
   gdate -d "${localdate}" +%s
+}
+
+localdatetime_isEqual(){
+  local time1=$(localdatetime_timestamp "$1")
+  local time2=$(localdatetime_timestamp "$2")
+
+  if [[ ${time1} -eq ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
+localdatetime_isAfter(){
+  local time1=$(localdatetime_timestamp "$1")
+  local time2=$(localdatetime_timestamp "$2")
+
+  if [[ ${time1} -gt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+localdatetime_isBefore(){
+  local time1=$(localdatetime_timestamp "$1")
+  local time2=$(localdatetime_timestamp "$2")
+
+  if [[ ${time1} -lt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
+# 两个时间之间差多少s
+function localdatetime_duration(){
+  local time1=$(localdatetime_timestamp "$1")
+  local time2=$(localdatetime_timestamp "$2")
+
+  echo $((time2-time1))
 }
