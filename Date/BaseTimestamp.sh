@@ -19,9 +19,11 @@ function timestamp_now_nano(){
 function timestamp_toLocaldate(){
   gdate -d "@$1" "${DEFAULT_LOCALDATE_FORMAT}"
 }
+
 function timestamp_toLocaltime(){
   gdate -d "@$1" "${DEFAULT_LOCALTIME_FORMAT}"
 }
+
 function timestamp_toLocaldatetime(){
   gdate -d "@$1" "${DEFAULT_LOCALDATETIME_FORMAT}"
 }

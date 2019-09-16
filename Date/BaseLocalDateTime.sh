@@ -202,6 +202,38 @@ localdatetime_isBefore(){
   return "${FALSE}"
 }
 
+localdatetime_now_isEqual(){
+  local time1=$(localdatetime_now_timestamp)
+  local time2=$(localdatetime_timestamp "$1")
+
+  if [[ ${time1} -eq ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
+localdatetime_now_isAfter(){
+  local time1=$(localdatetime_now_timestamp)
+  local time2=$(localdatetime_timestamp "$1")
+
+  if [[ ${time1} -gt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+localdatetime_now_isBefore(){
+  local time1=$(localdatetime_now_timestamp)
+  local time2=$(localdatetime_timestamp "$1")
+
+  if [[ ${time1} -lt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
 # 两个时间之间差多少s
 function localdatetime_duration(){
   local time1=$(localdatetime_timestamp "$1")

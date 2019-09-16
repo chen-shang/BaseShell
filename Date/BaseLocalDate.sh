@@ -164,6 +164,39 @@ localdate_isBefore(){
   return "${FALSE}"
 }
 
+
+localdate_now_isEqual(){
+  local time1=$(localdate_timestamp $(localdate_now))
+  local time2=$(localdate_timestamp "$1")
+
+  if [[ ${time1} -eq ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
+localdate_now_isAfter(){
+  local time1=$(localdate_timestamp $(localdate_now))
+  local time2=$(localdate_timestamp "$1")
+
+  if [[ ${time1} -gt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+localdate_now_isBefore(){
+  local time1=$(localdate_timestamp $(localdate_now))
+  local time2=$(localdate_timestamp "$1")
+
+  if [[ ${time1} -lt ${time2} ]];then
+    return "${TRUE}"
+  fi
+
+  return "${FALSE}"
+}
+
 # 指定时间之间差几天
 function localdate_duration(){
   local date1=$(localdate_getDayOfYear "$1")
