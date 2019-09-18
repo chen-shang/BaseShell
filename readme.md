@@ -12,6 +12,23 @@
 
 [BaseShell使用教程](https://chen-shang.github.io/2019/08/28/ji-zhu-zong-jie/baseshell/baseshell-shi-yong-jiao-cheng/)
 
+我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类java的工具类，这会强迫自己深入Java的源代码。
+
+BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具库,涵盖多种类Java工具的实现
+1. 并发工具【Concurrent】
+2. 锁【Concurrent】
+3. Object工具【Lang】
+4. 数学工具【Lang】
+5. 常量【Constant】
+6. 字符串工具【Lang】
+7. SSH【Ssh】
+8. Starter包【Starter】
+9. 工具包【Utils】
+10. 单元测试【Utils】
+11. 日期工具【localdate、localdatetime、localtime、timeunit、week】
+12. 日志工具【log】
+等等,目前还在完善当中。旨在简化shell脚本的编写、提高shell脚本的健壮性。丰富的类库可以大大减少shell脚本编写的难度，其类Java的实现方式可以使得面向对象范式的程序员很快的理解并使用。与之相配套的我会出一篇《Shell编程规约》,以期规范Shell脚本程序员的书写习惯。
+
 ## 初始化项目
 ```
 cd ~
@@ -23,9 +40,9 @@ sh $(pwd)/BaseShell/init.sh
 看到如下输出,则新建项目成功
 ```
 > sh $(pwd)/BaseShell/init.sh
-project[项目目录]:com.chenshang.learn
+project[项目目录]:com.baseshell.learn
 module[模块名称]:Script
-./../../com.chenshang.learn
+./../../com.baseshell.learn
 ├── BaseShell -> /script/BaseShell
 └── Script
     ├── Resources
@@ -40,8 +57,8 @@ module[模块名称]:Script
 ## 运行项目
 【强制】运行shell脚本要到脚本目录下执行
 ```
-cd com.chenshang.learn/Shell/Service/ShellService.sh
-sh ShellService.sh
+cd com.baseshell.learn/Shell/Service/ScriptService.sh
+sh ScriptService.sh
 ```
 看到如下输出,说明项目运行ok,之后可以愉快的写脚本了
 ```
@@ -137,9 +154,77 @@ source ./../../BaseShell/Lang/BaseString.sh
 source ../../BaseShell/Starter/BaseEnd.sh
 ```
 这样直接执行脚本的时候,会先寻找脚本里面的main函数去执行,类似运行一个Java Class类中的main方法
+
 ## 如何引用包
 引用包使用source命令
 `source 第三方脚本`会使第三方脚本从头到尾加载一遍,遇到函数就加载函数、遇到变量就加载变量、遇到可执行的命令就会执行,这个命令其实就是把第三方脚本定义的函数、全局变量加载到当前脚本的上下文中
 这里推荐使用相对路径,因为使用绝对路径,IDEA无法进行代码提示,也是醉了
 
+## 日志工具【Log】
+### 如何引入
+`source ./../../BaseShell/Starter/BaseHeader.sh`默认会引入Log框架`source ./../../BaseShell/Log/BaseLog.sh` 无需手动引入
+
+### 默认配置
+两个系统默认配置,在 `config.sh` 配置文件中,用户可根据自己的意愿修改
+```
+# 日志记录位置
+LOG_DIR="${HOME}/.baseshell"
+# 日志级别
+LOG_LEVEL=SYSTEM
+```
+### 使用方法
+```
+支持固定文本
+log_debug "要记录的日志内容"
+支持字符串插值
+log_debug "要记录的日志内容. key=${key},value=${value}"
+支持多参数
+log_debug "要记录的日志内容." "1=$1" "2=$2"
+支持函数
+log_debug "要记录的日志内容." "now=$(date)" "index=$((i++))"
+```
+
+Log 包里面有8个方法
+
+| 方法        | 配置文件配置     | 说明                                                              |
+|-------------|------------------|-------------------------------------------------------------------|
+| log_debug   | LOG_LEVEL=DEBUG  | 打印DEBUG级别的日志                                               |
+| log_info    | LOG_LEVEL=INFO   | 打印INFO级别的日志,输出颜色为白色                                 |
+| log_success | LOG_LEVEL=INFO   | 打印INFO级别的日志,输出颜色为绿色                                 |
+| log_fail    | LOG_LEVEL=INFO   | 打印INFO级别的日志,输出颜色为红色,并退出当前进程                  |
+| log_warn    | LOG_LEVEL=WARN   | 打印WARN级别的日志,输出颜色为灰色                                 |
+| log_error   | LOG_LEVEL=ERROR  | 打印ERROR级别的日志,输出颜色为红色                                |
+| log_system  | LOG_LEVEL=SYSTEM | 打印SYSTEM级别的日志,输出颜色为白色,是BaseShell使用的日志输出格式 |
+| log_trace   |                  | 只会记录日志到文件,不会打印到控制台                               |
+
+### 输出示例
+执行Test下的测试用例,输出如下
+![](BaseShell使用教程/log.jpg)
+
+### 使用示例
+![](BaseShell使用教程/Log.gif)
+
+## 校参工具【Annotation】
+此包下的工具是用来进行函数参数校验的,类似Spring中的Validate的功能。一旦出错则会终止函数的执行。 所有的Annotation均已`_`下划线开头,
+曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
+### 如何引入
+`source ./../../BaseShell/Starter/BaseHeader.sh`默认会引入Log框架`source ./../../BaseShell/Annotation/BaseAnnotation.sh` 无需手动引入
+### 使用方法
+`_NotBlank` 判断入参数不为空(空或空字符串)
+`_Natural`  判断入参数为自然数(0,1,2,3...)
+`_Min`      最大不得小于此最小值
+`_Max`      最大不得超过此最大值
+### 使用示例
+![](BaseShell使用教程/Log.gif)
+
 未完待续。。。明天再写
+## 并发工具【Concurrent】
+## 锁【Concurrent】
+## Object工具【Lang】
+## 数学工具【Lang】
+## 常量【Constant】
+## 字符串工具【Lang】
+## SSH【Ssh】
+## Starter包【Starter】
+## 工具包【Utils】
+## 测试【Utils】
