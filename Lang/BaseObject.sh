@@ -94,7 +94,7 @@ function hashCode(){
   _action(){
     local param=$1
     local hash=0
-    for (( i = 0; i < ${#param}; i ++ )); do
+    local i;for (( i=0; i<${#param}; i++ )); do
       printf -v val "%d" "'${param:$i:1}" # val is ASCII val
       if ((31 * hash + val > 2147483647)); then
         # hash scheme

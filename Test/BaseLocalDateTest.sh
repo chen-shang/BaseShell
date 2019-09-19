@@ -40,10 +40,11 @@ test-localdate(){
 #  localdate_plus '20190908' '1month'
 #  localdate_plus '20190908' '1day'
 
-  localdate_isEqual  "2019-09-09 09:00" "2019-09-09" && echo yes || echo no
-  localdate_isBefore "2019-09-09 09:00" "2019-09-09 19:00" && echo yes || echo no
-  localdate_isAfter  "2019-09-10" "2019-09-09" && echo yes || echo no
+#  localdate_isEqual  "2019-09-09 09:00" "2019-09-09" && echo yes || echo no
+#  localdate_isBefore "2019-09-09 09:00" "2019-09-09 19:00" && echo yes || echo no
+#  localdate_isAfter  "2019-09-10" "2019-09-09" && echo yes || echo no
 
+  localdate_getWeek 2019-09-10
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

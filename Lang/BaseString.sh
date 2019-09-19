@@ -117,7 +117,7 @@ function toCamelCase(){
     # 去除首单词后的部分,放到一个数组中
     local remainWordList
     remainWordList=$(echo "${param}"|awk -F '_' '{ for (i = 2; i <= NF; i++) print $i }')
-    for item in ${remainWordList};do
+    local item;for item in ${remainWordList};do
         remainWord+=$(echo "${item}"|string_firstLetter_toUpperCase "$@")
     done
     echo -e "${firstWord}${remainWord}"

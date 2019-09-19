@@ -14,10 +14,8 @@ function new_arrayList(){ _NotBlank "$1" "arrayList name can not be null"
   local listName=$1
   local cmd="${listName}=()"
   eval declare -a "${cmd}"
-
   local functions=$(cat < "${BASH_SOURCE[0]}"|grep -v "grep"|grep "function "|grep -v "new_function"|grep "(){"| sed "s/(){//g" |awk  '{print $2}')
-
-  for func in ${functions} ;do
+  local func;for func in ${functions} ;do
      local suffix=$(echo "${func}"|awk -F '_' '{print $2}')
      new_function "${func}" "${listName}_${suffix}"
   done
@@ -60,7 +58,7 @@ function list_forEach(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd='$'"{${listName}[@]}"
   local values=$(eval echo "${cmd}")
-  for value in ${values};do
+  local value;for value in ${values};do
      eval "${runnable} ${value}"
   done
 }
@@ -81,7 +79,7 @@ function list_contains(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd='$'"{${listName}[@]}"
   local values=$(eval echo "${cmd}")
-  for value in ${values};do
+  local value;for value in ${values};do
     equals "${value}" "$1" && return "${TRUE}"
   done
 
@@ -98,7 +96,7 @@ function list_indexOf(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local size=$(eval echo '$'"{#${listName}[@]}")
   local result=-1
-  for ((index=0;index<size;index++));do
+  local index;for ((index=0;index<size;index++));do
     local cmd='$'"{${listName}[${index}]}"
     local value=$(eval echo "${cmd}")
     equals "${value}" "$1" && {
@@ -113,7 +111,7 @@ function list_lastIndexOf(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local size=$(eval echo '$'"{#${listName}[@]}")
   local result=-1
-  for ((index=size;0<=index;index--));do
+  local index;for ((index=size;0<=index;index--));do
     local cmd='$'"{${listName}[${index}]}"
     local value=$(eval echo "${cmd}")
     equals "${value}" "$1" && {
@@ -155,7 +153,7 @@ function list_mapper(){
   local cmd='$'"{${listName}[@]}"
   local values=$(eval echo "${cmd}")
   local result=""
-  for value in ${values};do
+  local value;for value in ${values};do
      result+="$(eval $1 "${value}") "
   done
 
@@ -169,7 +167,7 @@ function list_reducer(){
   local result=$2
   # 含有初始值
   isNotBlank "${result}" && {
-    for value in ${values};do
+    local value;for value in ${values};do
        result=$(eval $1 "${result}" "${value}")
     done
   }
@@ -178,7 +176,7 @@ function list_reducer(){
   isNotBlank "${result}" || {
     local size=$(${listName}_size)
     result=$(${listName}_get 0)
-    for ((i=1;i<size;i++)){
+    local i;for ((i=1;i<size;i++)){
       local value=$(${listName}_get ${i})
       result=$(eval $1 "${result}" "${value}")
     }
