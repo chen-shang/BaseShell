@@ -13,8 +13,8 @@ function equals(){
   local value2=$2 #二参
 
   local length1=${#value1}
-  local length1=${#value2}
-  if [[ "${length1}" -eq "${length1}" && "${value1}" == "${value2}"  ]];then
+  local length2=${#value2}
+  if [[ "${length1}" -eq "${length2}" && "${value1}" == "${value2}"  ]];then
     return "${TRUE}"
   else
     return "${FALSE}"
