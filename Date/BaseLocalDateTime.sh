@@ -66,36 +66,36 @@ function localdatetime_now_dayOfYear(){
 }
 # 格式 Saturday
 # 当前日期 [String]<-()
-function localdatetime_getDayOfYear(){
+function localdatetime_getDayOfYear(){ _NotBlank "$1"
   localdate_getDayOfYear "$1"
 }
 # 取出给的日期的年份
-function localdatetime_getYear(){
+function localdatetime_getYear(){ _NotBlank "$1"
   localdate_getYear "$1"
 }
 # 取出给的日期的月份
-function localdatetime_getMonth(){
+function localdatetime_getMonth(){ _NotBlank "$1"
   localdate_getMonth "$1"
 }
 # 取出给的日期的日期
-function localdatetime_getDay(){
+function localdatetime_getDay(){ _NotBlank "$1"
   localdate_getDay "$1"
 }
 # 格式 Saturday
 # 取出给的日期是星期几
-function localdatetime_getWeek(){
+function localdatetime_getWeek(){ _NotBlank "$1"
   localdate_getWeek "$1"
 }
 
 # 格式 Saturday
 # 取出给的日期是星期几
-function localdatetime_getLocaldate(){
+function localdatetime_getLocaldate(){ _NotBlank "$1"
   gdate -d "$1" "${DEFAULT_LOCALDATE_FORMAT}"
 }
 
 # 格式 Saturday
 # 取出给的日期是星期几
-function localdatetime_getLocaltime(){
+function localdatetime_getLocaltime(){ _NotBlank "$1"
   gdate -d "$1" "${DEFAULT_LOCALTIME_FORMAT}"
 }
 
@@ -165,12 +165,12 @@ function localdatetime_format(){ _NotBlank "$1" "date can not be null" &&  _NotB
   gdate -d "$1" "$2"
 }
 
-function localdatetime_timestamp(){
+function localdatetime_timestamp(){ _NotBlank "$1"
   local localdate=$(localdatetime_format "$1" "${DEFAULT_LOCALDATETIME_FORMAT}")
   gdate -d "${localdate}" +%s
 }
 
-localdatetime_isEqual(){
+localdatetime_isEqual(){ _NotBlank "$1" && _NotBlank "$2"
   local time1=$(localdatetime_timestamp "$1")
   local time2=$(localdatetime_timestamp "$2")
 
@@ -181,7 +181,7 @@ localdatetime_isEqual(){
   return "${FALSE}"
 }
 
-localdatetime_isAfter(){
+localdatetime_isAfter(){ _NotBlank "$1" && _NotBlank "$2"
   local time1=$(localdatetime_timestamp "$1")
   local time2=$(localdatetime_timestamp "$2")
 
@@ -191,7 +191,7 @@ localdatetime_isAfter(){
 
   return "${FALSE}"
 }
-localdatetime_isBefore(){
+localdatetime_isBefore(){ _NotBlank "$1" && _NotBlank "$2"
   local time1=$(localdatetime_timestamp "$1")
   local time2=$(localdatetime_timestamp "$2")
 
@@ -202,7 +202,7 @@ localdatetime_isBefore(){
   return "${FALSE}"
 }
 
-localdatetime_now_isEqual(){
+localdatetime_now_isEqual(){ _NotBlank "$1" && _NotBlank "$2"
   local time1=$(localdatetime_now_timestamp)
   local time2=$(localdatetime_timestamp "$1")
 
@@ -213,7 +213,7 @@ localdatetime_now_isEqual(){
   return "${FALSE}"
 }
 
-localdatetime_now_isAfter(){
+localdatetime_now_isAfter(){ _NotBlank "$1"
   local time1=$(localdatetime_now_timestamp)
   local time2=$(localdatetime_timestamp "$1")
 
@@ -223,7 +223,7 @@ localdatetime_now_isAfter(){
 
   return "${FALSE}"
 }
-localdatetime_now_isBefore(){
+localdatetime_now_isBefore(){ _NotBlank "$1"
   local time1=$(localdatetime_now_timestamp)
   local time2=$(localdatetime_timestamp "$1")
 
@@ -235,7 +235,7 @@ localdatetime_now_isBefore(){
 }
 
 # 两个时间之间差多少s
-function localdatetime_duration(){
+function localdatetime_duration(){ _NotBlank "$1"
   local time1=$(localdatetime_timestamp "$1")
   local time2=$(localdatetime_timestamp "$2")
 

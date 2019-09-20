@@ -57,8 +57,8 @@ test-new_map(){
   qq_put "two" "2"
   qq_put "three" "3"
 
-  declare -A user=(['chenshang']='{"age":2,"name":"frank"}')
   new_map user
+  declare -A user=(['chenshang']='{"age":2,"name":"frank"}')
   user_get "chenshang"|jq .name
 }
 

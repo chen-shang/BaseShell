@@ -58,7 +58,6 @@ test-_NotBlank(){
 
    (_NotBlank >/dev/null 2>&1)
    assertFalse "$?"
-   isBlank
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

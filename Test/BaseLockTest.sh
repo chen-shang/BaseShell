@@ -6,21 +6,21 @@ source ./../../BaseShell/Starter/BaseTestHeader.sh
 source ./../../BaseShell/Concurrent/BaseLock.sh
 source ./../../BaseShell/Concurrent/BaseThreadPool.sh
 #===============================================================
-test-new_lock(){ #ignore
-  lock=$(new_fd)
+test-new_lock(){
+  local lock=$(new_fd)
   log_debug "lock_fd:${lock}"
   new_lock "${lock}"
   read -r -u "${lock}" result
   assertTrue "${result}"
 
-  lock=$(new_fd)
+  local lock=$(new_fd)
   log_debug "lock_fd:${lock}"
   new_lock "${lock}"
   read -r -u "${lock}" result2
   assertTrue "${result2}"
 
   (
-    lock=$(new_fd)
+    local lock=$(new_fd)
     log_debug "lock_fd:${lock}"
     new_lock "${lock}"
     read -r -u "${lock}" result
@@ -33,7 +33,7 @@ test-new_lock(){ #ignore
     assertTrue "${result}"
   )
 
-  lock=$(new_fd)
+  local lock=$(new_fd)
   log_debug "lock_fd:${lock}"
   new_lock "${lock}"
   read -r -u "${lock}" result
