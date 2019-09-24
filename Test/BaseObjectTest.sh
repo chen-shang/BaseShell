@@ -25,28 +25,6 @@ test-equals(){
   assertFalse $?
 }
 
-
-test-isNatural(){
-  isNatural "1"
-  assertTrue $?
-
-  isNatural "2.1"
-  assertFalse $?
-}
-
-test-new_fd(){
-  fd=$(new_fd)
-  assertEquals "${fd}" "4"
-
-  exec 4<>file && rm file
-  fd=$(new_fd)
-  assertEquals "${fd}" "5"
-
-  exec 4>&-
-  fd=$(new_fd)
-  assertEquals "${fd}" "4"
-}
-
 test-is(){
   isBlank ""
   assertTrue $?
@@ -66,14 +44,51 @@ test-is(){
   isEmpty  1
   assertFalse $?
 
-   isNotBlank ""
-   assertFalse $?
-   isNotBlank " "
-   assertFalse $?
-   isNotBlank "1"
-   assertTrue $?
-   isNotBlank  1
-   assertTrue $?
+  isNotBlank ""
+  assertFalse $?
+  isNotBlank " "
+  assertFalse $?
+  isNotBlank "1"
+  assertTrue $?
+  isNotBlank  1
+  assertTrue $?
+
+  isNatural "1"
+  assertTrue $?
+  isNatural "2.1"
+  assertFalse $?
+}
+
+test-hashCode(){
+  local hashCode=$(hashCode "A")
+  assertEquals "${hashCode}" "65"
+
+  local hashCode=$(echo "A"|hashCode)
+  assertEquals "${hashCode}" "65"
+}
+
+test-new_fd(){
+  fd=$(new_fd)
+  assertEquals "${fd}" "4"
+
+  exec 4<>file && rm file
+  fd=$(new_fd)
+  assertEquals "${fd}" "5"
+
+  exec 4>&-
+  fd=$(new_fd)
+  assertEquals "${fd}" "4"
+}
+
+test-new_function(){
+  function func(){
+    # 返回当前函数的名称
+    echo ${FUNCNAME[0]}
+  }
+
+  new_function func func_new
+  local name=$(func_new)
+  assertEquals "${name}" "func_new"
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

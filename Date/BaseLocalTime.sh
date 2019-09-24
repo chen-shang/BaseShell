@@ -72,3 +72,7 @@ function localtime_plus(){
   local localtime=$1 ;local duration=$2
   gdate -d "${localtime}  ${duration}" "${DEFAULT_LOCALTIME_FORMAT}"
 }
+
+function localtime_format(){
+  gdate -d "$1" "$2"
+}

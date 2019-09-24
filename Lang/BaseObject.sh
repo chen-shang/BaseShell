@@ -82,8 +82,7 @@ function isNotNull(){
   [[ "${param}" != "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
-
-function isNatural(){
+function isNatural(){ _NotBlank "$1"
   local param=$1
   grep -q '^[[:digit:]]*$' <<< "${param}" && return "${TRUE}" || return "${FALSE}"
 }
@@ -127,16 +126,6 @@ function pip(){
   _action "${param}"
 }
 
-# @param timeout the maximum time to wait in seconds.
-function delay(){
-  local timeout=$1
-  _action(){
-    local timeout=$1
-    sleep "${timeout}"
-  }
-  pip "${timeout}"
-}
-
 # 获取一个可用的文件描述符号
 function new_fd(){
   {
@@ -151,7 +140,7 @@ function new_fd(){
   } 3<>/tmp/base_shell.lock
 }
 
-isExist(){
+isExist(){ _NotBlank "$1" "fd can not be null"
   local fd=$1
   {
     flock 3
@@ -165,7 +154,7 @@ isExist(){
 
 
 # 那文件描述符关联一个fifo,不关心文件名字
-function new_fifo(){
+function new_fifo(){ _NotBlank "$1" "fd can not be null"
   local fd=$1
   [[ -z "${fd}" ]] && { echo "fd can not be blank" ;exit ; }
 
@@ -183,10 +172,10 @@ function new_fifo(){
 }
 
 # 重命名函数
-new_function(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
+function new_function(){ _NotBlank "$1" "source function name can not be null" && _NotBlank "$2" "target function name can not be null"
   test -n "$(declare -f $1)" || return
   eval "${_/$1/$2}"
 }
 
 readonly -f isEmpty isNotEmpty isBlank isNotBlank new_function
-readonly -f hashCode equals delay pip new_fd new_fifo
+readonly -f hashCode equals pip new_fd new_fifo

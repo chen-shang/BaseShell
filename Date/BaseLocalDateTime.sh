@@ -17,6 +17,7 @@ function localdatetime_now(){
   date "${DEFAULT_LOCALDATETIME_FORMAT}"
 }
 
+# 秒级别的时间戳
 function localdatetime_now_timestamp(){
   date +%s
 }
