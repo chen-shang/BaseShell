@@ -21,3 +21,15 @@ function random_string(){
   local length=${1:-16}
   head -c ${length} /dev/random |base32
 }
+
+# 产生随机一句话
+random_word(){
+  #木芽一言 https://api.xygeng.cn/dailywd/?pageNum=320
+  curl -s https://api.xygeng.cn/dailywd/api/|jq -r .txt |xargs echo
+  #一言 https://hitokoto.cn/api
+}
+
+# 产生随机一首诗词
+random_poetry(){
+   curl -s -H 'X-User-Token:RgU1rBKtLym/MhhYIXs42WNoqLyZeXY3EkAcDNrcfKkzj8ILIsAP1Hx0NGhdOO1I' https://v2.jinrishici.com/sentence|jq .data.origin|xargs echo
+}

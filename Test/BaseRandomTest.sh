@@ -26,5 +26,15 @@ test-random_string(){
   string=$(random_string)
   assertNotNull "${string}"
 }
+
+test-random_word(){
+  local string=$(random_word)
+  assertNotNull "${string}"
+}
+
+test-random_poetry(){
+  local string=$(random_poetry)
+  assertNotNull "${string}"
+}
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
