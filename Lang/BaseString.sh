@@ -155,3 +155,12 @@ function toCamelCase(){
 #function string_replaceAll(){
 #:
 #}
+
+function string_tailRemove(){
+  local param=$*
+  _action(){
+    local param=$*
+    echo "${param}"|sed s'/.$//'
+  }
+  pip "${param}"
+}

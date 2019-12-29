@@ -8,7 +8,7 @@ eval "${import}=0"
 # BANNER图的位置
 BANNER_PATH="./../../BaseShell/Banner"
 # 是否显示BANNER
-SHOW_BANNER=0
+SHOW_BANNER=1
 
 # 日志记录位置
 LOG_DIR="${HOME}/.baseshell"

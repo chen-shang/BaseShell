@@ -6,21 +6,24 @@ source ./../../BaseShell/Starter/BaseTestHeader.sh
 source ./../../BaseShell/Collection/BaseArrayList.sh
 #===============================================================
 function fun(){
-new_arrayList number
-number_add 1
+  new_arrayList number
+  number_add 1
   number_add 2
   add(){
     echo $(($1+$2))
   }
   number_reducer add
 }
-test-list_reducer(){
-fun
-list_values
 
+test-list_reducer(){
+  fun
+  list_values
 }
 
 
-
+test-list_indexOf(){
+  new_arrayList number
+  list_indexOf 2
+}
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh
