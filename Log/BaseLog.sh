@@ -18,6 +18,7 @@ case ${LOG_LEVEL} in
    "INFO"  ) log_level=2 ;;
    "DEBUG" ) log_level=3 ;;
    "SYSTEM") log_level=4 ;;
+   "*") log_level=2 ;;
 esac
 
 # 默认关闭,debug级别的日志会忽略
