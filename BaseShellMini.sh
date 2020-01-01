@@ -318,3 +318,11 @@ random_word(){
 random_poetry(){
    curl -s -H 'X-User-Token:RgU1rBKtLym/MhhYIXs42WNoqLyZeXY3EkAcDNrcfKkzj8ILIsAP1Hx0NGhdOO1I' https://v2.jinrishici.com/sentence|jq .data.origin|xargs echo
 }
+
+# 执行函数 [Any]<-(function_name:String,function_parameters:List<Any>)
+execute(){
+  function_name=$1
+  shift # 参数列表以空格为分割左移一位,相当于丢弃掉第一个参数
+  function_parameters=$*
+  (${function_name} "${function_parameters}")
+}
