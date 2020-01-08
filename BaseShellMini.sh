@@ -5,6 +5,17 @@ import=$(basename "${BASH_SOURCE[0]}" .sh)
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
+# 脚本使用帮助文档
+manual(){ cat <"$0"                      \
+         | grep -B1 'function'           \
+         | grep -v "\\--"                \
+         | sed "s/function //g"          \
+         | sed "s/(){//g"                \
+         | sed "s/#//g"                  \
+         | sed 'N;s/\n/ /'               \
+         | awk '{print $1,$3,$2}'        \
+         | column -t
+}
 
 #==========================BaseConstant.sh=====================================
 readonly TRUE=0                         # Linux 中一般0代表真非0代表假
@@ -26,6 +37,16 @@ function equals(){
   else
     return "${FALSE}"
   fi
+}
+
+isTrue(){
+  local value1=$* #一参
+  equals "${value1}" "${TRUE}"
+}
+
+isFalse(){
+  local value1=$* #一参
+  ! isTrue "${value1}"
 }
 
 # isEmpty ""  -> 0
@@ -207,7 +228,7 @@ function toLowerCase(){
 }
 
 # 日志记录位置
-LOG_DIR="${HOME}/.baseshell"
+LOG_DIR="/tmp"
 
 # ERROR<WARN<INFO<DEBUG
 case ${LOG_LEVEL} in
@@ -272,7 +293,7 @@ function log_fail(){
     echo -e "\\033[31m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${FUNCNAME[1]}]:    $*\\033[0m"|trim 1>&2
     echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
     echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
-    exit 1
+    exit 127
   fi
 }
 
@@ -308,14 +329,14 @@ function random_string(){
 }
 
 # 产生随机一句话
-random_word(){
+function random_word(){
   #木芽一言 https://api.xygeng.cn/dailywd/?pageNum=320
   curl -s https://api.xygeng.cn/dailywd/api/|jq -r .txt |xargs echo
   #一言 https://hitokoto.cn/api
 }
 
 # 产生随机一首诗词
-random_poetry(){
+function random_poetry(){
    curl -s -H 'X-User-Token:RgU1rBKtLym/MhhYIXs42WNoqLyZeXY3EkAcDNrcfKkzj8ILIsAP1Hx0NGhdOO1I' https://v2.jinrishici.com/sentence|jq .data.origin|xargs echo
 }
 

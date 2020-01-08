@@ -51,19 +51,22 @@ function file_getLines(){ _NotBlank "$1" "file name can not be null"
 function file_getSize(){ _NotBlank "$1" "file name can not be null"
   cat "$1" |wc -c |xargs echo
 }
+
 # 获取文件一共有多少行
 function file_getSize(){ _NotBlank "$1" "file name can not be null"
   cat "$1" |wc -c |xargs echo
 }
 
+# 是否是可执行文件
 function file_canExecute(){
   [[ -x $1 ]]
 }
 
+# 是否是可文件
 function file_isFile(){ _NotBlank "$1" "file name can not be null"
   [[ -f $1 ]]
 }
-
+# 是否存在
 function file_isExist(){ _NotBlank "$1" "file name can not be null"
   [[ -f $1 ]]
 }
