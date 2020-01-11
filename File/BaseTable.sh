@@ -9,15 +9,24 @@ source ./../../BaseShell/Lang/BaseObject.sh
 source ./../../BaseShell/File/BaseFile.sh
 
 # 将文件内容读进内存
-function csv_read(){
+function table_read(){ _NotBlank "$1" "file name can not be null"
   local fileName=$1
-  cat "${fileName}" |column -t
+  file_read "${fileName}"|awk 'NR>1{print $0}'
 }
 
-# 读取指定的列
-function csv_readColumn(){  _NotBlank "$1" "file name can not be null" &&  _NotBlank "$2" "column can not be null"
-  local fileName=$1
-  local column=$2
+# 获取csv的头
+function table_header(){ _NotBlank "$1" "file name can not be null"
+  local fileName=$*
+  file_header "${fileName}"
+}
+
+function tale_line(){ _NotBlank "$1" "line can not be null" && _NotBlank "$2" "file name can not be null"
+  local line=$1;local fileName=$2
+  file_line "${line}" "${fileName}"
+}
+
+function tale_column(){ _NotBlank "$1" "column can not be null" && _NotBlank "$2" "file name can not be null"
+  local column=$1;local fileName=$2
   ! isNatural "${column}" && {
 
     column=$(csv_header "${fileName}"\
@@ -30,53 +39,17 @@ function csv_readColumn(){  _NotBlank "$1" "file name can not be null" &&  _NotB
   awk '{print $'${column}'}' "${fileName}"
 }
 
-# 读取指定的列
-function csv_readLine(){
-  local fileName=$1 ;local line=$2 ;local column=$3
-  file_readLine "${fileName}" "$((line+1))" "${column}"
+function table_readJson(){
+  local fileName=$1
+  local header=("$(file_header ${fileName})")
+  local i=1
+  for column in ${header[*]};do
+    local query+='"\"'${column}'\":""\""$'${i}'"\","'
+    ((i++))
+  done
+  local result=("$(eval "table_read ${fileName}|awk '{print ${query}}'"|string_tailRemove)")
+  for json in ${result[*]};do
+    jsons+="{${json}},"
+  done
+  echo "[$(echo "${jsons}"|string_tailRemove)]"
 }
-
-function csv_replaceLine(){
-  local fileName=$1 ;local line=$2 ;local text=$3
-  file_replaceLine "${fileName}" "${line}" "${text}"
-}
-
-function csv_readJson(){
-  local fileName=$1 #todo
-}
-
-# 行列转置
-function csv_transpose(){
-  local param=$*
-  _action(){
-    local param=$*
-    file_isFile "${param}" && {
-      awk '{for(i=1;i<=NF;i++)a[NR,i]=$i}END{for(j=1;j<=NF;j++)for(k=1;k<=NR;k++)printf k==NR?a[k,j] RS:a[k,j] FS}' "$1"|column -t
-    } || {
-      echo "${param}"|awk '{for(i=1;i<=NF;i++)a[NR,i]=$i}END{for(j=1;j<=NF;j++)for(k=1;k<=NR;k++)printf k==NR?a[k,j] RS:a[k,j] FS}'|column -t
-    }
-  }
-  pip "${param}"
-}
-
-# 获取csv的头
-function csv_header(){
-  local param=$*
-  _action(){
-    local param=$*
-    file_isFile "${param}" && {
-      file_readHead "${param}"|column -t
-    } || {
-      echo "${param}"|head -n 1
-    }
-  }
-  pip "${param}"
-}
-
-#function csv_write(){
-#
-#}
-
-#function csv_writeJson(){
-#
-#}

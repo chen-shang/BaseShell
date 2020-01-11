@@ -21,5 +21,9 @@ test-string_subString(){
   assertEquals "${result}" " "
 }
 
+test-string_firstLetter_toUpperCase(){
+  result=$(string_firstLetter_toUpperCase "id")
+  assertEquals "${result}" "Id"
+}
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

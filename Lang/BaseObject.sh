@@ -121,9 +121,34 @@ function pip(){
   #参数长度==0 尝试从标准输出获取参数
   if [[ ${#param} -eq 0 ]];then
     # timeout 设置1秒的超时
-    param=$(timeout 1 cat <&0)
+    param=$(timeout 0.1 cat <&0)
   fi
   _action "${param}"
+}
+
+function pip2(){
+  local param1=$1
+  local param2=$2
+  #参数长度==0 尝试从标准输出获取参数
+  if [[ ${#param2} -eq 0 ]];then
+     # timeout 设置1秒的超时
+     param2=$(timeout 1 cat <&0)
+  fi
+
+  _action "${param1}" "${param2}"
+}
+
+function pip3(){
+  local param1=$1
+  local param2=$2
+  local param3=$3
+  #参数长度==0 尝试从标准输出获取参数
+  if [[ ${#param3} -eq 0 ]];then
+     # timeout 设置1秒的超时
+     param3=$(timeout 1 cat <&0)
+  fi
+
+  _action "${param1}" "${param2}"  "${param3}"
 }
 
 # 获取一个可用的文件描述符号

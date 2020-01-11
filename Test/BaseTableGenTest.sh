@@ -3,12 +3,10 @@
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
-source ./../../BaseShell/File/BaseTable.sh
+source ./../../BaseShell/File/BaseTableGen.sh
 #===============================================================
-table='./table'
-test-table_readJson(){
-  table_readJson "${table}"
+test-genDao(){
+  genDao './table'
 }
-
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

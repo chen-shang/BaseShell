@@ -102,7 +102,7 @@ function string_firstLetter_toUpperCase(){
   local param=$1 #传入的字符串
   _action(){
     local param=$*
-    echo -e "$(string_indexOf "${param}" "0"|trim "$@"|toUpperCase)$(string_subString "${param}" "1")"
+    echo -e "$(string_indexOf "${param}" "0"|trim|toUpperCase)$(string_subString "${param}" "1")"
   }
   pip "${param}"
 }
@@ -124,6 +124,16 @@ function toCamelCase(){
   }
   pip "${param}"
 }
+
+# 转下划线
+function toUnderlineCase(){
+  local param=$1 #传入的字符串
+  _action(){
+    echo ${param}|sed 's/\([a-z0-9]\)\([A-Z]\)/\1_\2/g'
+  }
+  pip "${param}"
+}
+
 #
 #function string_charAt(){
 #:
@@ -149,12 +159,18 @@ function toCamelCase(){
 #function string_join(){
 #:
 #}
-#function string_replace(){
-#:
-#}
-#function string_replaceAll(){
-#:
-#}
+function string_replace(){
+  local param=$1
+  local source=$2
+  local target=$3
+  echo -e "${param/${source}/${target}}"
+}
+function string_replaceAll(){
+  local param=$1
+  local source=$2
+  local target=$3
+  echo -e "${param//${source}/${target}}"
+}
 
 function string_tailRemove(){
   local param=$*
