@@ -9,30 +9,87 @@
 ![](https://github.com/chen-shang/Picture/blob/master/init.gif)
 
 # BaseShell使用教程
-
 [BaseShell使用教程](https://chen-shang.github.io/2019/08/28/ji-zhu-zong-jie/baseshell/baseshell-shi-yong-jiao-cheng/)
 
-我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类java的工具类，这会强迫自己深入Java的源代码。
+我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类Java的工具类，这会强迫自己深入学习Java的源代码。
+
+所以Java是我的第一语言,Scala作为第二语言,忠实的shell粉,但不排除其他编程语言。
 
 BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具库,涵盖多种类Java工具的实现
-1. 并发工具【Concurrent】
-2. 锁【Concurrent】
-3. Object工具【Lang】
-4. 数学工具【Lang】
-5. 常量【Constant】
-6. 字符串工具【Lang】
-7. SSH【Ssh】
-8. Starter包【Starter】
-9. 工具包【Utils】
-10. 单元测试【Utils】
-11. 日期工具【localdate、localdatetime、localtime、timeunit、week】
-12. 日志工具【log】
-等等,目前还在完善当中。旨在简化shell脚本的编写、提高shell脚本的健壮性。丰富的类库可以大大减少shell脚本编写的难度，其类Java的实现方式可以使得面向对象范式的程序员很快的理解并使用。与之相配套的我会出一篇《Shell编程规约》,以期规范Shell脚本程序员的书写习惯。
+```
+.
+├── Annotation                         #函数参数校验脚本
+│   └── BaseAnnotation.sh
+├── Collection                         #集合处理脚本
+│   ├── BaseArrayList.sh
+│   ├── BaseHasMap.sh
+│   └── BaseMap.sh
+├── Concurrent                         #并发控制脚本
+│   ├── BaseLock.sh
+│   ├── BaseThreadPool.sh
+│   └── BaseThreadPoolExecutor.sh
+├── Constant                           #自定义常量
+│   └── BaseConstant.sh
+├── Date                               #日期处理脚本
+│   ├── BaseLocalDate.sh
+│   ├── BaseLocalDateTime.sh
+│   ├── BaseLocalTime.sh
+│   ├── BaseMonth.sh
+│   ├── BaseTimeUnit.sh
+│   ├── BaseTimestamp.sh
+│   └── BaseWeek.sh
+├── File                               #文件处理脚本
+│   ├── BaseFile.sh
+│   └── BaseTable.sh
+├── Lang  
+│   ├── BaseMath.sh
+│   ├── BaseObject.sh
+│   └── BaseString.sh
+├── Log                                #日志脚本
+│   └── BaseLog.sh
+├── Ssh #ssh工机具
+│   └── BaseSsh.sh
+├── Starter                            #包导入辅助脚本
+│   ├── BaseDateTimeStarter.sh
+│   ├── BaseEnd.sh
+│   ├── BaseHeader.sh
+│   ├── BaseStarter.sh
+│   ├── BaseTestEnd.sh
+│   └── BaseTestHeader.sh
+├── Test                              #单元测试脚本
+│   ├── BaseAnnotationTest.sh
+│   ├── BaseArrayListTest.sh
+│   ├── BaseLocalDateTest.sh
+│   ├── BaseLocalDateTimeTest.sh
+│   ├── BaseLocalTimeTest.sh
+│   ├── BaseLockTest.sh
+│   ├── BaseLogTest.sh
+│   ├── BaseMapTest.sh
+│   ├── BaseMiniTest.sh
+│   ├── BaseObjectTest.sh
+│   ├── BaseRandomTest.sh
+│   ├── BaseStringTest.sh
+│   ├── BaseTableTest.sh
+│   ├── BaseThreadPoolExecutorTest.sh
+│   ├── BaseThreadPoolTest.sh
+│   ├── BaseUuidTest.sh
+│   └── table
+├── Utils                              #辅助工具脚本
+│   ├── BaseCodec.sh
+│   ├── BaseRandom.sh
+│   └── BaseUuid.sh
+├── Banner                             #项目头图
+├── config.sh                          #项目配置文件
+├── init.sh                            #项目初始化脚本
+├── BaseShellMini.sh                   #常用最小引入脚本
+└── readme.md                          #项目介绍
+```
+目前还在完善当中。旨在简化shell脚本的编写、提高shell脚本的健壮性。丰富的脚本库可以大大减少shell脚本编写的难度，其类Java的实现方式可以使得面向对象范式的程序员很快的理解并使用。与之相配套的我会出一篇《Shell编程规约》,以期规范Shell脚本程序员的书写习惯。
 
 ## 初始化项目
 ```
 cd ~
-mkdir script && cd script #新建一个script目录用于存放所有的脚本
+mkdir shell && cd shell #新建一个script目录用于存放所有的脚本
 git clone https://github.com/chen-shang/BaseShell.git
 sh $(pwd)/BaseShell/init.sh
 ```
@@ -41,10 +98,10 @@ sh $(pwd)/BaseShell/init.sh
 ```
 > sh $(pwd)/BaseShell/init.sh
 project[项目目录]:com.baseshell.learn
-module[模块名称]:Script
+module[模块名称]:script
 ./../../com.baseshell.learn
 ├── BaseShell -> /script/BaseShell
-└── Script
+└── script
     ├── Resources
     ├── Service
     │   └── Main.sh
@@ -57,8 +114,8 @@ module[模块名称]:Script
 ## 运行项目
 【强制】运行shell脚本要到脚本目录下执行
 ```
-cd com.baseshell.learn/Shell/Service/ScriptService.sh
-sh ScriptService.sh
+cd com.baseshell.learn/Shell/Service
+sh Main.sh
 ```
 看到如下输出,说明项目运行ok,之后可以愉快的写脚本了
 ```
@@ -71,16 +128,19 @@ hello world
 ```
 # 目录结构
 ```
-./../../com.chenshang.learn
-├── BaseShell -> /Users/chenshang/script/BaseShell BaseShell的源码软链
-└── Shell
-    ├── Resources            资源文件
-    ├── Service              项目脚本
-    │   └── Main.sh          脚本文件
-    ├── Test                 测试脚本
-    ├── config.sh            配置文件
-    └── readme.md            描述文件
+.
+├── BaseShell -> /Users/chenshang/Learn/shell/BaseShell BaseShell的源码软链
+└── script
+    ├── Resources   资源文件
+    ├── Service     项目脚本
+    │   └── Main.sh 脚本文件
+    ├── Test        测试脚本
+    ├── config.sh   配置文件
+    └── readme.md   描述文件
+
+5 directories, 3 files
 ```
+
 BaseShell相当于Java的JDK.
 资源文件: 一般放一些文本文件、图片、csv等非脚本文件
 项目脚本: 项目相关脚本所在的文件,如果想要写一些辅助的脚本,建议与Service同级创建一个文件夹来写
