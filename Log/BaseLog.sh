@@ -2,7 +2,7 @@
 # shellcheck disable=SC1091,SC2155
 # @attention 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
 #===============================================================
-import=$(basename "${BASH_SOURCE[0]}" .sh)
+import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================

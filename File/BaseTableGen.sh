@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-import=$(basename "${BASH_SOURCE[0]}" .sh)
+import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
@@ -22,7 +22,7 @@ function genDao(){
     echo '#!/usr/bin/env bash'
     echo '# shellcheck disable=SC1091,SC2155'
     echo '#==============================================================='
-    echo 'import=$(basename "${BASH_SOURCE[0]}" .sh)'
+    echo 'import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"'
     echo 'if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi'
     echo 'eval "${import}=0"'
     echo '#==============================================================='
