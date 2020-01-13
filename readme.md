@@ -244,7 +244,7 @@ source ../../BaseShell/Starter/BaseEnd.sh
 曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
 
 |方法|表头|备注|
-|:----|:----:|:----:|
+|:----|:----|:----|
 |_NotBlank|入参数不为空(空或空字符串)|
 |_Natural|入参数为自然数(0,1,2,3...)|
 |_Min|最大不得小于此最小值|
@@ -258,6 +258,9 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 }
 ```
 一般函数的参数校验,我一般和函数也在一行上,第二行用具体的变量名接收参数。上面的函数如果有某个参数没有传,函数会异常退出,下面的代码也不会执行。
+
+![](https://github.com/chen-shang/Picture/blob/master/baseshell/annotation.jpg)
+
 
 ## 日志工具【Log】
 ### 如何引入
