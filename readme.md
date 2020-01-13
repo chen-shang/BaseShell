@@ -145,7 +145,9 @@ hello world
 ```
 
 BaseShell相当于Java的JDK.
-配置文件: 
+
+配置文件:
+ 
 【推荐】config.sh 脚本中尽量之定义变量,不要定义函数或可执行命令,类比Java项目中的properties
 描述文件: 项目的描述文件
 
@@ -233,6 +235,30 @@ source ../../BaseShell/Starter/BaseEnd.sh
 `source 第三方脚本`会使第三方脚本从头到尾加载一遍,遇到函数就加载函数、遇到变量就加载变量、遇到可执行的命令就会执行,这个命令其实就是把第三方脚本定义的函数、全局变量加载到当前脚本的上下文中
 这里推荐使用相对路径,因为使用绝对路径,IDEA无法进行代码提示,也是醉了
 
+### Annotation #函数参数校验脚本
+```
+.
+└── BaseAnnotation.sh
+```
+默认自动引入,此包下的工具是用来进行函数参数校验的,类似Spring中的Validate的功能。一旦参数校验没有通过则会终止函数的执行。 所有方法都是以 `_` 开头的,类似于Java中的`@`
+曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
+
+|方法|表头|备注|
+|:----|:----:|:----:|
+|_NotBlank|入参数不为空(空或空字符串)|
+|_Natural|入参数为自然数(0,1,2,3...)|
+|_Min|最大不得小于此最小值|
+|_Max|最大不得超过此最大值|
+
+示例
+```bash
+# 将文件内容读进内存
+function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2" "port can not be null" && _NotBlank "$3" "user can not bull" && _NotBlank "$4" "pass can not bull"
+  local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4
+}
+```
+一般函数的参数校验,我一般和函数也在一行上,第二行用具体的变量名接收参数。上面的函数如果有某个参数没有传,函数会异常退出,下面的代码也不会执行。
+
 ## 日志工具【Log】
 ### 如何引入
 `source ./../../BaseShell/Starter/BaseHeader.sh`默认会引入Log框架`source ./../../BaseShell/Log/BaseLog.sh` 无需手动引入
@@ -277,16 +303,6 @@ Log 包里面有8个方法
 ### 使用示例
 ![](BaseShell使用教程/Log.gif)
 
-## 校参工具【Annotation】
-此包下的工具是用来进行函数参数校验的,类似Spring中的Validate的功能。一旦出错则会终止函数的执行。 所有的Annotation均已`_`下划线开头,
-曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
-### 如何引入
-`source ./../../BaseShell/Starter/BaseHeader.sh`默认会引入Log框架`source ./../../BaseShell/Annotation/BaseAnnotation.sh` 无需手动引入
-### 使用方法
-`_NotBlank` 判断入参数不为空(空或空字符串)
-`_Natural`  判断入参数为自然数(0,1,2,3...)
-`_Min`      最大不得小于此最小值
-`_Max`      最大不得超过此最大值
 ### 使用示例
 ![](BaseShell使用教程/Log.gif)
 
