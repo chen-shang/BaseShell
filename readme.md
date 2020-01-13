@@ -231,9 +231,16 @@ source ../../BaseShell/Starter/BaseEnd.sh
 这样直接执行脚本的时候,会先寻找脚本里面的main函数去执行,类似运行一个Java Class类中的main方法
 
 ## 如何引用包
+我们规定项目目录最大深度为2层,也就是不允许在Service同级的目录下在创建目录然后在里面写脚本
+
 引用包使用source命令
 `source 第三方脚本`会使第三方脚本从头到尾加载一遍,遇到函数就加载函数、遇到变量就加载变量、遇到可执行的命令就会执行,这个命令其实就是把第三方脚本定义的函数、全局变量加载到当前脚本的上下文中
 这里推荐使用相对路径,因为使用绝对路径,IDEA无法进行代码提示,也是醉了
+
+示例
+如果想引入日期相关的函数 `source ./../../BaseShell/Date/BaseLocalDate.sh`
+
+如果想引入文件相关的函数 `source ./../../BaseShell/File/BaseFile.sh`
 
 ### Annotation #函数参数校验脚本
 ```
