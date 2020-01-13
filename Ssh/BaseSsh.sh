@@ -11,14 +11,14 @@ timeout=60
 # 检查机器登陆 [String]<-(ip:String,port:Int,user:String,pass:String)
 function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2" "port can not be null" && _NotBlank "$3" "user can not bull" && _NotBlank "$4" "pass can not bull"
   local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4
-  local key="ssh root@${ip} -p ${port} [${pass}]"
+  local key="ssh ${user}@${ip} -p ${port} [${pass}]"
   expect -c "
     set timeout ${timeout}
     spawn ssh -p ${port} ${user}@${ip} 'pwd'
     expect {
       \"*yes/no*\"   { send \"yes\r\"; exp_continue }
       \"*Permission denied*\" {exit 3}
-      \"*password*\" { send \"${pass}\r\";exp_continue }
+      \"*assword*\" { send \"${pass}\r\";exp_continue }
       \"*Connection closed by remote host*\" { exit 1 }
       \"*Connection refused*\" {exit 2}
       \"*Network is unreachable*\" {exit 4}
@@ -56,7 +56,7 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 # 登陆远程机器 []<-(ip:String,port:Int,pass:String)
 function ssh_login(){
   local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4
-  ssh_checkLogin "${ip}" "${port}" "${pass}" || return
+  ssh_checkLogin "${ip}" "${port}" "${user}" "${pass}" || return
   expect -c "
     set timeout ${timeout}
     spawn ssh -p ${port} ${user}@${ip}
@@ -77,13 +77,33 @@ function ssh_login(){
 # 执行远程命令 [String]<-(ip:String,port:Int,pass:String,cmd:String)
 function ssh_run(){
   local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4 ;local cmd=$5
-  ssh_checkLogin "${ip}" "${port}" "${pass}" || return
+  ssh_checkLogin "${ip}" "${port}" "${user}" "${pass}" || return
   expect -c "
     set timeout ${timeout}
     spawn ssh -p ${port} ${user}@${ip} ${cmd};
     expect {
       \"*yes/no*\"   { send \"yes\r\"; exp_continue }
-      \"*password*\" { send \"${pass}\r\" }
+      \"*assword*\" { send \"${pass}\r\" }
+      \"*Connection closed by remote host*\" { exit 1 }
+      timeout {exit 2}
+    };
+    expect eof;
+  "
+}
+
+# @param ip   登陆ip地址
+# @param port 登陆端口号
+# @param port 登陆账号
+# @param pass 登陆密码
+# 执行远程命令 [String]<-(ip:String,port:Int,pass:String,cmd:String)
+function ssh_exec(){
+  local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4 ;local cmd=$5
+  expect -c "
+    set timeout ${timeout}
+    spawn ssh -p ${port} ${user}@${ip} ${cmd};
+    expect {
+      \"*yes/no*\"   { send \"yes\r\"; exp_continue }
+      \"*assword*\" { send \"${pass}\r\" }
       \"*Connection closed by remote host*\" { exit 1 }
       timeout {exit 2}
     };
@@ -99,14 +119,14 @@ function ssh_run(){
 # 执行远程命令 [String]<-(ip:String,port:Int,pass:String,file:String,dir:String)
 function ssh_upload(){
   local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4 ;local file=$5 ;local dir=$6
-  ssh_checkLogin "${ip}" "${port}" "${pass}" || return
+  ssh_checkLogin "${ip}" "${port}" "${user}" "${pass}" || return
   expect -c "
     set timeout 20;
     # 先判断目录存不存在,不存在则新建之
     spawn ssh -p ${port} ${user}@${ip}
     expect {
       \"*yes/no*\"   { send \"yes\r\"; exp_continue }
-      \"*password*\" { send \"${pass}\r\" }
+      \"*assword*\" { send \"${pass}\r\" }
       \"*Connection closed by remote host*\" {exit 1}
       timeout {exit 2}
     };
@@ -115,7 +135,7 @@ function ssh_upload(){
     spawn scp -r -P ${port} ${file} ${user}@${ip}:${dir};
     expect {
       \"*yes/no*\"   { send \"yes\r\"; exp_continue }
-      \"*password*\" { send \"${pass}\r\" }
+      \"*assword*\" { send \"${pass}\r\" }
     };
     expect eof;
   "

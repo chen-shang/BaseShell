@@ -25,7 +25,7 @@ ln -nsf "${BASE_SHELL}" ./BaseShell
 mkdir -p "${module}"
 cd "${module}"
 
-mkdir -p Resources Service Test
+mkdir -p Resources Service Test Utils
 
 # 写入默认的配置文件
 echo "#!/usr/bin/env bash
