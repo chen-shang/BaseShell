@@ -19,65 +19,65 @@ BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具�
 ```
 .
 ├── Annotation                         #函数参数校验脚本
-│   └── BaseAnnotation.sh
+|   └── BaseAnnotation.sh
 ├── Collection                         #集合处理脚本
-│   ├── BaseArrayList.sh
-│   ├── BaseHasMap.sh
-│   └── BaseMap.sh
+|   ├── BaseArrayList.sh
+|   ├── BaseHasMap.sh
+|   └── BaseMap.sh
 ├── Concurrent                         #并发控制脚本
-│   ├── BaseLock.sh
-│   ├── BaseThreadPool.sh
-│   └── BaseThreadPoolExecutor.sh
+|   ├── BaseLock.sh
+|   ├── BaseThreadPool.sh
+|   └── BaseThreadPoolExecutor.sh
 ├── Constant                           #自定义常量
-│   └── BaseConstant.sh
+|   └── BaseConstant.sh
 ├── Date                               #日期处理脚本
-│   ├── BaseLocalDate.sh
-│   ├── BaseLocalDateTime.sh
-│   ├── BaseLocalTime.sh
-│   ├── BaseMonth.sh
-│   ├── BaseTimeUnit.sh
-│   ├── BaseTimestamp.sh
-│   └── BaseWeek.sh
+|   ├── BaseLocalDate.sh
+|   ├── BaseLocalDateTime.sh
+|   ├── BaseLocalTime.sh
+|   ├── BaseMonth.sh
+|   ├── BaseTimeUnit.sh
+|   ├── BaseTimestamp.sh
+|   └── BaseWeek.sh
 ├── File                               #文件处理脚本
-│   ├── BaseFile.sh
-│   └── BaseTable.sh
+|   ├── BaseFile.sh
+|   └── BaseTable.sh
 ├── Lang  
-│   ├── BaseMath.sh
-│   ├── BaseObject.sh
-│   └── BaseString.sh
+|   ├── BaseMath.sh
+|   ├── BaseObject.sh
+|   └── BaseString.sh
 ├── Log                                #日志脚本
-│   └── BaseLog.sh
+|   └── BaseLog.sh
 ├── Ssh #ssh工机具
-│   └── BaseSsh.sh
+|   └── BaseSsh.sh
 ├── Starter                            #包导入辅助脚本
-│   ├── BaseDateTimeStarter.sh
-│   ├── BaseEnd.sh
-│   ├── BaseHeader.sh
-│   ├── BaseStarter.sh
-│   ├── BaseTestEnd.sh
-│   └── BaseTestHeader.sh
+|   ├── BaseDateTimeStarter.sh
+|   ├── BaseEnd.sh
+|   ├── BaseHeader.sh
+|   ├── BaseStarter.sh
+|   ├── BaseTestEnd.sh
+|   └── BaseTestHeader.sh
 ├── Test                              #单元测试脚本
-│   ├── BaseAnnotationTest.sh
-│   ├── BaseArrayListTest.sh
-│   ├── BaseLocalDateTest.sh
-│   ├── BaseLocalDateTimeTest.sh
-│   ├── BaseLocalTimeTest.sh
-│   ├── BaseLockTest.sh
-│   ├── BaseLogTest.sh
-│   ├── BaseMapTest.sh
-│   ├── BaseMiniTest.sh
-│   ├── BaseObjectTest.sh
-│   ├── BaseRandomTest.sh
-│   ├── BaseStringTest.sh
-│   ├── BaseTableTest.sh
-│   ├── BaseThreadPoolExecutorTest.sh
-│   ├── BaseThreadPoolTest.sh
-│   ├── BaseUuidTest.sh
-│   └── table
+|   ├── BaseAnnotationTest.sh
+|   ├── BaseArrayListTest.sh
+|   ├── BaseLocalDateTest.sh
+|   ├── BaseLocalDateTimeTest.sh
+|   ├── BaseLocalTimeTest.sh
+|   ├── BaseLockTest.sh
+|   ├── BaseLogTest.sh
+|   ├── BaseMapTest.sh
+|   ├── BaseMiniTest.sh
+|   ├── BaseObjectTest.sh
+|   ├── BaseRandomTest.sh
+|   ├── BaseStringTest.sh
+|   ├── BaseTableTest.sh
+|   ├── BaseThreadPoolExecutorTest.sh
+|   ├── BaseThreadPoolTest.sh
+|   ├── BaseUuidTest.sh
+|   └── table
 ├── Utils                              #辅助工具脚本
-│   ├── BaseCodec.sh
-│   ├── BaseRandom.sh
-│   └── BaseUuid.sh
+|   ├── BaseCodec.sh
+|   ├── BaseRandom.sh
+|   └── BaseUuid.sh
 ├── Banner                             #项目头图
 ├── config.sh                          #项目配置文件
 ├── init.sh                            #项目初始化脚本
@@ -104,7 +104,7 @@ module[模块名称]:Script
 └── Script
     ├── Resources
     ├── Service
-    │   └── Main.sh
+    |   └── Main.sh
     ├── Test
     ├── Utils
     ├── config.sh
@@ -134,7 +134,7 @@ hello world
 └── Script                                          模块目录：一般建议大写,代表一个Shell模块,里面专门是针对某个模块儿的脚本
     ├── Resources                                   资源目录：资源目录: 一般放一些文本文件、图片、csv等非脚本文件
     ├── Service                                     项目目录：项目相关脚本所在的文件,如果想要写一些辅助的脚本,建议与Service同级创建一个文件夹来写
-    │   └── Main.sh                                 
+    |   └── Main.sh                                 
     ├── Test                                        测试目录：对脚本中的函数进行单元测试的脚本
     ├── Utils                                       工具目录：工具类
     ├── config.sh                                   配置文件：项目的配置文件包括 头图、日志级别等以及一些项目中用到的配置项
@@ -246,17 +246,17 @@ source ../../BaseShell/Starter/BaseEnd.sh
 ```
 .
 ├── Annotation                         #函数参数校验脚本
-│   └── BaseAnnotation.sh
+|   └── BaseAnnotation.sh
 ```
 默认自动引入,此包下的工具是用来进行函数参数校验的,类似Spring中的Validate的功能。一旦参数校验没有通过则会终止函数的执行。 所有方法都是以 `_` 开头的,类似于Java中的`@`
 曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
 
 |方法|表头|备注|
 |:----|:----|:----|
-|_NotBlank|入参数不为空(空或空字符串)|
-|_Natural|入参数为自然数(0,1,2,3...)|
-|_Min|最大不得小于此最小值|
-|_Max|最大不得超过此最大值|
+|_NotBlank|入参数不为空(空或空字符串)|-|
+|_Natural|入参数为自然数(0,1,2,3...)|-|
+|_Min|最大不得小于此最小值|-|
+|_Max|最大不得超过此最大值|-|
 
 示例
 ```bash
@@ -272,33 +272,32 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 ## 集合处理脚本
 ```
 ├── Collection
-│   ├── BaseArrayList.sh
-│   ├── BaseHasMap.sh 
-│   └── BaseMap.sh
+|   ├── BaseArrayList.sh
+|   ├── BaseHasMap.sh 
+|   └── BaseMap.sh
 ```
 默认自动引入,此包下的工具是用来对集合 和 Map 进行操作的。
 ### BaseArrayList.sh
-
 |方法|表头|备注|
 |:----|:----|:----|
-|new_arrayList|新建一个list|
-│list_add│添加元素│
-│list_set│设置元素│
-│list_removeByIndex│按照下标移除元素│
-│list_removeByValue│按照值移除元素│
-│list_get│按照下标获取元素│
-│list_forEach│对列表中的每一个元素都进行操作│
-│list_size│获取当前list的元素个数│
-│list_isEmpty│判断当前list是否为空│
-│list_contains│判断当前list是否包含某元素│
-│list_clear│清空当前list│
-│list_indexOf│获取指定元素的下标│从前往后第一个
-│list_lastIndexOf│获取指定元素的下标│从后往前第一个
-│list_sub│截取指定下标的元素││
-│list_copy│赋值一个新的数组│
-│list_values│获取元素的值列表│
-│list_mapper│最每一个元素进行操作并返回一个新的列表│
-│list_reducer│聚类操作│
+|new_arrayList|新建一个list|-|
+|list_add|添加元素|-|
+|list_set|设置元素|-|
+|list_removeByIndex|按照下标移除元素|-|
+|list_removeByValue|按照值移除元素|-|
+|list_get|按照下标获取元素|-|
+|list_forEach|对列表中的每一个元素都进行操作|-|
+|list_size|获取当前list的元素个数|-|
+|list_isEmpty|判断当前list是否为空|-|
+|list_contains|判断当前list是否包含某元素|-|
+|list_clear|清空当前list|-|
+|list_indexOf|获取指定元素的下标|从前往后第一个|
+|list_lastIndexOf|获取指定元素的下标|从后往前第一个|
+|list_sub|截取指定下标的元素|-|
+|list_copy|赋值一个新的数组|-|
+|list_values|获取元素的值列表|-|
+|list_mapper|最每一个元素进行操作并返回一个新的列表|-|
+|list_reducer|聚类操作|-|
 
 ## 日志工具【Log】
 ### 如何引入
