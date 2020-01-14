@@ -242,10 +242,11 @@ source ../../BaseShell/Starter/BaseEnd.sh
 
 如果想引入文件相关的函数 `source ./../../BaseShell/File/BaseFile.sh`
 
-### Annotation #函数参数校验脚本
+### 函数参数校验脚本
 ```
 .
-└── BaseAnnotation.sh
+├── Annotation                         #函数参数校验脚本
+│   └── BaseAnnotation.sh
 ```
 默认自动引入,此包下的工具是用来进行函数参数校验的,类似Spring中的Validate的功能。一旦参数校验没有通过则会终止函数的执行。 所有方法都是以 `_` 开头的,类似于Java中的`@`
 曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
@@ -268,6 +269,36 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 
 ![](https://github.com/chen-shang/Picture/blob/master/baseshell/annotation.jpg)
 
+## 集合处理脚本
+```
+├── Collection
+│   ├── BaseArrayList.sh
+│   ├── BaseHasMap.sh 
+│   └── BaseMap.sh
+```
+默认自动引入,此包下的工具是用来对集合 和 Map 进行操作的。
+### BaseArrayList.sh
+
+|方法|表头|备注|
+|:----|:----|:----|
+|new_arrayList|新建一个list|
+│list_add│添加元素│
+│list_set│设置元素│
+│list_removeByIndex│按照下标移除元素│
+│list_removeByValue│按照值移除元素│
+│list_get│按照下标获取元素│
+│list_forEach│对列表中的每一个元素都进行操作│
+│list_size│获取当前list的元素个数│
+│list_isEmpty│判断当前list是否为空│
+│list_contains│判断当前list是否包含某元素│
+│list_clear│清空当前list│
+│list_indexOf│获取指定元素的下标│从前往后第一个
+│list_lastIndexOf│获取指定元素的下标│从后往前第一个
+│list_sub│截取指定下标的元素││
+│list_copy│赋值一个新的数组│
+│list_values│获取元素的值列表│
+│list_mapper│最每一个元素进行操作并返回一个新的列表│
+│list_reducer│聚类操作│
 
 ## 日志工具【Log】
 ### 如何引入

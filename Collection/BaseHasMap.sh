@@ -7,7 +7,7 @@ eval "${import}=0"
 #===============================================================
 source ../../BaseShell/Starter/BaseHeader.sh
 source ./../../BaseShell/Collection/BaseMap.sh
-readonly defaultSize=2
+readonly defaultSize=32
 
 declare -A hashMap=()
 # 新建一个HashMap  []<-(mapName:String)
