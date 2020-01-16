@@ -242,7 +242,7 @@ source ../../BaseShell/Starter/BaseEnd.sh
 
 如果想引入文件相关的函数 `source ./../../BaseShell/File/BaseFile.sh`
 
-### 函数参数校验脚本
+### 函数参数校验脚本【Annotation】
 ```
 .
 ├── Annotation                         #函数参数校验脚本
@@ -269,7 +269,7 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 
 ![](https://github.com/chen-shang/Picture/blob/master/baseshell/annotation.jpg)
 
-## 集合处理脚本
+## 集合处理脚本【Collection】
 ```
 ├── Collection
 |   ├── BaseArrayList.sh
