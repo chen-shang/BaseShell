@@ -39,13 +39,12 @@ function genDao(){
   #  }"
   #  echo "orderBy(){
   #  }"
-  #  echo "${tableName}_insert(){
+
+
+  #  echo "function ${tableName}_update(){
   #  }"
-  #  echo "${tableName}_delete(){
-  #  }"
-  #  echo "${tableName}_update(){
-  #  }"
-     echo "${tableName}"'_parse(){'
+
+     echo "function ${tableName}"'_parse(){ _NotBlank "$*" "query can not be null"'
      echo '  local query=$*;'
      echo '  for COLUMN in ${'"${TABLE_NAME}"'_COLUMNS_UP[*]};do'
      echo '  local index=$(eval "echo \${'"${TABLE_NAME}"'_COLUMN_${COLUMN}}")'
@@ -54,25 +53,49 @@ function genDao(){
      echo '  echo ${query}'
      echo '}'
 
-     echo "${tableName}"'_select(){'
+     echo "function ${tableName}_insert(){"' _NotBlank "$*" "query can not be null"'
+     echo '  echo "$*">> "${'${TABLE_NAME}_TABLE'}"'
+     echo "}"
+
+     echo "function ${tableName}"'_select(){ _NotBlank "$*" "query can not be null"'
      echo '  local query=$*'
      echo '  query=$('"${tableName}"'_parse "${query}")'
      echo '  local query="awk '\''${query} NR!=1{print \$0}'\'' ${'${TABLE_NAME}_TABLE'}"'
-     echo '  log_info "${query}"'
+     echo '  log_debug "${query}"'
      echo '  eval "${query}"'
      echo "}"
 
-     echo "${tableName}"'_selectOne(){'
+     echo "function ${tableName}"'_selectOne(){ _NotBlank "$*" "query can not be null"'
      echo '  local query=$*'
      echo '  local result=$('"${tableName}"'_select "${query}"|head -1)'
      echo '  echo ${result}'
      echo "}"
 
-     echo "${tableName}"'_count(){'
+     echo "function ${tableName}"'_count(){ _NotBlank "$*" "query can not be null"'
      echo '  local query=$*'
      echo '  local result=$('"${tableName}"'_select "${query}"|wc -l)'
      echo '  echo ${result}'
      echo "}"
+
+     echo "function ${tableName}"'_line(){ _NotBlank "$*" "query can not be null"'
+     echo '  local query=$*'
+     echo '  query=$('${tableName}'_parse "${query}")'
+     echo '  local query="awk '\''${query} NR!=1{print NR}'\'' ${HOST_INFO_TABLE_TABLE}"'
+     echo '  log_debug "${query}"'
+     echo '  eval "${query}"'
+     echo '}'
+
+     echo "function ${tableName}"'_delete(){ _NotBlank "$*" "query can not be null"'
+     echo '  local lines=( $(HostInfoTable_line "$1") )'
+     echo '  local query=""'
+     echo '  for line in ${lines[*]};do'
+     echo '    query+="${line}d;"'
+     echo '  done'
+     echo '  query="$(echo "${query}"|string_tailRemove)"'
+     echo '  sed -i '\'\'' "${query}" "${HOST_INFO_TABLE_TABLE}"'
+     echo '  echo "${#lines[@]}"'
+     echo '}'
+
   }
 
   genColumn(){

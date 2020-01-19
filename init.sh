@@ -15,7 +15,7 @@ fi
 
 # 新建项目目录
 mkdir -p "${project}"
-cd  "${project}"
+cd  "${project}" || exit
 
 # 引入BaseShell
 BASE_SHELL=$(dirname ${BASH_SOURCE[0]})
