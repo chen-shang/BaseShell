@@ -25,6 +25,7 @@ readonly NULL='null'
 readonly PI=3.14159265358979323846
 readonly E=2.7182818284590452354
 
+#==========================Object=====================================
 # @return {@code true} if the arguments are equal to each other
 function equals(){
   local value1=$1 #一参
@@ -197,7 +198,7 @@ function _Max(){ _NotBlank "$1" ; _NotBlank "$2"
   [[ $(echo "$2 >= $1" | bc) -eq 1 ]] && log_fail "${err_msg}" || return "${TRUE}"
 }
 
-
+#==========================String.sh=====================================
 # 去掉字符串前后空格 [String]<-(param:String)
 function trim(){
   local param=$*
@@ -226,7 +227,7 @@ function toLowerCase(){
   }
   pip "${param}"
 }
-
+#==========================Log.sh=====================================
 # 日志记录位置
 LOG_DIR="/tmp"
 
@@ -340,6 +341,8 @@ function random_poetry(){
    curl -s -H 'X-User-Token:RgU1rBKtLym/MhhYIXs42WNoqLyZeXY3EkAcDNrcfKkzj8ILIsAP1Hx0NGhdOO1I' https://v2.jinrishici.com/sentence|jq .data.origin|xargs echo
 }
 
+
+#==========================ssh.sh=====================================
 timeout=60
 # @param ip   登陆ip地址
 # @param port 登陆端口号
@@ -477,6 +480,158 @@ function ssh_upload(){
     expect eof;
   "
 }
+
+#==========================并发相关=====================================
+# 该锁利用fifo的阻塞原理实现 非重入锁
+# 新建一个锁 []<-(lock_fd:String)
+new_lock(){ _NotBlank "$1" "lock fd can not be null"
+  local fd=$1
+  new_fifo "${fd}"
+  echo 0 >& "${fd}"
+}
+
+# 尝试加锁,也就是获取fifo的执行令牌,并发情况下只有一个线程可以获取到
+# 非冲入锁,切勿连续两次上锁,否则有可能死锁
+# 尝试加锁 []<-(lock_fd:String)
+lock_tryLock(){ _NotBlank "$1" "lock fd can not be null"
+  local fd=$1
+  ! isExist "${fd}" && {
+    new_lock "${fd}"
+  }
+  read -r -u "${fd}"
+}
+
+# 解锁,也就是归还fifo的执行令牌,并发情况下只有一个线程可以获取到
+# 非冲入锁,切勿连续两次解锁,否则有可能死锁
+# 解锁 []<-(lock_fd:String)
+lock_unLock(){ _NotBlank "$1" "lock fd can not be null"
+  local fd=$1
+  echo 0 >& "${fd}"
+}
+
+function lock_run(){ _NotBlank "$1" "lock fd can not be null" && _NotBlank "$2" "function can not be null"
+  local fd=$1;shift ; local task=$*
+  lock_tryLock "${fd}"
+  eval "${task}"
+  lock_unLock "${fd}"
+}
+# 获取一个可用的文件描述符号
+function new_fd(){
+  {
+    flock 3
+    local find=${NULL}
+    for((fd=4;fd<1024;fd++));do
+      local rco="$(true 2>/dev/null >& ${fd}; echo $?)"
+      local rci="$(true 2>/dev/null <& ${fd}; echo $?)"
+      [[ "${rco}${rci}" == "11" ]] && find=${fd} && break
+    done
+    echo "${find}"
+  } 3<>/tmp/base_shell.lock
+}
+
+isExist(){ _NotBlank "$1" "fd can not be null"
+  local fd=$1
+  {
+    flock 3
+    [[ -z "${fd}" ]] && { echo "fd can not be blank" ;exit ; }
+
+    local rco=$(true 2>/dev/null >& "${fd}"; echo $?)
+    local rci=$(true 2>/dev/null <& "${fd}"; echo $?)
+    [[ "${rco}${rci}" == "00" ]] && return ${TRUE} || return ${FALSE}
+  } 3<>/tmp/base_shell.lock
+}
+
+
+# 那文件描述符关联一个fifo,不关心文件名字
+function new_fifo(){ _NotBlank "$1" "fd can not be null"
+  local fd=$1
+  [[ -z "${fd}" ]] && { echo "fd can not be blank" ;exit ; }
+
+  {
+    flock 3
+    local rco=$(true 2>/dev/null >& "${fd}"; echo $?)
+    local rci=$(true 2>/dev/null <& "${fd}"; echo $?)
+    [[ "${rco}${rci}" == "00" ]] && return #存在则退出
+
+    # 不存在则关联一个fifo有名管道
+    local fifo=$(uuidgen)
+    [[ -e "${fifo}" ]] || mkfifo "${fifo}"
+    eval "exec ${fd}<>${fifo} && rm -rf ${fifo}"
+  } 3<>/tmp/base_shell.lock
+}
+
+#==========================Thread.sh=====================================
+# 该线程池的实现方法与下面的 BaseThreadPoolExecutor.sh 实现不同。与Java中的线程池实现不同
+# 实现方式令牌队列中存放指定执行个数的令牌,令牌队列为空的时候阻塞任务的提交
+# 令牌队列不为空的时候允许拿走一个令牌执行
+# 该令牌队列保证了:在多线程环境下获取令牌是互斥的,利用fifo的阻塞和read命令一次读取一行
+
+# coreSize:核心线程数
+# eg: new_threadPool && local pool=$?
+# 新建线程池 [int]<-(coreSize:Integer)
+new_threadPool(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
+  local coreSize=$1
+  local fd=$(new_fd)
+  new_fifo "${fd}"
+  for((i=0;i<coreSize;i++));do
+    #写入令牌
+    eval "echo ${i} >& ${fd}"
+  done
+  return "${fd}"
+}
+
+# 注意这个方法是阻塞方法
+# 提交一个任务 []<-(task:Function)
+threadPool_submit(){ _NotBlank "$1" "thread pool can not be null"
+  local fd=$1 ;shift ;local task=$*
+  #获取执行令牌,获取不到令牌则阻塞,直到有任务结束执行归还令牌
+  read -r -u "${fd}" token
+  {
+    eval "${task}" #开始执行耗时操作
+    eval "echo ${token} >& ${fd}" #归还令牌
+  } &
+}
+#===============================================================================
+# 该线程池的实现方法与上面的 BaseThreadPool.sh实现不同。该类与Java的ThreadPoolExecutor.sh实现类似
+# 可以说是 ThreadPoolExecutor.java 的简版实现。开发过程当中对Java中一些不得已的设计有了深刻的理解
+
+
+# coreSize:核心线程数
+# keepAliveTime:线程的存活时间
+# 任务队列使用的是无限的任务队列
+# eg: new_ThreadPoolExecutor && local pool=$?
+# 新建线程池 [int]<-(coreSize:Integer,keepAliveTime:Long)
+new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
+  local coreSize=$1 #核心线程数
+  local keepAliveTime=${2:-1} #线程的存活时间
+
+  local lock=$(new_fd)
+  new_lock "${lock}"
+
+  local fd=$(new_fd)
+  new_fifo "${fd}"
+
+  for((i=0;i<coreSize;i++));do
+    {
+      while :;do
+        trap 'echo you hit Ctrl-C/Ctrl-\, now exiting.....; exit' SIGINT SIGQUIT
+        lock_tryLock "${lock}" #这个地方必须加锁,防止read并发读导致task错乱
+        read -t "${keepAliveTime}" -r -u "${fd}" task
+        lock_unLock "${lock}"
+        isBlank "${task}" && exit
+        eval "${task}"
+      done
+    } &
+  done
+
+  return "${fd}"
+}
+
+executor_run(){
+  local fd=$1 ;shift ;local task=$*
+  echo "${task}" >& "${fd}"
+}
+#===============================================================================
 
 # 执行函数 [Any]<-(function_name:String,function_parameters:List<Any>)
 execute(){
