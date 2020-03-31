@@ -6,17 +6,18 @@ if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
 # 脚本使用帮助文档
-manual(){ cat <"$0"                      \
-         | grep -B1 'function'           \
-         | grep -v "\\--"                \
-         | sed "s/function //g"          \
-         | sed "s/(){//g"                \
-         | sed "s/#//g"                  \
-         | sed 'N;s/\n/ /'               \
-         | awk '{print $1,$3,$2}'        \
-         | column -t
+manual(){
+  clear
+  cat <"$0"                       \
+  | grep -B1 'function'           \
+  | grep -v "\\--"                \
+  | sed "s/function //g"          \
+  | sed "s/(){//g"                \
+  | sed "s/#//g"                  \
+  | sed 'N;s/\n/ /'               \
+  | awk '{print $1,$3,$2}'        \
+  | column -t
 }
-
 #==========================BaseConstant.sh=====================================
 readonly TRUE=0                         # Linux 中一般0代表真非0代表假
 readonly FALSE=1
