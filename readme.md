@@ -8,6 +8,15 @@
 
 ![](https://github.com/chen-shang/Picture/blob/master/init.gif)
 
+请预先安装以下工具
+```
+lolcat
+tree
+jq
+```
+本人代码是在mac环境下写成的,其他环境如有不兼容的点请联系我,我来修改,谢谢。大家一起努力吧。
+![](https://github.com/chen-shang/Picture/blob/master/weixin/WechatIMG99.jpeg)
+
 # BaseShell使用教程
 [BaseShell使用教程](https://chen-shang.github.io/2019/08/28/ji-zhu-zong-jie/baseshell/baseshell-shi-yong-jiao-cheng/)
 
