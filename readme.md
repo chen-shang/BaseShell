@@ -295,7 +295,7 @@ function ssh_connect(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2" "p
 ```
 此包下的工具是用来对集合 和 Map 进行操作的。
 ### BaseArrayList.sh
-| 方法               | 表头                                   | 备注           |
+| 方法               | 说明                                 | 备注           |
 |:-------------------|:---------------------------------------|:---------------|
 | new_arrayList      | 新建一个list                           | -              |
 | list_add           | 添加元素                               | -              |
@@ -357,15 +357,54 @@ Log 包里面有8个方法
 ### 输出示例
 执行Test下的测试用例,输出如下
 ![](https://github.com/chen-shang/Picture/blob/master/Log.gif)
-
 未完待续。。。明天再写
 ## 并发工具【Concurrent】
 ## 锁【Concurrent】
 ## Object工具【Lang】
 ## 数学工具【Lang】
 ## 常量【Constant】
+几个常量定义如下,可以在脚本的任何位置使用,因为太常用了,尤其是 `TRUE` `FALSE`
+```
+#===============================================================
+readonly TRUE=0                         # Linux 中一般0代表真非0代表假
+readonly FALSE=1
+readonly NONE=''
+readonly NULL='null'
+readonly PI=3.14159265358979323846
+readonly E=2.7182818284590452354
+```
 ## 字符串工具【Lang】
 ## SSH【Ssh】
 ## Starter包【Starter】
 ## 工具包【Utils】
+### BaseRandom.sh
+| 方法          | 说明                          | 备注 |
+|:--------------|:------------------------------|:-----|
+| random_int    | 产生一个随机数                | -    |
+| random_string | # 产生一个随机未字符串 base32 | -    |
+| random_word   | 产生随机一句话                | -    |
+| random_poetry | 产生随机一首诗词              | -    |
+
+### BaseUuid.sh
+| 方法 | 说明         | 备注         |
+|:-----|:-------------|:-------------|
+| uuid | 返回一个uuid | [String]<-() |
+
+测试用例
+```
+#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2155
+#===============================================================
+source ./../../BaseShell/Starter/BaseTestHeader.sh
+#===============================================================
+source ./../../BaseShell/Utils/BaseUuid.sh
+#===============================================================
+test-uuid(){
+  local uuid=$(uuid)
+  assertNotNull "${uuid}"
+}
+#===============================================================
+source ./../../BaseShell/Starter/BaseTestEnd.sh
+```
+![](https://github.com/chen-shang/Picture/blob/master/uuid.gif)
 ## 测试【Utils】
