@@ -249,7 +249,7 @@ source ../../BaseShell/Starter/BaseEnd.sh
 我们规定项目目录最大深度为2层,也就是不允许在Service同级的目录下在创建目录然后在里面写脚本
 
 引用包使用source命令
-`source 第三方脚本`会使第三方脚本从头到尾加载一遍,遇到函数就加载函数、遇到变量就加载变量、遇到可执行的命令就会执行,这个命令其实就是把第三方脚本定义的函数、全局变量加载到当前脚本的上下文中
+`source xx.sh`会使第三方脚本xx.sh从头到尾加载一遍,遇到函数就加载函数、遇到变量就加载变量、遇到可执行的命令就会执行,这个命令其实就是把第三方脚本定义的函数、全局变量加载到当前脚本的上下文中
 这里推荐使用相对路径,因为使用绝对路径,IDEA无法进行代码提示,也是醉了
 
 示例
@@ -266,21 +266,23 @@ source ../../BaseShell/Starter/BaseEnd.sh
 默认自动引入,此包下的工具是用来进行函数参数校验的,类似Spring中的Validate的功能。一旦参数校验没有通过则会终止函数的执行。 所有方法都是以 `_` 开头的,类似于Java中的`@`
 曾想用@开头,但发现@在shell中属于特殊字符,不允许出现在函数命中,斟酌再三选择了`_`
 
-|方法|表头|备注|
-|:----|:----|:----|
-|_NotBlank|入参数不为空(空或空字符串)|-|
-|_Natural|入参数为自然数(0,1,2,3...)|-|
-|_Min|最大不得小于此最小值|-|
-|_Max|最大不得超过此最大值|-|
+| 方法      | 表头                       | 备注 |
+|:----------|:---------------------------|:-----|
+| _NotBlank | 入参数不为空(空或空字符串) | -    |
+| _Natural  | 入参数为自然数(0,1,2,3...) | -    |
+| _Min      | 最大不得小于此最小值       | -    |
+| _Max      | 最大不得超过此最大值       | -    |
+
+基本套路是,第一个参数是变量,第二个参数是异常时候的代码提示
 
 示例
 ```bash
-# 将文件内容读进内存
-function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2" "port can not be null" && _NotBlank "$3" "user can not bull" && _NotBlank "$4" "pass can not bull"
+# ssh连接
+function ssh_connect(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2" "port can not be null" && _NotBlank "$3" "user can not bull" && _NotBlank "$4" "pass can not bull"
   local ip=$1 ;local port=$2 ;local user=$3 ;local pass=$4
 }
 ```
-一般函数的参数校验,我一般和函数也在一行上,第二行用具体的变量名接收参数。上面的函数如果有某个参数没有传,函数会异常退出,下面的代码也不会执行。
+一般函数的参数校验,我一般和函数写在一行上,第二行用具体的变量名接收参数。上面的函数如果有某个参数没有传,函数会异常退出,下面的代码也不会执行。
 
 ![](https://github.com/chen-shang/Picture/blob/master/baseshell/annotation.jpg)
 
@@ -291,39 +293,40 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 |   ├── BaseHasMap.sh 
 |   └── BaseMap.sh
 ```
-默认自动引入,此包下的工具是用来对集合 和 Map 进行操作的。
+此包下的工具是用来对集合 和 Map 进行操作的。
 ### BaseArrayList.sh
-|方法|表头|备注|
-|:----|:----|:----|
-|new_arrayList|新建一个list|-|
-|list_add|添加元素|-|
-|list_set|设置元素|-|
-|list_removeByIndex|按照下标移除元素|-|
-|list_removeByValue|按照值移除元素|-|
-|list_get|按照下标获取元素|-|
-|list_forEach|对列表中的每一个元素都进行操作|-|
-|list_size|获取当前list的元素个数|-|
-|list_isEmpty|判断当前list是否为空|-|
-|list_contains|判断当前list是否包含某元素|-|
-|list_clear|清空当前list|-|
-|list_indexOf|获取指定元素的下标|从前往后第一个|
-|list_lastIndexOf|获取指定元素的下标|从后往前第一个|
-|list_sub|截取指定下标的元素|-|
-|list_copy|赋值一个新的数组|-|
-|list_values|获取元素的值列表|-|
-|list_mapper|最每一个元素进行操作并返回一个新的列表|-|
-|list_reducer|聚类操作|-|
-
+| 方法               | 表头                                   | 备注           |
+|:-------------------|:---------------------------------------|:---------------|
+| new_arrayList      | 新建一个list                           | -              |
+| list_add           | 添加元素                               | -              |
+| list_set           | 设置元素                               | -              |
+| list_removeByIndex | 按照下标移除元素                       | -              |
+| list_removeByValue | 按照值移除元素                         | -              |
+| list_get           | 按照下标获取元素                       | -              |
+| list_forEach       | 对列表中的每一个元素都进行操作         | -              |
+| list_size          | 获取当前list的元素个数                 | -              |
+| list_isEmpty       | 判断当前list是否为空                   | -              |
+| list_contains      | 判断当前list是否包含某元素             | -              |
+| list_clear         | 清空当前list                           | -              |
+| list_indexOf       | 获取指定元素的下标                     | 从前往后第一个 |
+| list_lastIndexOf   | 获取指定元素的下标                     | 从后往前第一个 |
+| list_sub           | 截取指定下标的元素                     | -              |
+| list_copy          | 赋值一个新的数组                       | -              |
+| list_values        | 获取元素的值列表                       | -              |
+| list_mapper        | 最每一个元素进行操作并返回一个新的列表 | -              |
+| list_reducer       | 聚类操作                               | -              |
+### BaseHasMap.sh
+### BaseMap.sh
 ## 日志工具【Log】
 ### 如何引入
-`source ./../../BaseShell/Starter/BaseHeader.sh`默认会引入Log框架`source ./../../BaseShell/Log/BaseLog.sh` 无需手动引入
+`source ./../../BaseShell/Starter/BaseHeader.sh` 默认会引入Log框架 `source ./../../BaseShell/Log/BaseLog.sh` 无需手动引入
 
 ### 默认配置
 两个系统默认配置,在 `config.sh` 配置文件中,用户可根据自己的意愿修改
 ```
 # 日志记录位置
 LOG_DIR="${HOME}/.baseshell"
-# 日志级别
+# 日志级别 
 LOG_LEVEL=SYSTEM
 ```
 ### 使用方法
@@ -353,13 +356,7 @@ Log 包里面有8个方法
 
 ### 输出示例
 执行Test下的测试用例,输出如下
-![](BaseShell使用教程/log.jpg)
-
-### 使用示例
-![](BaseShell使用教程/Log.gif)
-
-### 使用示例
-![](BaseShell使用教程/Log.gif)
+![](https://github.com/chen-shang/Picture/blob/master/Log.gif)
 
 未完待续。。。明天再写
 ## 并发工具【Concurrent】
