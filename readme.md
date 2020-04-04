@@ -10,21 +10,23 @@
 
 请预先安装以下工具
 ```
+column
 lolcat
 tree
 jq
+gdate
 ```
-本人代码是在mac环境下写成的,其他环境如有不兼容的点请联系我,我来修改,谢谢。大家一起努力吧。
+所有脚本均系mac环境开发,使用的是bash,理论上兼容所有linux系统,如遇问题,请联系我,我来做兼容
 ![](https://github.com/chen-shang/Picture/blob/master/weixin/WechatIMG99.jpeg)
 
 # BaseShell使用教程
 [BaseShell使用教程](https://chen-shang.github.io/2019/08/28/ji-zhu-zong-jie/baseshell/baseshell-shi-yong-jiao-cheng/)
 
-我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类Java的工具类，这会强迫自己深入学习Java的源代码。
+我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类似Java的工具类，这会强迫自己深入学习Java的源代码。
 
 所以Java是我的第一语言,Scala作为第二语言,忠实的shell粉,但不排除其他编程语言。这是我对编程语言的态度。
 
-BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具库,涵盖多种类Java工具的实现
+BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具库,涵盖多种**类**Java工具的实现
 ```
 .
 ├── Annotation                         #函数参数校验脚本
@@ -50,6 +52,11 @@ BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具�
 ├── File                               #文件处理脚本
 |   ├── BaseFile.sh
 |   └── BaseTable.sh
+│   └── BaseTableGen.sh
+├── Cursor                             #光标控制脚本
+│   ├── BaseCursor.sh
+│   ├── BaseKeyboard.sh
+│   └── BaseKeyboardEvent.sh
 ├── Lang  
 |   ├── BaseMath.sh
 |   ├── BaseObject.sh
@@ -67,22 +74,6 @@ BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具�
 |   └── BaseTestHeader.sh
 ├── Test                              #单元测试脚本
 |   ├── BaseAnnotationTest.sh
-|   ├── BaseArrayListTest.sh
-|   ├── BaseLocalDateTest.sh
-|   ├── BaseLocalDateTimeTest.sh
-|   ├── BaseLocalTimeTest.sh
-|   ├── BaseLockTest.sh
-|   ├── BaseLogTest.sh
-|   ├── BaseMapTest.sh
-|   ├── BaseMiniTest.sh
-|   ├── BaseObjectTest.sh
-|   ├── BaseRandomTest.sh
-|   ├── BaseStringTest.sh
-|   ├── BaseTableTest.sh
-|   ├── BaseThreadPoolExecutorTest.sh
-|   ├── BaseThreadPoolTest.sh
-|   ├── BaseUuidTest.sh
-|   └── table
 ├── Utils                              #辅助工具脚本
 |   ├── BaseCodec.sh
 |   ├── BaseRandom.sh
@@ -122,7 +113,7 @@ module[模块名称]:Script
 6 directories, 3 files
 ```
 ## 运行项目
-【强制】运行shell脚本要到脚本目录下执行
+【强制】运行shell脚本要cd到脚本所在目录下执行
 ```
 cd com.baseshell.learn/Script/Service/
 sh Main.sh
@@ -139,7 +130,7 @@ hello world
 # 目录结构
 ```
 ./../../com.baseshell.learn                         项目目录
-├── BaseShell -> /Users/chenshang/shell/BaseShell   BaseShell的源码软链
+├── BaseShell -> /Users/chenshang/shell/BaseShell   BaseShell的源码软链,相当于类库
 └── Script                                          模块目录：一般建议大写,代表一个Shell模块,里面专门是针对某个模块儿的脚本
     ├── Resources                                   资源目录：资源目录: 一般放一些文本文件、图片、csv等非脚本文件
     ├── Service                                     项目目录：项目相关脚本所在的文件,如果想要写一些辅助的脚本,建议与Service同级创建一个文件夹来写
@@ -207,6 +198,8 @@ eval "${import}=0"
 ```
 这段代码的作用是为了预防 像 A脚本引用B脚本,B脚本又引用A脚本导致的循环引用问题。其原理是以文件名定义一个变量,引用过之后变量的值设置为0,再次引用的时候直接return,注意再次引用的时候是直接return不是exit. 详细用法,后面会有展开。
 这段代码目前是我能想到的最精简的方式,不排除以后有更优的方案。
+因此
+【强制】在一个项目中,不要存在同名文件
 
 4. 引用各种工具类,类似于Java中的import
 ```
@@ -227,6 +220,7 @@ source ./../../BaseShell/Log/BaseLog.sh
 source ./../../BaseShell/Annotation/BaseAnnotation.sh
 source ./../../BaseShell/Lang/BaseString.sh
 ```
+【强制】`source ./../../BaseShell/Starter/BaseHeader.sh`,`source ./../config.sh`这两个是必须要引用的,且放在所有引用的开头。
 
 5. 接下来是main入口函数和业务代码
 
@@ -238,6 +232,8 @@ source ./../../BaseShell/Lang/BaseString.sh
 source ../../BaseShell/Starter/BaseEnd.sh
 ```
 这样直接执行脚本的时候,会先寻找脚本里面的main函数去执行,类似运行一个Java Class类中的main方法
+【强制】Service包中的业务代码都必须引入 `source ../../BaseShell/Starter/BaseEnd.sh`
+【强制】自定义的工具脚本不要引入 `source ../../BaseShell/Starter/BaseEnd.sh`
 
 ## 如何引用包
 我们规定项目目录最大深度为2层,也就是不允许在Service同级的目录下在创建目录然后在里面写脚本
