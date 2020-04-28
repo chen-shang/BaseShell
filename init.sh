@@ -23,13 +23,24 @@ ln -nsf "${BASE_SHELL}" ./BaseShell
 
 # 新建模块
 mkdir -p "${module}"
-cd "${module}"
+cd "${module}" || exit
 
-mkdir -p Resources Service Test Utils
+mkdir -p Resources Service Test Utils Profile/dev Profile/prod
+
+head="#===============================================================
+import=\"\$(basename \"\${BASH_SOURCE[0]}\" .sh)_\$\$\"
+if [[ \$(eval echo '$'\"\${import}\") == 0 ]]; then return; fi
+eval \"\${import}=0\""
 
 # 写入默认的配置文件
 echo "#!/usr/bin/env bash
-# shellcheck disable=SC1091,SC2155
+# shellcheck disable=SC1091,SC2155,SC2154,SC2034,SC1090
+${head}
+#===============================================================
+ENV=dev
+[ -f ./../Profile/\${ENV}/application.sh ] && source \"./../Profile/\${ENV}/application.sh\"
+#默认dev
+[ -f ./Profile/dev/application.sh ] && source \"./Profile/dev/application.sh\"
 #===============================================================
 # 是否显示BANNER
 SHOW_BANNER=0
@@ -40,12 +51,10 @@ LOG_LEVEL=DEBUG
 # 写入默认的readme文件
 echo "# ${module}" > readme.md
 
+# 写入默认的Service
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-#===============================================================
-import=\$(basename \"\${BASH_SOURCE[0]}\" .sh)
-if [[ \$(eval echo '$'\"\${import}\") == 0 ]]; then return; fi
-eval \"\${import}=0\"
+${head}
 #===============================================================
 source ./../../BaseShell/Starter/BaseHeader.sh
 source ./../config.sh
@@ -58,5 +67,14 @@ main(){
 #===============================================================================
 source ../../BaseShell/Starter/BaseEnd.sh
 " > "./Service/Main.sh"
+
+# 写入默认的application.sh
+echo "#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2155,SC2154,SC2034
+${head}
+#===============================================================
+readonly _author_=$(whoami)
+" > "./Profile/dev/application.sh"
+cp "./Profile/dev/application.sh" "./Profile/prod/application.sh"
 
 tree "./../../${project}"

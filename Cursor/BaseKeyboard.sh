@@ -58,12 +58,16 @@ keyboard_select(){ _NotBlank "$1" "selection can not be null"
 # 键盘逃逸,键盘监听
 keyboard_escape(){
   local keyboardEvents="$*"
+  isBlank "${keyboardEvents}" && {
+    keyboardEvents="*"
+  }
   while :;do
      unset K1 K2 K3
      read -r -s -N1 K1
      read -r -s -N2 -t '0.0001' K2
      read -r -s -N1 -t '0.0001' K3
      local key="${K1}${K2}${K3}"
+     log_trace "${key}"
      if [ "$key" = $'\x1b\x4f\x48' ]; then
        key=$'\x1b\x5b\x31\x7e'
      fi
@@ -75,12 +79,12 @@ keyboard_escape(){
 
      case "$key" in
        $'\x1b\x5b\x32\x7e')  # Insert
-          string_contains "${keyboardEvents}" "insert" && {
+         ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "insert") && {
             KeyboardEvent_insert
           }
        ;;
-       $'\x1b\x5b\x33\x7e')  # Delete
-          string_contains "${keyboardEvents}" "delete" && {
+       $'\177')  # Delete
+          ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "delete") && {
             KeyboardEvent_delete
           }
        ;;
@@ -97,50 +101,56 @@ keyboard_escape(){
 #        todo
        ;;
        $'\x1b\x5b\x41')  # Up_arrow
-         string_contains "${keyboardEvents}" "up" && {
+         ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "up") && {
             KeyboardEvent_up
          }
        ;;
        $'\x1b\x5b\x42')  # Down_arrow
-         string_contains "${keyboardEvents}" "down" && {
+         ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "down") && {
             KeyboardEvent_down
          }
        ;;
        $'\x1b\x5b\x43')  # Right_arrow
-         string_contains "${keyboardEvents}" "right" && {
+        ( equals "*" "${keyboardEvents}"  ||  string_contains "${keyboardEvents}" "right") && {
             KeyboardEvent_right
          }
        ;;
        $'\x1b\x5b\x44')  # Left_arrow
-         string_contains "${keyboardEvents}" "left" && {
+        ( equals "*" "${keyboardEvents}"  ||  string_contains "${keyboardEvents}" "left") && {
             KeyboardEvent_left
          }
        ;;
        $'\x09')  # Tab
-         string_contains "${keyboardEvents}" "tab" && {
+        ( equals "*" "${keyboardEvents}"  ||  string_contains "${keyboardEvents}" "tab") && {
             KeyboardEvent_tab
          }
        ;;
        $'\x0a')  # Enter
-         string_contains "${keyboardEvents}" "enter" && {
+         ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "enter") && {
            KeyboardEvent_enter
            break
          }
        ;;
        $'\x1b')  # Escape
-         string_contains "${keyboardEvents}" "esc" && {
+         ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "esc") && {
             KeyboardEvent_esc
          }
        ;;
        $'\x20')  # Space
-         string_contains "${keyboardEvents}" "space" && {
+        ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "space") && {
             KeyboardEvent_space
          }
        ;;
        *) # 自定义按键
-         string_contains "${keyboardEvents}" "${key}" && {
-            KeyboardEvent_${key}
+         equals "*" "${keyboardEvents}"  && {
+            KeyboardEvent_all "${key}"
+         } || {
+            string_contains "${keyboardEvents}" "${key}" && {
+              KeyboardEvent_${key}
+            }
          }
+
+
      esac
   done
 }

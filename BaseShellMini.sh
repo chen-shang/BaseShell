@@ -663,10 +663,10 @@ executor_run(){
 }
 #===============================================================================
 
-# 执行函数 [Any]<-(function_name:String,function_parameters:List<Any>)
+# 执行函数 [Any]<-(functionName,functionParameters:List<Any>)
 execute(){
-  function_name=$1
+  local functionName=$1
   shift # 参数列表以空格为分割左移一位,相当于丢弃掉第一个参数
-  function_parameters=$*
-  (${function_name} "${function_parameters}")
+  local functionParameters=$*
+  eval "${functionName} ${functionParameters}"
 }

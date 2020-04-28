@@ -82,7 +82,8 @@ function isNotNull(){
   [[ "${param}" != "${NULL}" ]] && return "${TRUE}" || return "${FALSE}"
 }
 
-function isNatural(){ _NotBlank "$1"
+# 是否自然数
+function isNatural(){ _NotBlank "$1" "param can not be null"
   local param=$1
   grep -q '^[[:digit:]]*$' <<< "${param}" && return "${TRUE}" || return "${FALSE}"
 }

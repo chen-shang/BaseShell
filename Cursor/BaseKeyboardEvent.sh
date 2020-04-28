@@ -24,16 +24,16 @@ KeyboardEvent_right(){
 }
 
 KeyboardEvent_enter(){
-  tput rc
   exit
 }
 
-KeyboardEvent_delete(){ :
-
+KeyboardEvent_delete(){
+  cursor_left
+  tput el
 }
 
-KeyboardEvent_esc(){ :
-
+KeyboardEvent_esc(){
+ exit
 }
 
 KeyboardEvent_tab(){ :
@@ -44,6 +44,9 @@ KeyboardEvent_insert(){ :
 
 }
 
-KeyboardEvent_space(){ :
+KeyboardEvent_space(){
+  printf " "
+}
 
+KeyboardEvent_all(){ :
 }

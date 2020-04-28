@@ -24,7 +24,7 @@ gdate
 
 我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类似Java的工具类，这会强迫自己深入学习Java的源代码。
 
-所以Java是我的第一语言,Scala作为第二语言,忠实的shell粉,但不排除其他编程语言。这是我对编程语言的态度。
+所以Java是我的第一语言,Scala作为第二语言,忠实的shell粉,但不排斥其他编程语言。这是我对编程语言的态度。
 
 BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具库,涵盖多种**类**Java工具的实现
 ```
@@ -53,6 +53,8 @@ BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具�
 |   ├── BaseFile.sh
 |   └── BaseTable.sh
 │   └── BaseTableGen.sh
+├── Json
+│   └── BaseJson.sh                    #Json工具类
 ├── Cursor                             #光标控制脚本
 │   ├── BaseCursor.sh
 │   ├── BaseKeyboard.sh
@@ -93,7 +95,7 @@ mkdir shell && cd shell #新建一个script目录用于存放所有的脚本
 git clone https://github.com/chen-shang/BaseShell.git
 sh $(pwd)/BaseShell/init.sh
 ```
-根据提示输入 project[项目目录] 和 module[模块名称]
+根据提示输入 project:项目目录 和 module:模块名称
 看到如下输出,则新建项目成功
 ```
 > sh $(pwd)/BaseShell/init.sh
@@ -102,9 +104,14 @@ module[模块名称]:Script
 ./../../com.baseshell.learn
 ├── BaseShell -> /Users/chenshang/shell/BaseShell
 └── Script
+    ├── Profile
+    │   ├── dev
+    │   │   └── application.sh
+    │   └── prod
+    │       └── application.sh
     ├── Resources
     ├── Service
-    |   └── Main.sh
+    │   └── Main.sh
     ├── Test
     ├── Utils
     ├── config.sh
@@ -132,24 +139,25 @@ hello world
 ./../../com.baseshell.learn                         项目目录
 ├── BaseShell -> /Users/chenshang/shell/BaseShell   BaseShell的源码软链,相当于类库
 └── Script                                          模块目录：一般建议大写,代表一个Shell模块,里面专门是针对某个模块儿的脚本
+    ├── Profile                                      配置文件：类似Maven中的Profile，在config.sh中通过env控制选择加载哪个环境的配置文件
+    │   ├── dev
+    │   │   └── application.sh
+    │   └── prod
+    │       └── application.sh
     ├── Resources                                   资源目录：资源目录: 一般放一些文本文件、图片、csv等非脚本文件
     ├── Service                                     项目目录：项目相关脚本所在的文件,如果想要写一些辅助的脚本,建议与Service同级创建一个文件夹来写
-    |   └── Main.sh                                 
+    │   └── Main.sh
     ├── Test                                        测试目录：对脚本中的函数进行单元测试的脚本
     ├── Utils                                       工具目录：工具类
-    ├── config.sh                                   配置文件：项目的配置文件包括 头图、日志级别等以及一些项目中用到的配置项
+    ├── config.sh                                    配置文件：项目的配置文件包括 头图、日志级别等以及一些项目中用到的配置项
     └── readme.md                                   描述文件：项目名称、项目介绍等等
-└── Module2                                         模块二
 
-6 directories, 3 files
+9 directories, 5 files
 ```
-
 BaseShell相当于Java的JDK.
 
-配置文件:
- 
 【推荐】config.sh 脚本中尽量之定义变量,不要定义函数或可执行命令,类比Java项目中的properties
-描述文件: 项目的描述文件
+【推荐】application.sh 针对不同环境有不同的配置的,可以写到application.sh中,可以在这里定义函数
 
 # 功能介绍
 脚本应该怎么写-示例
@@ -362,6 +370,19 @@ Log 包里面有8个方法
 ## 锁【Concurrent】
 ## Object工具【Lang】
 ## 数学工具【Lang】
+| 方法          | 说明           |
+|---------------|----------------|
+| math_abs      | 求绝对值       |
+| math_toDeci   | 转十进制       |
+| math_toBinary | 转二进制       |
+| math_toHex    | 转十六进       |
+| math_max      | 两数中的最大值 |
+| math_min      | 两数中的最小值 |
+| math_sqrt     | 开方           |
+| math_avg      | 均值           |
+| math_log      | 对数           |
+
+![](https://github.com/chen-shang/Picture/blob/master/baseshell/math.gif)
 ## 常量【Constant】
 几个常量定义如下,可以在脚本的任何位置使用,因为太常用了,尤其是 `TRUE` `FALSE`
 ```
@@ -386,9 +407,9 @@ readonly E=2.7182818284590452354
 | random_poetry | 产生随机一首诗词              | -    |
 
 ### BaseUuid.sh
-| 方法 | 说明         | 备注         |
-|:-----|:-------------|:-------------|
-| uuid | 返回一个uuid | [String]<-() |
+| 方法  | 说明        | 备注 |
+|:-----|:------------|:----|
+| uuid | 返回一个uuid |     |
 
 测试用例
 ```
