@@ -39,20 +39,22 @@ json_empty(){
 }
 
 json_new(){
-  array=$*
+  local criteria="$1"
   local json="{}"
-  for kv in ${array};do
-   k=$(echo "${kv}"|awk -F '=' '{print $1}')
-   v=$(echo "${kv}"|awk -F '=' '{print $2}')
-   local type=$(echo "${v}"|jq -r 'type' 2>/dev/null )
-   case ${type} in
-     "number"|"object"|"array")
-       json=$(echo "${json}"|jq -c .${k}=${v})
-     ;;
-     *)
-       json=$(echo "${json}"|jq -c .${k}=\"${v}\")
-     ;;
-   esac
+  local kvs=$(echo "${criteria}"|awk -F '&' '{for(i=1;i<=NF;i++){print $i}}')
+  local end="====end===="
+  echo -e "${kvs}\n${end}"|while read kv;do
+    equals "${kv}" "${end}" && echo "${json}"
+    local k="$(echo "${kv}"|awk -F '=' '{print $1}')"
+    local v="$(echo "${kv}"|awk -F '=' '{print $2}')"
+    local type=$(echo ${v}|jq -r 'type' 2>/dev/null )
+    case "${type}" in
+      "number"|"object"|"array")
+        json=$(echo "${json}"|jq -c .${k}="${v}")
+      ;;
+      *)
+        json=$(echo "${json}"|jq -c ".${k}=\"${v}\"")
+      ;;
+    esac
   done
-  echo "${json}"
 }
