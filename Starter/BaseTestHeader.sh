@@ -5,6 +5,7 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
+source ./../../BaseShell/config.sh
 source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================================
 # 这种没有实现的函数类似接口,在对应的xxEnd.sh中必有实现

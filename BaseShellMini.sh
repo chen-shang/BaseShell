@@ -8,7 +8,6 @@ eval "${import}=0"
 # 脚本中被 #ignore 修饰的不自动生成文档
 # 脚本使用帮助文档
 manual(){ #ignore
-  clear
   # 全部的函数以及描述
   equals "$1" "-a" && {
     cat <"$0"                       \

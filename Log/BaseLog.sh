@@ -6,10 +6,9 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../config.sh
 source ./../../BaseShell/Lang/BaseString.sh
 
-if [[ ! -d ${LOG_DIR} ]]; then mkdir -p "${LOG_DIR}" ;fi
+if [[ ! -d ${LOG_DIR} ]]; then mkdir -p "${LOG_DIR:?}" ;fi
 
 # ERROR<WARN<INFO<DEBUG
 case ${LOG_LEVEL} in
