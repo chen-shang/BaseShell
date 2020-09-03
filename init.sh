@@ -25,7 +25,7 @@ ln -nsf "${BASE_SHELL}" ./BaseShell
 mkdir -p "${module}"
 cd "${module}" || exit
 
-mkdir -p Resources Service Test Utils Profile/dev Profile/prod
+mkdir -p Resources Controller Service Test Utils Profile/dev Profile/prod
 
 head="#===============================================================
 import=\"\$(basename \"\${BASH_SOURCE[0]}\" .sh)_\$\$\"
@@ -49,9 +49,10 @@ LOG_LEVEL=DEBUG
 " > config.sh
 
 # 写入默认的readme文件
-echo "# ${module}" > readme.md
+echo "# ${module}
+" > readme.md
 
-# 写入默认的Service
+# 写入默认的Controller
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 ${head}
@@ -66,7 +67,40 @@ main(){
 }
 #===============================================================================
 source ../../BaseShell/Starter/BaseEnd.sh
-" > "./Service/Main.sh"
+" > "./Controller/Main.sh"
+
+# 写入默认的Service
+echo "#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2155
+${head}
+#===============================================================
+source ./../../BaseShell/Starter/BaseHeader.sh
+source ./../config.sh
+#导入工具包
+#===============================================================================
+#业务代码
+function demo(){
+  echo \"ok\"
+}
+" > "./Service/DemoService.sh"
+
+# 写入默认的Test
+echo "#!/usr/bin/env bash
+# shellcheck disable=SC1091,SC2155
+#===============================================================
+source ./../../BaseShell/Starter/BaseTestHeader.sh
+#===============================================================
+# 引入测试脚本
+source ./../Service/DemoService.sh
+#===============================================================
+# 编写测试用例
+test-demo(){
+  local result=\$(demo)
+  assertEquals \"\${result}\" \"ok\"
+}
+#===============================================================
+source ./../../BaseShell/Starter/BaseTestEnd.sh
+" > "./Test/DemoServiceTest.sh"
 
 # 写入默认的application.sh
 echo "#!/usr/bin/env bash
