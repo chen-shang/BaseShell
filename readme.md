@@ -10,11 +10,7 @@
 
 请预先安装以下工具
 ```
-column
-lolcat
-tree
-jq
-gdate
+column 、lolcat、tree、jq、gdate
 ```
 所有脚本均系mac环境开发,使用的是bash,理论上兼容所有linux系统,如遇问题,请联系我,我来做兼容
 ![](https://github.com/chen-shang/Picture/blob/master/weixin/WechatIMG99.jpeg)
@@ -91,7 +87,7 @@ BaseShell类似于Java语言的SDK是为Shell脚本语言提供的一套工具�
 ## 初始化项目
 ```
 cd ~
-mkdir shell && cd shell #新建一个script目录用于存放所有的脚本
+mkdir Shell && cd Shell #新建一个script目录用于存放所有的脚本
 git clone https://github.com/chen-shang/BaseShell.git
 sh $(pwd)/BaseShell/init.sh
 ```
@@ -102,8 +98,10 @@ sh $(pwd)/BaseShell/init.sh
 project[项目目录]:com.baseshell.learn
 module[模块名称]:Script
 ./../../com.baseshell.learn
-├── BaseShell -> /Users/chenshang/shell/BaseShell
+├── BaseShell -> /Users/chenshang/Shell/BaseShell
 └── Script
+    ├── Controller
+    │   └── Main.sh
     ├── Profile
     │   ├── dev
     │   │   └── application.sh
@@ -111,13 +109,14 @@ module[模块名称]:Script
     │       └── application.sh
     ├── Resources
     ├── Service
-    │   └── Main.sh
+    │   └── DemoService.sh
     ├── Test
+    │   └── DemoServiceTest.sh
     ├── Utils
     ├── config.sh
     └── readme.md
 
-6 directories, 3 files
+10 directories, 7 files
 ```
 ## 运行项目
 【强制】运行shell脚本要cd到脚本所在目录下执行
@@ -136,23 +135,28 @@ hello world
 ```
 # 目录结构
 ```
-./../../com.baseshell.learn                         项目目录
-├── BaseShell -> /Users/chenshang/shell/BaseShell   BaseShell的源码软链,相当于类库
-└── Script                                          模块目录：一般建议大写,代表一个Shell模块,里面专门是针对某个模块儿的脚本
-    ├── Profile                                      配置文件：类似Maven中的Profile，在config.sh中通过env控制选择加载哪个环境的配置文件
+project[项目目录]:com.baseshell.learn
+module[模块名称]:Script
+./../../com.baseshell.learn                             项目目录
+├── BaseShell -> /Users/chenshang/Shell/BaseShell       BaseShell的源码软链,相当于类库
+└── Script                                              模块目录：一般建议大写,代表一个Shell模块,里面专门是针对某个模块儿的脚本
+    ├── Controller                                      Controller：类似MVC模式中的Controller层,是脚本的入口
+    │   └── Main.sh
+    ├── Profile                                         配置文件：类似Maven中的Profile，在config.sh中通过env控制选择加载哪个环境的配置文件。默认dev和prod两个环境
     │   ├── dev
     │   │   └── application.sh
     │   └── prod
     │       └── application.sh
-    ├── Resources                                   资源目录：资源目录: 一般放一些文本文件、图片、csv等非脚本文件
-    ├── Service                                     项目目录：项目相关脚本所在的文件,如果想要写一些辅助的脚本,建议与Service同级创建一个文件夹来写
-    │   └── Main.sh
-    ├── Test                                        测试目录：对脚本中的函数进行单元测试的脚本
-    ├── Utils                                       工具目录：工具类
-    ├── config.sh                                    配置文件：项目的配置文件包括 头图、日志级别等以及一些项目中用到的配置项
-    └── readme.md                                   描述文件：项目名称、项目介绍等等
+    ├── Resources                                       资源目录：资源目录: 一般放一些文本文件、图片、csv等非脚本文件
+    ├── Service                                         项目目录：项目相关脚本所在的文件,如果想要写一些辅助的脚本,建议与Service同级创建一个文件夹来写
+    │   └── DemoService.sh
+    ├── Test                                            测试目录：对脚本中的函数进行单元测试的脚本
+    │   └── DemoServiceTest.sh
+    ├── Utils                                           工具目录：工具类
+    ├── config.sh                                       配置文件：项目的配置文件包括 头图、日志级别等以及一些项目中用到的配置项
+    └── readme.md                                       描述文件：项目名称、项目介绍等等
 
-9 directories, 5 files
+10 directories, 7 files
 ```
 BaseShell相当于Java的JDK.
 
