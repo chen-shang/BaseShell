@@ -121,7 +121,7 @@ module[模块名称]:Script
 ## 运行项目
 【强制】运行shell脚本要cd到脚本所在目录下执行
 ```
-cd com.baseshell.learn/Script/Service/
+cd com.baseshell.learn/Script/Controller/
 sh Main.sh
 ```
 看到如下输出,说明项目运行ok,之后可以愉快的写脚本了
@@ -228,7 +228,7 @@ source ./../config.sh
 
 `source ./../../BaseShell/Starter/BaseHeader.sh`,`source ./../config.sh`这两个是必须要引用的,且放在所有引用的开头。
 
-`source ./../config.sh` 则是为了因为当前项目的配置文件,我们对项目的全局配置变量都在这里面定义
+`source ./../config.sh` 则是为了引入当前项目的配置文件,我们对项目的全局配置变量都在这里面定义
 
 `source ./../../BaseShell/Starter/BaseHeader.sh` 目的是引入BaseShell框架. 相当于引用下面四个包
 
