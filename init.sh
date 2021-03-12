@@ -19,7 +19,8 @@ cd  "${project}" || exit
 
 # 引入BaseShell
 BASE_SHELL=$(dirname ${BASH_SOURCE[0]})
-ln -nsf "${BASE_SHELL}" ./BaseShell
+#ln -nsf "${BASE_SHELL}" ./BaseShell
+cp -r "${BASE_SHELL}" ./BaseShell
 
 # 新建模块
 mkdir -p "${module}"
