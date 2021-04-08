@@ -370,6 +370,37 @@ function random_poetry(){
    curl -s -H 'X-User-Token:RgU1rBKtLym/MhhYIXs42WNoqLyZeXY3EkAcDNrcfKkzj8ILIsAP1Hx0NGhdOO1I' https://v2.jinrishici.com/sentence|jq .data.origin|xargs echo
 }
 
+#==========================测试相关=====================================
+
+# 断言目标值是
+assertEquals(){
+  equals "$1" "$2" && log_success "test ok[100%],hit [${2}]"
+  equals "$1" "$2" || log_error "test fail[100%],expect [${2}] but [${1}]"
+}
+
+# 断言目标值不为空
+assertNotNull(){
+  isNotBlank "$1" && log_success "test ok[100%],hit [${1}]"
+  isNotBlank "$1" || log_error "test fail[100%],expect not null"
+}
+
+# 断言目标值为空
+assertNull(){
+  isBlank "$1" && log_success "test ok[100%],hit [${1}]"
+  isBlank "$1" || log_error "test fail[100%],expect null but [${1}]"
+}
+
+# 断言目标值为假(非零)
+assertFalse(){
+  equals "$1" "${FALSE}" && log_success "test ok[100%],hit [FALSE]"
+  equals "$1" "${FALSE}" || log_error "test fail[100%],expect false [FALSE] but [TRUE]"
+}
+
+# 断言目标值为真(为零)
+assertTrue(){
+  equals "$1" "${TRUE}" && log_success "test ok[100%],hit [TRUE]"
+  equals "$1" "${TRUE}" || log_error "test fail[100%],expect [TRUE] but [FALSE]"
+}
 
 #==========================ssh.sh=====================================
 timeout=60
