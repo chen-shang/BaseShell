@@ -4,6 +4,8 @@
 import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
+import="BaseHeader_$$"
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 #===============================================================
 # 脚本中被 #ignore 修饰的不自动生成文档
 # 脚本使用帮助文档

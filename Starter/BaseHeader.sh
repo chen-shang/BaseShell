@@ -5,6 +5,8 @@
 import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
+import="BaseShellMini_$$"
+if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 #===============================================================
 source ./../../BaseShell/config.sh
 source ./../../BaseShell/Starter/BaseStarter.sh
