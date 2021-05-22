@@ -149,8 +149,6 @@ keyboard_escape(){
               KeyboardEvent_${key}
             }
          }
-
-
      esac
   done
 }

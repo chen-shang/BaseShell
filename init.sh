@@ -26,7 +26,7 @@ cp -r "${BASE_SHELL}" ./BaseShell
 mkdir -p "${module}"
 cd "${module}" || exit
 
-mkdir -p Resources Controller Service Test Utils Profile/dev Profile/prod
+mkdir -p Resources Controller Service Enum Test Utils Profile/dev Profile/prod
 
 head="#===============================================================
 import=\"\$(basename \"\${BASH_SOURCE[0]}\" .sh)_\$\$\"
