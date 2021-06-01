@@ -14,16 +14,16 @@ if [[ -z "${module}"  ]];then
 fi
 
 # 新建项目目录
-mkdir -p "${project}"
-cd  "${project}" || exit
+[[ ! -d "${project}" ]] && mkdir -p "${project}"
+cd "${project}" || exit
 
 # 引入BaseShell
-BASE_SHELL=$(dirname ${BASH_SOURCE[0]})
-#ln -nsf "${BASE_SHELL}" ./BaseShell
-cp -r "${BASE_SHELL}" ./BaseShell
+BASE_SHELL=$(dirname "${BASH_SOURCE[0]}")
+#[[ ! -d BaseShell ]] && ln -nsf "${BASE_SHELL}" ./BaseShell
+[[ ! -d BaseShell ]] && cp -r "${BASE_SHELL}" ./BaseShell
 
 # 新建模块
-mkdir -p "${module}"
+[[ ! -d "${module}" ]] && mkdir -p "${module}"
 cd "${module}" || exit
 
 mkdir -p Resources Controller Service Enum Test Utils Profile/dev Profile/prod
