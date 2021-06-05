@@ -21,7 +21,7 @@ test-map(){
   assertTrue $?
   map_containsKey "five"
   assertFalse $?
-  size=$(map_size)
+  local size=$(map_size)
   assertEquals "${size}" "4"
   map_remove "one"
   assertTrue $?
@@ -35,7 +35,6 @@ test-map(){
   map_forEach log
 
   map_kv
-
 }
 
 mapper(){

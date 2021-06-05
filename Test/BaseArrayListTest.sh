@@ -25,11 +25,14 @@ test-list(){
   assertEquals "${result}" "2"
   
   #定义一个函数,作用是求和
-  add(){
+  sum(){
     echo $(($1+$2))
   }
-  local result=$(number_reducer add) #获取第二个元素
+  local result=$(number_reducer sum) #执行reduce函数操作,进行求和
   assertEquals "${result}" "6"
+  
+  local result=$(number_reducer sum 10) #执行reduce函数操作,带初始值进行求和
+  assertEquals "${result}" "16"
   
   number_removeByIndex 0     #去除第一个元素
   local result=$(number_values)
@@ -38,7 +41,7 @@ test-list(){
   local result=$(number_get 0) #获取第二个元素
   assertEquals "${result}" "2"
   
-  local result=$(number_reducer add)
+  local result=$(number_reducer sum)
   assertEquals "${result}" "5"
 }
 
@@ -61,11 +64,14 @@ test-list2(){
   assertEquals "${result}" "2"
   
   #定义一个函数,作用是求和
-  add(){
+  sum(){
     echo $(($1+$2))
   }
-  local result=$(list_reducer add) #获取第二个元素
+  local result=$(list_reducer sum) #执行reduce函数操作,进行求和
   assertEquals "${result}" "6"
+  
+  local result=$(list_reducer sum 10) #执行reduce函数操作,带初始值进行求和
+  assertEquals "${result}" "16"
   
   list_removeByIndex 0     #去除第一个元素
   local result=$(list_values)
@@ -74,7 +80,7 @@ test-list2(){
   local result=$(list_get 0) #获取第二个元素
   assertEquals "${result}" "2"
   
-  local result=$(list_reducer add)
+  local result=$(list_reducer sum)
   assertEquals "${result}" "5"
 }
 #===============================================================

@@ -4,10 +4,10 @@
 source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
 source ./../../BaseShell/Concurrent/BaseLock.sh
-source ./../../BaseShell/Concurrent/BaseThreadPool.sh
 #===============================================================
 test-new_lock(){
-  local lock=$(new_fd)
+  local lock
+  lock=$(new_fd)
   log_debug "lock_fd:${lock}"
   new_lock "${lock}"
   read -r -u "${lock}" result
@@ -42,14 +42,13 @@ test-new_lock(){
 
 echo 1 > file
 add(){
-  read item < file
+  read -r item < file
   ((item++))
   log_info "中间值:${item}"
   echo ${item} > file
 }
 
 test-lock_run(){
-#  set -x
   fd=$(new_fd)
   new_lock ${fd}
 

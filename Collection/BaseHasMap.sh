@@ -80,7 +80,7 @@ function hashMap_forEach(){ _NotBlank "$1" "function can not be null"
   local func=$1
   local key;for key in $("${mapName}"_keys);do
     local value=$(eval "${mapName}_get ${key}")
-    "${func} ${key} ${value}"
+    eval "${func} ${key} ${value}"
   done
 }
 # HashMap是否为空
