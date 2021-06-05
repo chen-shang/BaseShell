@@ -8,6 +8,7 @@ eval "${import}=0"
 source ./../../BaseShell/Lang/BaseObject.sh
 source ./../../BaseShell/Log/BaseLog.sh
 
+# @param $1:参数值 $2:err_msg
 # 判断传入参数是否为空 [Boolean]<-(param:String,err_msg:String)
 function _NotBlank(){
   local param=$(echo $1|trim);local err_msg=$2
@@ -15,6 +16,7 @@ function _NotBlank(){
   [[ -z "${param}" ]] && log_fail "${err_msg}" || return ${TRUE}
 }
 
+# @param $1:参数值 $2:err_msg
 # 判断传入参数是否为自然数 [Boolean]<-(param:String,err_msg:String)
 function _Natural(){
   local param=$1;local err_msg=$2
