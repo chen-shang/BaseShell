@@ -8,7 +8,7 @@ source ./../../BaseShell/Concurrent/BaseThreadPoolExecutor.sh
 #===============================================================
 test-executor_run(){
  #创建一个10个线程的线程池
- new_ThreadPoolExecutor 10 0.1
+ new_ThreadPoolExecutor 10 1
  fd=$?
 
  # 向线程池提交100个任务
@@ -18,7 +18,7 @@ test-executor_run(){
 
 
  #创建一个10个线程的线程池
- new_ThreadPoolExecutor 100 0.1
+ new_ThreadPoolExecutor 100 1
  fd=$?
 
 
