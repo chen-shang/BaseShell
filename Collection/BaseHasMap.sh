@@ -5,8 +5,10 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ../../BaseShell/Starter/BaseHeader.sh
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Collection/BaseMap.sh
+#===============================================================================
 readonly defaultSize=32
 
 declare -A hashMap=()

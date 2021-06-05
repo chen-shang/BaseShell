@@ -5,9 +5,9 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Starter/BaseHeader.sh
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/File/BaseTable.sh
-source ./../config.sh
 #===============================================================
 function genDao(){
   local table=$1

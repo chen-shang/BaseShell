@@ -5,7 +5,8 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Starter/BaseHeader.sh
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Utils/BaseUuid.sh
 source ./../../BaseShell/Concurrent/BaseLock.sh
 #===============================================================================
@@ -18,7 +19,7 @@ source ./../../BaseShell/Concurrent/BaseLock.sh
 # 任务队列使用的是无限的任务队列
 # eg: new_ThreadPoolExecutor && local pool=$?
 # 新建线程池 [int]<-(coreSize:Integer,keepAliveTime:Long)
-new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
+function new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
   local coreSize=$1 #核心线程数
   local keepAliveTime=${2:-1} #线程的存活时间
 
@@ -44,7 +45,7 @@ new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" && _Natural
   return "${fd}"
 }
 
-executor_run(){
+function executor_run(){
   local fd=$1 ;shift ;local task=$*
   echo "${task}" >& "${fd}"
 }

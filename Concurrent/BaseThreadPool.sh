@@ -5,7 +5,8 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Starter/BaseHeader.sh
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Utils/BaseUuid.sh
 #===============================================================================
 # 该线程池的实现方法与下面的 BaseThreadPoolExecutor.sh 实现不同。与Java中的线程池实现不同
@@ -16,7 +17,7 @@ source ./../../BaseShell/Utils/BaseUuid.sh
 # coreSize:核心线程数
 # eg: new_threadPool && local pool=$?
 # 新建线程池 [int]<-(coreSize:Integer)
-new_threadPool(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
+function new_threadPool(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" && _Min "0" "$1"
   local coreSize=$1
   local fd=$(new_fd)
   new_fifo "${fd}"
@@ -29,7 +30,7 @@ new_threadPool(){ _NotBlank "$1" "core size can not be null" && _Natural "$1" &&
 
 # 注意这个方法是阻塞方法
 # 提交一个任务 []<-(task:Function)
-threadPool_submit(){ _NotBlank "$1" "thread pool can not be null"
+function threadPool_submit(){ _NotBlank "$1" "thread pool can not be null"
   local fd=$1 ;shift ;local task=$*
   #获取执行令牌,获取不到令牌则阻塞,直到有任务结束执行归还令牌
   read -r -u "${fd}" token

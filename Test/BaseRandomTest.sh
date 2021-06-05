@@ -17,24 +17,24 @@ test-random_int(){
   assertTrue "${result}"
 
   int=$(random_int)
-  assertNotNull "${int}"
+  assertNotBlank "${int}"
 }
 
 test-random_string(){
   local string=$(random_string 16)
-  assertNotNull "${string}"
+  assertNotBlank "${string}"
   string=$(random_string)
-  assertNotNull "${string}"
+  assertNotBlank "${string}"
 }
 
 test-random_word(){
   local string=$(random_word)
-  assertNotNull "${string}"
+  assertNotBlank "${string}"
 }
 
 test-random_poetry(){
   local string=$(random_poetry)
-  assertNotNull "${string}"
+  assertNotBlank "${string}"
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

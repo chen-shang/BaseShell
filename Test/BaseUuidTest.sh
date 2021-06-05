@@ -7,7 +7,7 @@ source ./../../BaseShell/Utils/BaseUuid.sh
 #===============================================================
 test-uuid(){
   local uuid=$(uuid)
-  assertNotNull "${uuid}"
+  assertNotBlank "${uuid}"
 }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

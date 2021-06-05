@@ -5,48 +5,50 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Cursor/BaseCursor.sh
 #===============================================================
-KeyboardEvent_up(){
+function KeyboardEvent_up(){
   cursor_up
 }
 
-KeyboardEvent_down(){
+function KeyboardEvent_down(){
   cursor_down
 }
 
-KeyboardEvent_left(){
+function KeyboardEvent_left(){
   cursor_left
 }
 
-KeyboardEvent_right(){
+function KeyboardEvent_right(){
   cursor_right
 }
 
-KeyboardEvent_enter(){
+function KeyboardEvent_enter(){
   exit
 }
 
-KeyboardEvent_delete(){
+function KeyboardEvent_delete(){
   cursor_left
   tput el
 }
 
-KeyboardEvent_esc(){
+function KeyboardEvent_esc(){
  exit
 }
 
-KeyboardEvent_tab(){ :
+function KeyboardEvent_tab(){ :
 
 }
 
-KeyboardEvent_insert(){ :
+function KeyboardEvent_insert(){ :
 
 }
 
-KeyboardEvent_space(){
+function KeyboardEvent_space(){
   printf " "
 }
 
-KeyboardEvent_all(){ :
+function KeyboardEvent_all(){ :
 }

@@ -6,10 +6,10 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Starter/BaseHeader.sh
 #导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================================
-json_toString(){
+function json_toString(){
   local param=$*
   _action(){
     local json=$1
@@ -20,7 +20,7 @@ json_toString(){
   pip "${param}"
 }
 
-json_toPrettyString(){
+function json_toPrettyString(){
   local param=$*
   _action(){
     local json=$1
@@ -29,7 +29,7 @@ json_toPrettyString(){
   pip "${param}"
 }
 
-json_empty(){
+function json_empty(){
   local keys=$*
   local json="{}"
   for k in ${keys};do
@@ -38,7 +38,7 @@ json_empty(){
   echo "${json}"
 }
 
-json_new(){
+function json_new(){
   local criteria="$1"
   local json="{}"
   local kvs=$(echo "${criteria}"|awk -F '&' '{for(i=1;i<=NF;i++){print $i}}')

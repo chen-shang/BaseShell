@@ -14,12 +14,12 @@ function assertEquals(){ :
   local targetValue=$2 #预期结果
   local description=$3 #描述
 }
-function assertNotNull(){ :
+function assertNotBlank(){ :
   local sourceValue=$1 #测试结果
   local targetValue=$2 #预期结果
   local description=$3 #描述
 }
-function assertNull(){ :
+function assertBlank(){ :
   local sourceValue=$1 #测试结果
   local targetValue=$2 #预期结果
   local description=$3 #描述

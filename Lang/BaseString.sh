@@ -5,8 +5,9 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Lang/BaseObject.sh
-
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
+#===============================================================
 # 字符串长度 [Int]<-(param:String)
 function string_length(){
   local param=$*
@@ -27,7 +28,7 @@ function trim(){
   pip "${param}"
 }
 
-# 转大写
+# 转大写 [String]<-(param:String)
 function toUpperCase(){
   local param=$*
   _action(){
@@ -37,7 +38,7 @@ function toUpperCase(){
   pip "${param}"
 }
 
-# 转小写
+# 转小写 [String]<-(param:String)
 function toLowerCase(){
   local param=$*
   _action(){
@@ -46,7 +47,7 @@ function toLowerCase(){
   pip "${param}"
 }
 
-# 判断两个字符串是否相等,忽略大小写
+# 判断两个字符串是否相等,忽略大小写 [Boolean]<-(param1:String,param1:String)
 function string_equalsIgnoreCase(){
   equals "$(toUpperCase "$1")" "$(toUpperCase "$2")"
 }
@@ -98,6 +99,8 @@ function string_subString(){
     echo -e "${param:${begin}:$((end-begin + 1))}"
   fi
 }
+
+# 字符串首字母转大写 [String]<-(param:String)
 function string_firstLetter_toUpperCase(){
   local param=$1 #传入的字符串
   _action(){
@@ -107,7 +110,7 @@ function string_firstLetter_toUpperCase(){
   pip "${param}"
 }
 
-# 下划线转驼峰
+# 下划线转驼峰 [String]<-(param:String)
 function toCamelCase(){
   local param=$1 #传入的字符串
   _action(){
@@ -135,36 +138,40 @@ function toUnderlineCase(){
 }
 
 #
-#function string_charAt(){
+#function string_charAt(){ #ignore
 #:
 #}
-#function string_compareTo(){
+#function string_compareTo(){ #ignore
 #:
 #}
-#function string_compareToIgnoreCase(){
+#function string_compareToIgnoreCase(){ #ignore
 #:
 #}
-#function string_concat(){
+#function string_concat(){ #ignore
 #:
 #}
-#function string_equals(){
+#function string_equals(){ #ignore
 #:
 #}
-#function string_format(){
+#function string_format(){ #ignore
 #:
 #}
-#function string_isEmpty(){
+#function string_isEmpty(){ #ignore
 #:
 #}
-#function string_join(){
+#function string_join(){ #ignore
 #:
 #}
+
+# 字符串替换
 function string_replace(){
   local param=$1
   local source=$2
   local target=$3
   echo -e "${param/${source}/${target}}"
 }
+
+# 字符串替换
 function string_replaceAll(){
   local param=$1
   local source=$2
@@ -172,6 +179,7 @@ function string_replaceAll(){
   echo -e "${param//${source}/${target}}"
 }
 
+# 字符串去掉尾部一个字符
 function string_tailRemove(){
   local param=$*
   _action(){

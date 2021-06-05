@@ -5,13 +5,12 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Lang/BaseObject.sh
-source ./../../BaseShell/Log/BaseLog.sh
-
+source ./../../BaseShell/Starter/BaseStarter.sh
+#===============================================================} 
 # @param $1:参数值 $2:err_msg
 # 判断传入参数是否为空 [Boolean]<-(param:String,err_msg:String)
 function _NotBlank(){
-  local param=$(echo $1|trim);local err_msg=$2
+  local param=$(echo "$1"|trim);local err_msg=$2
   err_msg=${err_msg:-'parameter can not be null'}
   [[ -z "${param}" ]] && log_fail "${err_msg}" || return ${TRUE}
 }

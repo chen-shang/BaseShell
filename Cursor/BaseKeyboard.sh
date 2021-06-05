@@ -5,11 +5,12 @@ import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 eval "${import}=0"
 #===============================================================
-source ./../../BaseShell/Starter/BaseHeader.sh
+#导入工具包
+source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Cursor/BaseCursor.sh
 source ./../../BaseShell/Cursor/BaseKeyboardEvent.sh
 #===============================================================
-keyboard_select(){ _NotBlank "$1" "selection can not be null"
+function keyboard_select(){ _NotBlank "$1" "selection can not be null"
   local selection=$1
   local max=$(echo "${selection}"|wc -l)
   echo "${selection}"|while read item;do
@@ -56,7 +57,7 @@ keyboard_select(){ _NotBlank "$1" "selection can not be null"
 # 注册感兴趣的监听键盘事件
 # insert:插入键\delete:推给建\up:上箭头\down:下箭头\left:左箭头\right:右箭头
 # 键盘逃逸,键盘监听
-keyboard_escape(){
+function keyboard_escape(){
   local keyboardEvents="$*"
   isBlank "${keyboardEvents}" && {
     keyboardEvents="*"
