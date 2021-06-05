@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-set -u
+project=$1
+if [[ -z "${project}" ]];then
+  read -r -p "project[项目目录]:" project
+fi
 
-read -p "project[项目目录]:" project
-if [[ -z "${project}" ]]; then
+set -u
+if [[ -z "${project}" ]];then
   echo "project can not be null"
   exit
 fi
 
-read -p "module[模块名称]:" module
-if [[ -z "${module}" ]]; then
+read -r -p "module[模块名称]:" module
+if [[ -z "${module}" ]];then
   echo "module can not be null"
   exit
 fi
@@ -18,16 +21,17 @@ fi
 cd "${project}" || exit
 
 # 引入BaseShell
-BASE_SHELL=$(dirname ${BASH_SOURCE[0]})
+BASE_SHELL=$(dirname "${BASH_SOURCE[0]}")
 #[[ ! -d BaseShell ]] && ln -nsf "${BASE_SHELL}" ./BaseShell
 [[ ! -d BaseShell ]] && cp -r "${BASE_SHELL}" ./BaseShell
 
 # 新建模块
 [[ ! -d "${module}" ]] && mkdir -p "${module}"
+# 进入模块目录
 cd "${module}" || exit
-
-mkdir -p Resources Controller Service Test Utils
-
+# 新建模块目录结构
+mkdir -p Resources Controller Service Enum Test Utils Profile/dev Profile/prod
+# 写入样板代码
 head="#===============================================================
 import=\"\$(basename \"\${BASH_SOURCE[0]}\" .sh)_\$\$\"
 if [[ \$(eval echo '$'\"\${import}\") == 0 ]]; then return; fi
