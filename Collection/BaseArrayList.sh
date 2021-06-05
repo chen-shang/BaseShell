@@ -49,8 +49,9 @@ function list_removeByValue(){
 # 获取指定位置元素 []<-(index:int)
 function list_get(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
-  local cmd='$'"{${listName}[$1]}"
-  eval echo "${cmd}"
+  local cmd='$'"{${listName}[@]}"
+  local values=($(eval echo "${cmd}"))
+  echo "${values[$1]}"
 }
 # 针对每一个元素执行操作 []<-(runnable:Function[item:String])
 function list_forEach(){
@@ -164,21 +165,22 @@ function list_reducer(){
   local listName=$(echo "${FUNCNAME[0]}"|awk -F '_' '{print $1}')
   local cmd='$'"{${listName}[@]}"
   local values=$(eval echo "${cmd}")
+  
   local result=$2
   # 含有初始值
   isNotBlank "${result}" && {
     local value;for value in ${values};do
-       result=$(eval $1 "${result}" "${value}")
+      result=$(eval "$1" "${result}" "${value}")
     done
   }
 
   # 不含初始值
-  isNotBlank "${result}" || {
+  isBlank "${result}" && {
     local size=$(${listName}_size)
     result=$(${listName}_get 0)
     local i;for ((i=1;i<size;i++)){
-      local value=$(${listName}_get ${i})
-      result=$(eval $1 "${result}" "${value}")
+      local value=$(${listName}_get "${i}")
+      result=$(eval "$1" "${result}" "${value}")
     }
   }
 
