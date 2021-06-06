@@ -9,7 +9,6 @@ version:1.0
 
 ![](https://github.com/chen-shang/Picture/blob/master/init.gif)
 
-
 # 环境准备
 本Shell框架是以bash为标准,在Mac OS 10.14上进行验证。
 ```bash
@@ -39,12 +38,14 @@ brew install shellcheck
 brew install coreutils
 brew install bc
 brew install lolcat
+brew install bashdb
 ```
 
 所有脚本均系mac环境开发,使用的是bash,理论上兼容所有linux系统,如遇问题,请联系我,我来做兼容
 ![](https://github.com/chen-shang/Picture/blob/master/weixin/WechatIMG99.jpeg)
 
 # BaseShell使用教程
+详细使用教程请参考我的博客
 [BaseShell使用教程](https://chen-shang.github.io/2019/08/28/ji-zhu-zong-jie/baseshell/baseshell-shi-yong-jiao-cheng/)
 
 我写这套框架的初衷在于丰富自己的shell脚本库，以期在写一些简单脚本辅助开发时候能够像使用Java类库一样方便。同时为了写出类Java的工具类，这会强迫自己深入学习Java的源代码。
@@ -313,8 +314,6 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 
 ![](https://github.com/chen-shang/Picture/blob/master/baseshell/annotation.jpg)
 
-## 集合处理脚本【Collection】
-
 ## 集合工具脚本【Collection】
 ```terminal
 ├── Collection
@@ -345,6 +344,7 @@ function ssh_checkLogin(){ _NotBlank "$1" "ip can not be null" && _NotBlank "$2"
 | list_values        | 获取元素的值列表                       | -              |
 | list_mapper        | 最每一个元素进行操作并返回一个新的列表 | -              |
 | list_reducer       | 聚类操作                               | -              |
+
 详细用法请参考对应的单元测试类 BaseArrayListTest.sh、BaseMapTest.sh
 ### BaseHasMap.sh
 ### BaseMap.sh
