@@ -7,37 +7,23 @@ eval "${import}=0"
 import="BaseHeader_$$"
 if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
 #===============================================================
+# 默认引入的常用工具函数
 # 脚本中被 #ignore 修饰的不自动生成文档
 # 脚本使用帮助文档
-manual(){ #ignore
-  # 全部的函数以及描述
-  equals "$1" "-a" && {
-    cat <"$0"                       \
-    | grep -v '#ignore'             \
-    | grep -B1 '(){'                \
-    | grep -v "\\--"                \
-    | sed "s/function //g"          \
-    | sed "s/(){//g"                \
-    | sed 'N;s/\n/ /'               \
-    | grep '#'                      \
-    | sed "s/#//g"                  \
-    | awk '{print $1,$3,$2}'        \
-    | column -t
-  }
-
-  # 暴露的函数以及描述
-  ! equals "$1" "-a" && {
-    cat <"$0"                       \
-    | grep -v '#ignore'             \
-    | grep -B1 'function'           \
-    | grep -v "\\--"                \
-    | sed "s/function //g"          \
-    | sed "s/(){//g"                \
-    | sed "s/#//g"                  \
-    | sed 'N;s/\n/ /'               \
-    | awk '{print $1,$3,$2}'        \
-    | column -t
-  }
+function manual(){ #ignore
+  cat <"$0"                  |
+      grep -v '#ignore'      |
+      grep -B1 'function'    |
+      grep -EB1 '(){|() {}'  |
+      grep -v "\\--"         |
+      sed "s/function //g"   |
+      sed "s/(){//g"         |
+      sed "s/() {//g"        |
+      sed 'N;s/\n/ /'        |
+      grep '#'               |
+      sed "s/#//g"           |
+      awk '{print $1,$3,$2}' |
+      column -t
 }
 
 # 函数的详细描述
