@@ -11,7 +11,7 @@ source ./../../BaseShell/File/BaseTable.sh
 readonly TABLE_TABLE='./table'
 readonly TABLE_COLUMNS=( id name age sex )
 readonly TABLE_COLUMNS_UP=( ID NAME AGE SEX )
-Table_parse(){
+function Table_parse(){ _NotBlank "$*" "query can not be null"
   local query=$*;
   for COLUMN in ${TABLE_COLUMNS_UP[*]};do
   local index=$(eval "echo \${TABLE_COLUMN_${COLUMN}}")
@@ -19,22 +19,42 @@ Table_parse(){
   done
   echo ${query}
 }
-Table_select(){
+function Table_insert(){ _NotBlank "$*" "query can not be null"
+  echo "$*">> "${TABLE_TABLE}"
+}
+function Table_select(){ _NotBlank "$*" "query can not be null"
   local query=$*
   query=$(Table_parse "${query}")
   local query="awk '${query} NR!=1{print \$0}' ${TABLE_TABLE}"
-  log_info "${query}"
+  log_debug "${query}"
   eval "${query}"
 }
-Table_selectOne(){
+function Table_selectOne(){ _NotBlank "$*" "query can not be null"
   local query=$*
   local result=$(Table_select "${query}"|head -1)
   echo ${result}
 }
-Table_count(){
+function Table_count(){ _NotBlank "$*" "query can not be null"
   local query=$*
   local result=$(Table_select "${query}"|wc -l)
   echo ${result}
+}
+function Table_line(){ _NotBlank "$*" "query can not be null"
+  local query=$*
+  query=$(Table_parse "${query}")
+  local query="awk '${query} NR!=1{print NR}' ${HOST_INFO_TABLE_TABLE}"
+  log_debug "${query}"
+  eval "${query}"
+}
+function Table_delete(){ _NotBlank "$*" "query can not be null"
+  local lines=( $(HostInfoTable_line "$1") )
+  local query=""
+  for line in ${lines[*]};do
+    query+="${line}d;"
+  done
+  query="$(echo "${query}"|string_tailRemove)"
+  sed -i '' "${query}" "${HOST_INFO_TABLE_TABLE}"
+  echo "${#lines[@]}"
 }
 TABLE_COLUMN_ID='1'
 COLUMN_ID='ID'

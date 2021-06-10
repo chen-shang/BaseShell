@@ -27,7 +27,7 @@ function manual(){ #ignore
 }
 
 # 函数的详细描述
-desc(){ _NotBlank "$1" "function can not be null" #ignore
+function desc(){ _NotBlank "$1" "function can not be null" #ignore
   local func=$1
   local begin=$(cat <"$0"|grep -n -B10 "${func}(){"|grep -w "}"|tail -1|awk -F '-' '{print $1}')
   local end=$(cat <"$0"|grep -n "${func}(){"|tail -1|awk -F ':' '{print $1}')

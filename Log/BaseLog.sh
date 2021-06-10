@@ -25,46 +25,70 @@ esac
 # 默认关闭,debug级别的日志会忽略
 # debug级别的日志 []<-(msg:String)
 function log_debug(){
+  #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+   
   if [[ ${log_level} -ge 3 ]];then
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [DEBUG] [${FUNCNAME[1]}]:   $*"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [DEBUG] [${FUNCNAME[1]}]:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).debug.log" 2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [DEBUG] [${FUNCNAME[1]}]:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    echo -e "${LOG_HEADER}:   $*"|trim 1>&2
+    echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).debug.log" 2>&1
+    echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
 # info级别的日志 []<-(msg:String)
 function log_info(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "\\033[37m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${FUNCNAME[1]}]:    $*\\033[0m"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log"  2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log"  2>&1
+    #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    echo -e "\\033[37m${LOG_HEADER}:    $*\\033[0m"|trim 1>&2
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log"  2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log"  2>&1
   fi
 }
 
 # warn级别的日志 []<-(msg:String)
 function log_warn(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "\033[33m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN] [${FUNCNAME[1]}]:    $*\033[0m"|trim 1>&2
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+   
+    echo -e "\033[33m[${LOG_HEADER}]:    $*\033[0m"|trim 1>&2
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
 # error级别的日志 []<-(msg:String)
 function log_error(){
   if [[ ${log_level} -ge 0 ]];then
-    echo -e "\\033[31m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR] [${FUNCNAME[1]}]:   $*\\033[0m"|trim 1>&2
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR] [${FUNCNAME[1]}]:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).error.log" 2>&1
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR] [${FUNCNAME[1]}]:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+   
+    echo -e "\\033[31m${LOG_HEADER}:   $*\\033[0m"|trim 1>&2
+    echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).error.log" 2>&1
+    echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
 # 用来标识成功状态的,用绿色 []<-(msg:String)
 function log_success(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "\\033[32m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS] [${FUNCNAME[1]}]: $*\\033[0m"|trim 1>&2
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS] [${FUNCNAME[1]}]: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS] [${FUNCNAME[1]}]: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+   
+    echo -e "\\033[32m${LOG_HEADER}: $*\\033[0m"|trim 1>&2
+    echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
@@ -72,9 +96,14 @@ function log_success(){
 # 用来标识失败状态的,用红色, []<-(msg:String)
 function log_fail(){
   if [[ ${log_level} -ge 2 ]];then
-    echo -e "\\033[31m[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${FUNCNAME[1]}]:    $*\\033[0m"|trim 1>&2
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+   
+    echo -e "\\033[31m${LOG_HEADER}:    $*\\033[0m"|trim 1>&2
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
     exit 1
   fi
 }
@@ -83,14 +112,24 @@ function log_fail(){
 # 一般不用打开,看一眼
 function log_system(){
   if [[ ${log_level} -ge 4 ]];then
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SYSTEM] [${FUNCNAME[1]}]:    $*"|trim 1>&2
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SYSTEM] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
-    echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SYSTEM] [${FUNCNAME[1]}]:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
+    #执行脚本的工具类
+    local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+    #日志输出的公共部分
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+   
+    echo -e "${LOG_HEADER}:    $*"|trim 1>&2
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
 
 # @attention 日志只会输出到日志文件中,不会输出在控制台上,默认开启
 # 用来标识追踪日志 []<-(msg:String)
 function log_trace(){
-  echo -e "[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [TRACE] [${FUNCNAME[1]}]:   $*"|trim >>"${LOG_DIR}/$(date +%Y-%m-%d)".trace.log 2>&1
+  #执行脚本的工具类
+  local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
+  #日志输出的公共部分
+  local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    
+  echo -e "${LOG_HEADER}:   $*"|trim >>"${LOG_DIR}/$(date +%Y-%m-%d)".trace.log 2>&1
 }
