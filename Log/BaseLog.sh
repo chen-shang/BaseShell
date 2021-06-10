@@ -58,7 +58,7 @@ function log_warn(){
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
-    echo -e "\033[33m[${LOG_HEADER}]:    $*\033[0m"|trim 1>&2
+    echo -e "\033[33m${LOG_HEADER}:    $*\033[0m"|trim 1>&2
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
