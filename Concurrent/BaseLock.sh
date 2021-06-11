@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
-source ./../../BaseShell/Utils/BaseUuid.sh
 #===============================================================================
 # 该锁利用fifo的阻塞原理实现 非重入锁
 # 新建一个锁 []<-(lock_fd:String)

@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
-source ./../../BaseShell/Utils/BaseUuid.sh
 source ./../../BaseShell/Concurrent/BaseLock.sh
 #===============================================================================
 # 该线程池的实现方法与上面的 BaseThreadPool.sh实现不同。该类与Java的ThreadPoolExecutor.sh实现类似
 # 可以说是 ThreadPoolExecutor.java 的简版实现。开发过程当中对Java中一些不得已的设计有了深刻的理解
-
 
 # coreSize:核心线程数
 # keepAliveTime:线程的存活时间
@@ -31,8 +25,8 @@ function new_ThreadPoolExecutor(){ _NotBlank "$1" "core size can not be null" &&
 
   for((i=0;i<coreSize;i++));do
     {
+      trap 'echo you hit Ctrl-C/Ctrl-\, now exiting.....; exit' SIGINT SIGQUIT
       while :;do
-        trap 'echo you hit Ctrl-C/Ctrl-\, now exiting.....; exit' SIGINT SIGQUIT
         lock_tryLock "${lock}" #这个地方必须加锁,防止read并发读导致task错乱
         read -t "${keepAliveTime}" -r -u "${fd}" task
         lock_unLock "${lock}"

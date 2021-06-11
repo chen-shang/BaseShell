@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
-source ./../../BaseShell/Starter/BaseStarter.sh
+source ./../../BaseShell/Starter/BaseImported.sh && return
 #===============================================================
 
 # 这串代码特别简单，就是利用RANDOM这个随机数生成器进行取余就能够实现，至于为什么取余时需要+1是因为在取余时如果被整除那么余数会是0，这样就不在限定范围内了

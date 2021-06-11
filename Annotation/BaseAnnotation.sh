@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================} 
 # @param $1:参数值 $2:err_msg

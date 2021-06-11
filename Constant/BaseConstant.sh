@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
+source ./../../BaseShell/Starter/BaseImported.sh && return
 #===============================================================
 readonly TRUE=0                         # Linux 中一般0代表真非0代表假
 readonly FALSE=1

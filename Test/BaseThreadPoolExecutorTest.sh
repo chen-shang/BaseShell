@@ -3,7 +3,6 @@
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestHeader.sh
 #===============================================================
-source ./../../BaseShell/Concurrent/BaseLock.sh
 source ./../../BaseShell/Concurrent/BaseThreadPoolExecutor.sh
 #===============================================================
 test-executor_run(){
@@ -32,7 +31,7 @@ test-executor_run(){
 
 function runnable(){
    sleep 1
-   log_info "[${LINENO}]:$(gdate)"
+   log_info "$(gdate)"
  }
 #===============================================================
 source ./../../BaseShell/Starter/BaseTestEnd.sh

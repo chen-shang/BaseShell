@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Constant/BaseConstant.sh
+#===============================================================
 
 # @return {@code true} if the arguments are equal to each other
 function equals(){

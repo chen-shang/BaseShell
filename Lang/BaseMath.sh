@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================
 # D开头的数字代表十进制、B代表二进制、H代表十六进制、O代表八进制

@@ -2,11 +2,7 @@
 # shellcheck disable=SC1091,SC2155
 # @attention 注意 1>&2 每一个日志输入都把标准输出重定向到了标准错误输出,目的是在使用log_的时候不影响函数的返回结果
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
 #===============================================================
 LOG_DIR="${LOG_DIR:-${HOME}/.baseshell/}"
@@ -28,7 +24,7 @@ function log_debug(){
   #执行脚本的工具类
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
-    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [DEBUG] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
   if [[ ${log_level} -ge 3 ]];then
     echo -e "${LOG_HEADER}:   $*"|trim 1>&2
@@ -56,7 +52,7 @@ function log_warn(){
     #执行脚本的工具类
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
-    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
     echo -e "\033[33m${LOG_HEADER}:    $*\033[0m"|trim 1>&2
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
@@ -70,7 +66,7 @@ function log_error(){
     #执行脚本的工具类
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
-    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
     echo -e "\\033[31m${LOG_HEADER}:   $*\\033[0m"|trim 1>&2
     echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).error.log" 2>&1
@@ -84,7 +80,7 @@ function log_success(){
     #执行脚本的工具类
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
-    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
     echo -e "\\033[32m${LOG_HEADER}: $*\\033[0m"|trim 1>&2
     echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
@@ -99,7 +95,7 @@ function log_fail(){
     #执行脚本的工具类
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
-    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
     echo -e "\\033[31m${LOG_HEADER}:    $*\\033[0m"|trim 1>&2
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
@@ -115,7 +111,7 @@ function log_system(){
     #执行脚本的工具类
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
-    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+    local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SYSTEM] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
    
     echo -e "${LOG_HEADER}:    $*"|trim 1>&2
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
@@ -129,7 +125,7 @@ function log_trace(){
   #执行脚本的工具类
   local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
   #日志输出的公共部分
-  local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [INFO] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
+  local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [TRACE] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
     
   echo -e "${LOG_HEADER}:   $*"|trim >>"${LOG_DIR}/$(date +%Y-%m-%d)".trace.log 2>&1
 }

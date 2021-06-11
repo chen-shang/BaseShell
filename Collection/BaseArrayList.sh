@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155,SC2086
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
-#===============================================================================
+#===============================================================} 
 declare -a list=()
 # 新建一个arrayList []<-(listName:String)
 function new_arrayList(){ _NotBlank "$1" "arrayList name can not be null"

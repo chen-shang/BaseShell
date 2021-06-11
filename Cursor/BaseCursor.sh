@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
+source ./../../BaseShell/Starter/BaseImported.sh && return
 #===============================================================
-#导入工具包
-source ./../../BaseShell/Starter/BaseStarter.sh
-#===============================================================================
 
 # 定义一个变量记录光标所在位置
 eval "cursor_no_$$=1"

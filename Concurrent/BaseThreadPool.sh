@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-#===============================================================
-#导入工具包
+source ./../../BaseShell/Starter/BaseImported.sh && return
 source ./../../BaseShell/Starter/BaseStarter.sh
-source ./../../BaseShell/Utils/BaseUuid.sh
-#===============================================================================
+#===============================================================
 # 该线程池的实现方法与下面的 BaseThreadPoolExecutor.sh 实现不同。与Java中的线程池实现不同
 # 实现方式令牌队列中存放指定执行个数的令牌,令牌队列为空的时候阻塞任务的提交
 # 令牌队列不为空的时候允许拿走一个令牌执行
