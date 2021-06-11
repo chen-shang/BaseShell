@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-import="$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
-import="BaseHeader_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
+source ./../BaseShell/Starter/BaseImported.sh && return
 #===============================================================
 # 默认引入的常用工具函数
 # 脚本中被 #ignore 修饰的不自动生成文档
