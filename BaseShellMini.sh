@@ -1,7 +1,30 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-source ./../BaseShell/Starter/BaseImported.sh && return
+# 这段的作用是为了判断某个脚本是否之前被引用过
+IMPORT_SHELL_FLAG="${BASH_SOURCE[1]////_}"   #导入的脚本名称,把所有的/替换成_
+IMPORT_SHELL_FLAG="${IMPORT_SHELL_FLAG//./_}" #导入的脚本名称,把所有的.替换成_
+if [[ $(eval echo '$'"${IMPORT_SHELL_FLAG}") != 0 ]]; then 
+  eval "${IMPORT_SHELL_FLAG}=0"; return 1; 
+fi
+#===============================================================
+# 这段的作用是为了判断当前Mini脚本是否之前被引用过
+IMPORT_SHELL_FLAG="${BASH_SOURCE[0]////_}"   #导入的脚本名称,把所有的/替换成_
+IMPORT_SHELL_FLAG="${IMPORT_SHELL_FLAG//./_}" #导入的脚本名称,把所有的.替换成_
+if [[ $(eval echo '$'"${IMPORT_SHELL_FLAG}") != 0 ]]; then 
+  echo "${IMPORT_SHELL_FLAG} first imported"
+  eval "${IMPORT_SHELL_FLAG}=0";
+fi
+#===============================================================
+# 加载自定义配置
+if [[ -f ./../config.sh ]];then
+  source ./../config.sh
+fi
+
+# 显示 Banner 图
+if [[ ${SHOW_BANNER} == 0 ]];then
+  cat < "${BANNER_PATH}" |lolcat
+fi
 #===============================================================
 # 默认引入的常用工具函数
 # 脚本中被 #ignore 修饰的不自动生成文档

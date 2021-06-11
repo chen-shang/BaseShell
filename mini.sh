@@ -22,8 +22,9 @@ cd "${project}" || exit
 
 # 引入BaseShell
 BASE_SHELL=$(dirname "${BASH_SOURCE[0]}")
-#[[ ! -d BaseShell ]] && ln -nsf "${BASE_SHELL}" ./BaseShell
-[[ ! -d BaseShell ]] && cp -r "${BASE_SHELL}" ./BaseShell
+[[ ! -d BaseShell ]] && ln -nsf "${BASE_SHELL}" ./BaseShell
+#[[ ! -d BaseShell ]] && cp -r "${BASE_SHELL}" ./BaseShell
+cp "${BASE_SHELL}/BaseShellMini.sh" ./
 
 # 新建模块
 [[ ! -d "${module}" ]] && mkdir -p "${module}"
@@ -33,15 +34,19 @@ cd "${module}" || exit
 mkdir -p Resources Controller Service Enum Test Utils Profile/dev Profile/prod
 # 写入样板代码
 head="#===============================================================
-import=\"\$(basename \"\${BASH_SOURCE[0]}\" .sh)_\$\$\"
-if [[ \$(eval echo '$'\"\${import}\") == 0 ]]; then return; fi
-eval \"\${import}=0\""
+source ./../../BaseShellMini.sh && return"
 
-# 写入默认的配置文件
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155,SC2154,SC2034,SC1090
 ${head}
 #===============================================================
+ENV=dev
+[ -f ./../Profile/\${ENV}/application.sh ] && source \"./../Profile/\${ENV}/application.sh\"
+#默认dev
+[ -f ./Profile/dev/application.sh ] && source \"./Profile/dev/application.sh\"
+#===============================================================
+# 是否显示BANNER
+SHOW_BANNER=0
 # 日志级别
 LOG_LEVEL=DEBUG
 " >config.sh
@@ -50,9 +55,7 @@ LOG_LEVEL=DEBUG
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 ${head}
-#===============================================================
 #导入工具包
-source ./../../BaseShellMini.sh
 source ./../config.sh
 #===============================================================================
 #业务代码
@@ -67,9 +70,7 @@ main
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 ${head}
-#===============================================================
 #导入工具包
-source ./../../BaseShellMini.sh
 source ./../config.sh
 #===============================================================================
 #业务代码
@@ -81,8 +82,8 @@ demo(){
 # 写入默认的Test
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
-#===============================================================
-source ./../../BaseShellMini.sh
+${head}
+#导入工具包
 source ./../config.sh
 #===============================================================
 # 引入测试脚本
@@ -94,6 +95,7 @@ test-demo(){
   assertEquals \"\${result}\" \"ok\"
 }
 #===============================================================
+source ./../../BaseShell/Starter/BaseTestEnd.sh
 " >"./Test/DemoServiceTest.sh"
 
 tree "./../../${project}"

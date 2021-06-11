@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 #===============================================================
-import="_$(basename "${BASH_SOURCE[0]}" .sh)_$$"
-if [[ $(eval echo '$'"${import}") == 0 ]]; then return; fi
-eval "${import}=0"
+#导入的脚本名称,把所有的/替换成_,把所有的.替换成_
+IMPORT_SHELL_FLAG="${BASH_SOURCE[0]////_}" && IMPORT_SHELL_FLAG="${IMPORT_SHELL_FLAG//./_}"
+if [[ $(eval echo '$'"${IMPORT_SHELL_FLAG}") == 0 ]]; then return; fi #已导入就直接返回
+eval "${IMPORT_SHELL_FLAG}=0" 
 #===============================================================
 # BANNER图的位置
 BANNER_PATH="./../../BaseShell/Banner"
