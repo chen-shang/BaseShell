@@ -81,7 +81,7 @@ echo "#!/usr/bin/env bash
 ${head}
 #=================================业务代码========================================
 function demo(){
-  log_info \"happy script\"
+  echo \"ok\"
 }
 " > "./Service/DemoService.sh"
 
@@ -89,7 +89,7 @@ function demo(){
 echo "#!/usr/bin/env bash
 # shellcheck disable=SC1091,SC2155
 #================================导入工具包=======================================
-source ./../../BaseShell/Starter/BaseTestHeader.sh
+source ./../../BaseShell/Starter/BaseHeader.sh
 #================================导入待测包=======================================
 source ./../Service/DemoService.sh
 #=================================测试用例========================================
