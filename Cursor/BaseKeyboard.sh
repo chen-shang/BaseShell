@@ -51,7 +51,7 @@ function keyboard_select(){ _NotBlank "$1" "selection can not be null"
 }
 
 # 注册感兴趣的监听键盘事件
-# insert:插入键\delete:推给建\up:上箭头\down:下箭头\left:左箭头\right:右箭头
+# insert:插入键\delete:退格键\up:上箭头\down:下箭头\left:左箭头\right:右箭头
 # 键盘逃逸,键盘监听
 function keyboard_escape(){
   local keyboardEvents="$*"
@@ -125,7 +125,6 @@ function keyboard_escape(){
        $'\x0a')  # Enter
          ( equals "*" "${keyboardEvents}"  || string_contains "${keyboardEvents}" "enter") && {
            KeyboardEvent_enter
-           break
          }
        ;;
        $'\x1b')  # Escape
