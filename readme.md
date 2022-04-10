@@ -1,5 +1,5 @@
 version:1.0
-```
+```text
  ____                      _          _ _
 | __ )  __ _ ___  ___  ___| |__   ___| | |
 |  _ \ / _` / __|/ _ \/ __| '_ \ / _ \ | |
@@ -11,7 +11,7 @@ version:1.0
 
 # 环境准备
 本Shell框架是以bash为标准,在Mac OS 10.14上进行验证。
-```bash
+```text
 chenshang@chenshangMacBook-Pro:~$ sw_vers
 ProductName:	Mac OS X
 ProductVersion:	10.14

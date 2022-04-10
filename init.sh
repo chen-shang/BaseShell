@@ -22,8 +22,8 @@ cd "${project}" || exit
 
 # 引入BaseShell
 BASE_SHELL=$(dirname "${BASH_SOURCE[0]}")
-[[ ! -d BaseShell ]] && ln -nsf "${BASE_SHELL}" ./BaseShell
-#[[ ! -d BaseShell ]] && cp -r "${BASE_SHELL}" ./BaseShell
+#[[ ! -d BaseShell ]] && ln -nsf "${BASE_SHELL}" ./BaseShell
+[[ ! -d BaseShell ]] && cp -r "${BASE_SHELL}" ./BaseShell
 
 # 新建模块
 [[ ! -d "${module}" ]] && mkdir -p "${module}"
