@@ -6,11 +6,11 @@ source ./../../BaseShell/Starter/BaseStarter.sh
 source ./../../BaseShell/Date/BaseTimeUnit.sh
 #===============================================================================
 function timestamp_now(){
-  date +%s
+  gdate +%s
 }
 
 function timestamp_now_nano(){
-  echo +%s%N
+  gdate +%s%N
 }
 
 function timestamp_toLocaldate(){
@@ -26,5 +26,5 @@ function timestamp_toLocaldatetime(){
 }
 
 function timestamp_of(){
-  date -d "$1" +%s
+  gdate -d "$1" +%s
 }
