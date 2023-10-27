@@ -25,7 +25,7 @@ function log_debug(){
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [DEBUG] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-   
+
   if [[ ${log_level} -ge 3 ]];then
     echo -e "${LOG_HEADER}:   $*"|trim 1>&2
     echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).debug.log" 2>&1
@@ -53,9 +53,9 @@ function log_warn(){
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [WARN] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-   
+
     echo -e "\033[33m${LOG_HEADER}:    $*\033[0m"|trim 1>&2
-    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).warn.log" 2>&1
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
@@ -67,7 +67,7 @@ function log_error(){
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [ERROR] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-   
+
     echo -e "\\033[31m${LOG_HEADER}:   $*\\033[0m"|trim 1>&2
     echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).error.log" 2>&1
     echo -e "${LOG_HEADER}:   $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
@@ -81,9 +81,9 @@ function log_success(){
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-   
+
     echo -e "\\033[32m${LOG_HEADER}: $*\\033[0m"|trim 1>&2
-    echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).success.log" 2>&1
     echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
@@ -96,9 +96,9 @@ function log_fail(){
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-   
+
     echo -e "\\033[31m${LOG_HEADER}:    $*\\033[0m"|trim 1>&2
-    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).fail.log" 2>&1
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
     exit 1
   fi
@@ -112,7 +112,7 @@ function log_system(){
     local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
     #日志输出的公共部分
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SYSTEM] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-   
+
     echo -e "${LOG_HEADER}:    $*"|trim 1>&2
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
@@ -126,6 +126,6 @@ function log_trace(){
   local SCRIPT_FILE=$(basename "${BASH_SOURCE[1]}" .sh)
   #日志输出的公共部分
   local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [TRACE] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
-    
+
   echo -e "${LOG_HEADER}:   $*"|trim >>"${LOG_DIR}/$(date +%Y-%m-%d)".trace.log 2>&1
 }

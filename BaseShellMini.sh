@@ -333,7 +333,7 @@ function log_success(){
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [SUCCESS] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
 
     echo -e "\\033[32m${LOG_HEADER}: $*\\033[0m"|trim 1>&2
-    echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).success.log" 2>&1
     echo -e "${LOG_HEADER}: $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
   fi
 }
@@ -348,7 +348,7 @@ function log_fail(){
     local LOG_HEADER="[$(date +%Y-%m-%dT%H:%M:%S)][$$ $BASHPID] [FAIL] [${SCRIPT_FILE}.${FUNCNAME[1]}:${BASH_LINENO[0]}]"
 
     echo -e "\\033[31m${LOG_HEADER}:    $*\\033[0m"|trim 1>&2
-    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).info.log" 2>&1
+    echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).fail.log" 2>&1
     echo -e "${LOG_HEADER}:    $*"|trim >> "${LOG_DIR}/$(date +%Y-%m-%d).log" 2>&1
     exit 1
   fi
