@@ -11,7 +11,7 @@ methodList=$(cat <"$0" | grep "test-" | grep -v "grep" | grep -E "(){|() {" | gr
 # 测试文件名
 testFile=$(basename "${BASH_SOURCE[1]}" .sh)
 for method in ${methodList}; do
-  log_info "开始执行测试函数==============》${testFile}:${method}《=============="
+  log_info "开始执行测试函数=》${testFile}:${method}《="
   #子线程执行
   eval "(${method})"
 done
